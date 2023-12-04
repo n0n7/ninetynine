@@ -1,11 +1,10 @@
-<script></script>
+<script setup>
+import Navbar from "./components/NavBar.vue"
+</script>
 
 <template>
-    <header>
-        <div>ninetynine</div>
-    </header>
-
-    <main>
-        <TheWelcome />
-    </main>
+    <div id="app">
+        <Navbar />
+        <router-view></router-view>
+    </div>
 </template>
