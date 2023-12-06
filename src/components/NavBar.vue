@@ -1,7 +1,7 @@
 <template>
     <nav>
         <div id="container-div">
-            <img src="/public/99.png" alt="logo" width="50px" height="50px" href="/" onclick="">
+            <img src="/99.png" alt="logo" width="50px" height="50px" onclick="">
             <ul class="nav-ul">
                 <li v-for="(page,index) in pages" class="nav-list">
                     <a :href="page.path"> {{ page.name }} </a>
@@ -25,7 +25,7 @@
     }
 </script>
 
-<style>
+<style scoped>
     nav {
         background-color: #333;
         color: #fff;

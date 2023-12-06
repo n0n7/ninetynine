@@ -1,60 +1,89 @@
 <template>
-    <div>
+    <div class="form-container">
         <!--Login-->
-        <h1> Login </h1>
+        <h1>Login</h1>
         <form class="login-form">
-            <label for="username"> Username </label>
-            <input type="text" id="username" name="username" v-model="username">
-            <br>
-            <label for="password"> Password </label>
-            <input type="password" id="password" name="password" v-model="password">
-            <br>
-            <button type="submit" @click.prevent="login"> Login </button>
+            <div class="form-input-container">
+                <label for="username"> Username </label>
+                <input
+                    type="text"
+                    id="username"
+                    name="username"
+                    v-model="username"
+                    placeholder="username"
+                />
+            </div>
+            <div class="form-input-container">
+                <label for="password"> Password </label>
+                <input
+                    type="password"
+                    id="password"
+                    name="password"
+                    v-model="password"
+                    placeholder="password"
+                />
+            </div>
+            <button type="submit" @click.prevent="login">Login</button>
         </form>
     </div>
 </template>
 
 <script>
-    export default {
-        data() {
-            return {
-                username: '',
-                password: ''
-            }
-        },
-        methods: {
-            login() {
-                console.log('login');
-            }
+export default {
+    data() {
+        return {
+            username: "",
+            password: "",
         }
-    }
+    },
+    methods: {
+        login() {
+            // print username and password to console
+            console.log(this.username, this.password)
+            console.log("login")
+        },
+    },
+}
 </script>
 
 <style scoped>
-    div {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-    }
+h1 {
+    color: black;
+}
 
-    h1 {
-        color: black;
-        padding-left: 10px;
-    }
+button {
+    width: 100%;
+    padding: 5px;
+    border-radius: 10px;
+    border: 2px solid black;
+}
 
-    .login-form {
-        flex-direction: column;
-        text-align: center;
-        padding: 10px;
-    }
+button:hover {
+    cursor: pointer;
+    filter: brightness(90%);
+}
 
-    .login-form input {
-        margin-bottom: 10px;
-    }
+button:active {
+    filter: brightness(80%);
+}
+.form-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
 
-    #password {
-        margin-left: 2px;
-    }
+.form-input-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 10px;
+}
+.login-form {
+    flex-direction: column;
+    text-align: center;
+    padding: 10px;
+    min-width: 250px;
+}
 </style>
-
