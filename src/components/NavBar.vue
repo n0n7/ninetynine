@@ -1,12 +1,26 @@
 <template>
     <nav>
         <div id="container-div">
-            <img src="/99.png" alt="logo" width="50px" height="50px" onclick="">
-            <ul class="nav-ul">
-                <li v-for="(page,index) in pages" class="nav-list">
-                    <a :href="page.path"> {{ page.name }} </a>
-                </li>
-            </ul>
+            <div id="nav-home">
+                <router-link to="/">
+                    <img src="/99.png" alt="logo" width="50px" height="50px" onclick="">
+                </router-link>
+                <ul class="nav-ul">
+                    <li class="nav-list">
+                        <a href="/"> Home </a>
+                    </li>
+                </ul>
+            </div>
+            <div id="nav-profile">
+                <ul class="nav-ul">
+                    <li class="nav-list">
+                        <a href="/login"> Login </a>
+                    </li>
+                    <router-link to="/AccountSetting">
+                        <img src="/default_profile_icon.png" alt="profile" width="50px" height="50px">
+                    </router-link>
+                </ul>
+            </div>
         </div>
     </nav>
 </template>
@@ -34,12 +48,13 @@
     }
 
     img {
-        padding-left: 10px;
+        padding: 10px;
     }
 
     #container-div {
         display: flex;
         align-items: center;
+        justify-content: space-between;
     }
 
     .nav-ul {
@@ -59,5 +74,10 @@
 
     .nav-list a:hover {
         color: #ccc;
+    }
+
+    #nav-home {
+        display: flex;
+        align-items: center;
     }
 </style>

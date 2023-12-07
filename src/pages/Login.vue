@@ -24,6 +24,11 @@
                 />
             </div>
             <button type="submit" @click.prevent="login">Login</button>
+            <!--register-->
+            <div class="form-router">
+                <router-link to="/register">Don't have an account?</router-link>
+                <router-link to="/register">Forgot Password</router-link>
+            </div>
         </form>
     </div>
 </template>
@@ -56,6 +61,7 @@ button {
     padding: 5px;
     border-radius: 10px;
     border: 2px solid black;
+    margin-bottom: 10px;
 }
 
 button:hover {
@@ -84,6 +90,13 @@ button:active {
     flex-direction: column;
     text-align: center;
     padding: 10px;
-    min-width: 250px;
+    min-width: 300px;
+}
+
+.form-router {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
 }
 </style>
