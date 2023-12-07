@@ -1,5 +1,6 @@
 <template>
     <nav>
+        <!--navbar-->
         <div id="container-div">
             <div id="nav-home">
                 <router-link to="/">
