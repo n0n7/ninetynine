@@ -33,7 +33,7 @@
                 pages: [
                     { name: 'Home', path: '/' },
                     { name: 'Login', path: '/login' },
-                    { name: 'Contact', path: '/contact' },
+                    { name: 'Contact', path: '/contact' }
                 ]
             }
         }
@@ -42,7 +42,7 @@
 
 <style scoped>
     nav {
-        background-color: #333;
+        background-color: #242526;
         color: #fff;
         padding: 10px;
         margin-bottom: 20px;

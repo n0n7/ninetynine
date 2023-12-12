@@ -7,6 +7,7 @@ import HomePage from "./pages/Home.vue"
 import GameStatsPage from "./pages/GameStats.vue"
 import AccountSettingPage from "./pages/AccountSetting.vue"
 import RoomPage from "./pages/Room.vue"
+import JoinRoom from "./pages/JoinRoom.vue"
 
 const routes = [
     { path: "/login", component: LoginPage },
@@ -15,6 +16,7 @@ const routes = [
     { path: "/gamestats", component: GameStatsPage },
     { path: "/accountsetting", component: AccountSettingPage },
     { path: "/room/:roomId?", component: RoomPage, props: true },
+    { path: "/joinroom", component: JoinRoom}
 ]
 
 const router = createRouter({
