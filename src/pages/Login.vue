@@ -4,26 +4,31 @@
         <h1>Login</h1>
         <form class="login-form">
             <div class="form-input-container">
-                <label for="username"> Username </label>
+                <label for="username" :class="{'text-error': !isUsernameValid }"> Username </label>
                 <input
                     type="text"
                     id="username"
                     name="username"
                     v-model="username"
                     placeholder="username"
+                    :class="{'input-error': !isUsernameValid }"
+                    @input="clearError('isUsernameValid')"
                 />
             </div>
             <div class="form-input-container">
-                <label for="password"> Password </label>
+                <label for="password" :class="{'text-error': !isPasswordValid }"> Password </label>
                 <input
                     type="password"
                     id="password"
                     name="password"
                     v-model="password"
                     placeholder="password"
+                    :class="{'input-error': !isPasswordValid }"
+                    @input="clearError('isPasswordValid')"
                 />
             </div>
             <button type="submit" @click.prevent="login">Login</button>
+            <label id="error-message" class="text-error" v-if="!isError">{{ errorMessage }}</label>
             <!--register-->
             <div class="form-router">
                 <router-link to="/register">Don't have an account?</router-link>
@@ -39,14 +44,53 @@ export default {
         return {
             username: "",
             password: "",
+            isUsernameValid: true,
+            isPasswordValid: true,
+            errorMessage: ""
+        }
+    },
+    computed: {
+        isError() {
+            return this.isUsernameValid && this.isPasswordValid
         }
     },
     methods: {
         login() {
             // print username and password to console
             console.log(this.username, this.password)
-            console.log("login")
+
+            // check if username is valid
+            if (!this.verifyUsername(this.username)) {
+                this.isUsernameValid = false
+                this.errorMessage = "Username or Password is invalid"
+                console.log("username is invalid")  
+            }
+
+            // check if password is valid
+            if(!this.verifyPassword(this.password)) {
+                this.isPasswordValid = false
+                this.errorMessage = "Username or Password is invalid"
+                console.log("password is invalid")
+            }
+
+            // if username and password are valid, login
+            if (this.isUsernameValid && this.isPasswordValid) {
+                console.log("login")
+            }
+
         },
+        verifyUsername(username) {
+            // check if username is valid
+            return username.length > 0
+        },
+        verifyPassword(password) {
+            // check if password is valid
+            return password.length > 0
+        },
+        clearError(error) {
+            // clear error
+            this[error] = true
+        }
     },
 }
 </script>
@@ -98,5 +142,15 @@ button:active {
     justify-content: space-between;
     align-items: center;
     width: 100%;
+    margin-top: 10px;
 }
+
+.input-error {
+    border: 2px solid red;
+}
+
+.text-error {
+    color: red;
+}
+
 </style>
