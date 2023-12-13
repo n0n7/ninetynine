@@ -3,29 +3,29 @@
     <div class="search-bar">
         <form @submit.prevent="searchRoomID()">
             <input
+                :class="
+                    isRoomIDValid == null
+                        ? ''
+                        : isRoomIDValid
+                        ? 'input-valid'
+                        : 'input-invalid'
+                "
                 type="text"
                 placeholder="Room ID: xxxx-xxxx-xxxx"
                 maxlength="12"
                 ref="inputRoomID"
             />
-            <button class="search-icon">
-                <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 -960 960 960"
-                >
-                    <path
-                        d="M784-120 532-372q-30 24-69 38t-83 14q-109 0-184.5-75.5T120-580q0-109 75.5-184.5T380-840q109 0 184.5 75.5T640-580q0 44-14 83t-38 69l252 252-56 56ZM380-400q75 0 127.5-52.5T560-580q0-75-52.5-127.5T380-760q-75 0-127.5 52.5T200-580q0 75 52.5 127.5T380-400Z"
-                    />
-                </svg>
+            <button class="search-button">
+                <img src="/search.svg" class="search-icon" />
             </button>
         </form>
     </div>
-    <h2
+    <p
         v-show="isStatusVisible"
         :id="isRoomIDValid ? 'valid-status' : 'invalid-status'"
     >
         {{ status }}
-    </h2>
+    </p>
     <div class="flex-container-button">
         <NavButton
             class="flex-item-button"
@@ -43,7 +43,7 @@
 </template>
 
 <script>
-import NavButton from "/src/components/NavButton.vue"
+import NavButton from "/src/components/NavButton.vue";
 export default {
     components: {
         NavButton,
@@ -54,68 +54,84 @@ export default {
             isRoomIDValid: null,
             status: "Invalid status message",
             roomID: "",
-        }
+        };
     },
     methods: {
         searchRoomID() {
-            this.roomID = this.$refs.inputRoomID.value
-            this.isStatusVisible = true
+            this.roomID = this.$refs.inputRoomID.value;
+            this.isStatusVisible = true;
             if (this.roomID.length < 12) {
-                this.isRoomIDValid = false
-                this.status = "Invalid format"
+                this.isRoomIDValid = false;
+                this.status = "Invalid format";
             } else {
                 // Add condition to check if Room ID is available on database
-                this.isRoomIDValid = true
-                this.status = "Ready to join!"
+                this.isRoomIDValid = true;
+                this.status = "Ready to join!";
             }
         },
     },
-}
+};
 </script>
 
 <style scoped>
 h1 {
     color: white;
-    font-size: 3rem;
+    font-size: 4rem;
+    margin-top: 7vh;
     text-align: center;
 }
 
-h2 {
+p {
     color: white;
     position: absolute;
     left: 50%;
     transform: translate(-50%, -50%);
+    font-size: 2rem;
 }
 
 .search-bar {
-    margin-top: 8%;
+    margin-top: 16vh;
     text-align: center;
 }
 
 input {
     width: calc(9vw + 24rem);
     min-width: 24rem;
-    padding: 0.5rem;
-    font-size: 1.5rem;
+    padding-left: 0.5rem;
+    font-size: 2rem;
     border: 0;
     border-radius: 8px;
     background: #4e4f50;
     color: #b0b3b8;
 }
 
-.search-icon {
+.input-valid {
+    border: 2px solid #50c878;
+}
+
+.input-invalid {
+    border: 2px solid #ff0033;
+}
+
+.search-button {
     position: absolute;
-    transform: translate(-125%, 35%);
-    width: 2rem;
-    height: 2rem;
-    fill: #a35bff;
+    transform: translate(-110%, 8%);
     padding: 0;
     background: none;
     border: none;
+    cursor: pointer;
+}
+
+.search-icon {
+    width: 3rem;
+    height: 3rem;
+    filter: invert(37%) sepia(90%) saturate(2023%) hue-rotate(240deg)
+        brightness(103%) contrast(104%);
 }
 
 .search-icon:hover {
-    fill: #8222ff;
+    filter: invert(19%) sepia(66%) saturate(6926%) hue-rotate(262deg)
+        brightness(109%) contrast(110%);
 }
 
 #valid-status {
@@ -127,7 +143,7 @@ input {
 }
 
 .flex-container-button {
-    margin-top: 15%;
+    margin-top: 5rem;
     display: flex;
     flex-direction: row;
     justify-content: center;
