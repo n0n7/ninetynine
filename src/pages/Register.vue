@@ -1,6 +1,6 @@
 <template>
     <div class="form-container">
-        <h1>Register</h1>
+        <h1>Sign up</h1>
         <form class="register-form">
             <div class="form-input-container">
                 <label
@@ -54,14 +54,11 @@
                     @input="clearErrorConfirmPassword()"
                 />
             </div>
-            <button type="submit" @click.prevent="register">Register</button>
-            <label id="error-message" class="text-error" v-if="isError">{{
-                errorMessage
-            }}</label>
-            <div class="form-router">
-                <router-link to="/login">Already have an account?</router-link>
-            </div>
         </form>
+        <button type="submit" @click.prevent="register">Register</button>
+        <label id="error-message" class="text-error" v-if="isError">{{
+            errorMessage
+        }}</label>
     </div>
 </template>
 
@@ -76,7 +73,7 @@ export default {
             isPasswordValid: true,
             isConfirmPasswordValid: true,
             errorMessage: "",
-        }
+        };
     },
     computed: {
         isError() {
@@ -84,27 +81,27 @@ export default {
                 !this.isUsernameValid ||
                 !this.isPasswordValid ||
                 !this.isConfirmPasswordValid
-            )
+            );
         },
     },
     methods: {
         register() {
             // print username and password to console
-            console.log(this.username, this.password, this.confirmPassword)
+            console.log(this.username, this.password, this.confirmPassword);
 
             // check if form is valid
             if (!this.verifyUsername(this.username)) {
-                return
+                return;
             }
 
             if (!this.verifyPassword(this.password)) {
-                return
+                return;
             }
 
             if (
                 !this.verifyConfirmPassword(this.password, this.confirmPassword)
             ) {
-                return
+                return;
             }
 
             // send username and password
@@ -112,56 +109,68 @@ export default {
                 "register" + this.username,
                 this.password,
                 this.confirmPassword
-            )
+            );
         },
         verifyUsername(username) {
             if (username.length < 6) {
-                this.isUsernameValid = false
-                this.errorMessage = "Username must be at least 6 characters"
-                return false
+                this.isUsernameValid = false;
+                this.errorMessage = "Username must be at least 6 characters";
+                return false;
             }
-            return true
+            return true;
         },
         verifyPassword(password) {
             if (password.length < 8) {
-                this.isPasswordValid = false
-                this.errorMessage = "Password must be at least 8 characters"
-                return false
+                this.isPasswordValid = false;
+                this.errorMessage = "Password must be at least 8 characters";
+                return false;
             }
-            return true
+            return true;
         },
         verifyConfirmPassword(password, confirmPassword) {
             if (password !== confirmPassword) {
-                this.isConfirmPasswordValid = false
-                this.errorMessage = "Passwords do not match"
-                return false
+                this.isConfirmPasswordValid = false;
+                this.errorMessage = "Passwords do not match";
+                return false;
             }
-            return true
+            return true;
         },
         clearErrorUsername() {
-            this.isUsernameValid = true
+            this.isUsernameValid = true;
         },
         clearErrorPassword() {
-            this.isPasswordValid = true
+            this.isPasswordValid = true;
         },
         clearErrorConfirmPassword() {
-            this.isConfirmPasswordValid = true
-        }
+            this.isConfirmPasswordValid = true;
+        },
     },
-}
+};
 </script>
 
 <style scoped>
 h1 {
-    color: black;
+    color: white;
+}
+
+label {
+    color: white;
+}
+
+input {
+    color: white;
+    background-color: #4e4f50;
+    border-radius: 7px;
 }
 
 button {
-    width: 100%;
+    width: 10%;
+    height: 5%;
     padding: 5px;
+    background-color: #a35bff;
+    color: white;
     border-radius: 10px;
     border: 2px solid black;
-    margin-bottom: 10px;
 }
 
 button:hover {
@@ -189,8 +198,10 @@ button:active {
 .register-form {
     flex-direction: column;
     text-align: center;
-    padding: 10px;
-    min-width: 300px;
+    background-color: #242526;
+    padding: 10px 10px 0px 10px;
+    min-width: 350px;
+    margin-bottom: 20px;
 }
 
 .form-router {

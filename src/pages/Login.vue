@@ -126,7 +126,6 @@ button {
     color: white;
     border-radius: 10px;
     border: 2px solid black;
-    margin-bottom: 10px;
 }
 
 button:hover {
@@ -140,7 +139,7 @@ button:active {
 
 input {
     color: white;
-    background-color: #4E4F50;
+    background-color: #4e4f50;
     border-radius: 7px;
 }
 
@@ -164,7 +163,7 @@ input {
     background-color: #242526;
     padding: 10px;
     min-width: 300px;
-    margin-bottom: 10px;
+    margin-bottom: 20px;
 }
 
 .form-router {
