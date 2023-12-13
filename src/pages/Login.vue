@@ -17,7 +17,7 @@
                     v-model="username"
                     placeholder="username"
                     :class="{ 'input-error': !isUsernameValid }"
-                    @input="clearError('isUsernameValid')"
+                    @input="clearErrorUsername()"
                 />
             </div>
             <div class="form-input-container">
@@ -34,19 +34,20 @@
                     v-model="password"
                     placeholder="password"
                     :class="{ 'input-error': !isPasswordValid }"
-                    @input="clearError('isPasswordValid')"
+                    @input="clearErrorPassword()"
                 />
             </div>
-            <button type="submit" @click.prevent="login">Login</button>
-            <label id="error-message" class="text-error" v-if="!isError">{{
-                errorMessage
-            }}</label>
             <!--register-->
             <div class="form-router">
-                <router-link to="/register">Don't have an account?</router-link>
-                <router-link to="/register">Forgot Password</router-link>
+                <router-link to="/register">
+                    <label class="label-router"> Don't have an account? </label>
+                </router-link>
             </div>
         </form>
+        <button type="submit" @click.prevent="login">Login</button>
+        <label id="error-message" class="text-error" v-if="isError">{{
+            errorMessage
+        }}</label>
     </div>
 </template>
 
@@ -59,61 +60,70 @@ export default {
             isUsernameValid: true,
             isPasswordValid: true,
             errorMessage: "",
-        }
+        };
     },
     computed: {
         isError() {
-            return this.isUsernameValid && this.isPasswordValid
+            return !this.isUsernameValid || !this.isPasswordValid;
         },
     },
     methods: {
         login() {
             // print username and password to console
-            console.log(this.username, this.password)
+            console.log(this.username, this.password);
 
             // check if username is valid
             if (!this.verifyUsername(this.username)) {
-                this.isUsernameValid = false
-                this.errorMessage = "Username or Password is invalid"
-                console.log("username is invalid")
+                this.isUsernameValid = false;
+                this.errorMessage = "Username or Password is invalid";
+                console.log("username is invalid");
             }
 
             // check if password is valid
             if (!this.verifyPassword(this.password)) {
-                this.isPasswordValid = false
-                this.errorMessage = "Username or Password is invalid"
-                console.log("password is invalid")
+                this.isPasswordValid = false;
+                this.errorMessage = "Username or Password is invalid";
+                console.log("password is invalid");
             }
 
             // if username and password are valid, login
             if (this.isUsernameValid && this.isPasswordValid) {
-                console.log("login")
+                console.log("login");
             }
         },
         verifyUsername(username) {
             // check if username is valid
-            return username.length > 0
+            return username.length > 0;
         },
         verifyPassword(password) {
             // check if password is valid
-            return password.length > 0
+            return password.length > 0;
         },
-        clearError(error) {
-            // clear error
-            this[error] = true
+        clearErrorUsername() {
+            this.isUsernameValid = true;
+        },
+        clearErrorPassword() {
+            this.isPasswordValid = true;
         },
     },
-}
+};
 </script>
 
 <style scoped>
 h1 {
-    color: black;
+    color: white;
+}
+
+label {
+    color: white;
 }
 
 button {
-    width: 100%;
+    width: 10%;
+    height: 5%;
     padding: 5px;
+    background-color: #a35bff;
+    color: white;
     border-radius: 10px;
     border: 2px solid black;
     margin-bottom: 10px;
@@ -127,6 +137,13 @@ button:hover {
 button:active {
     filter: brightness(80%);
 }
+
+input {
+    color: white;
+    background-color: #4E4F50;
+    border-radius: 7px;
+}
+
 .form-container {
     display: flex;
     flex-direction: column;
@@ -144,16 +161,26 @@ button:active {
 .login-form {
     flex-direction: column;
     text-align: center;
+    background-color: #242526;
     padding: 10px;
     min-width: 300px;
+    margin-bottom: 10px;
 }
 
 .form-router {
     display: flex;
-    justify-content: space-between;
-    align-items: center;
+    justify-content: flex-end;
     width: 100%;
     margin-top: 10px;
+}
+
+.label-router {
+    color: white;
+}
+
+.label-router:hover {
+    cursor: pointer;
+    filter: brightness(80%);
 }
 
 .input-error {

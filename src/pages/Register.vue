@@ -16,7 +16,7 @@
                     v-model="username"
                     placeholder="username"
                     :class="{ 'input-error': !isUsernameValid }"
-                    @input="clearError('isUsernameValid')"
+                    @input="clearErrorUsername()"
                 />
             </div>
             <div class="form-input-container">
@@ -33,7 +33,7 @@
                     v-model="password"
                     placeholder="password"
                     :class="{ 'input-error': !isPasswordValid }"
-                    @input="clearError('isPasswordValid')"
+                    @input="clearErrorPassword()"
                 />
             </div>
             <!--confirm password-->
@@ -51,11 +51,11 @@
                     v-model="confirmPassword"
                     placeholder="confirm password"
                     :class="{ 'input-error': !isConfirmPasswordValid }"
-                    @input="clearError('isConfirmPasswordValid')"
+                    @input="clearErrorConfirmPassword()"
                 />
             </div>
             <button type="submit" @click.prevent="register">Register</button>
-            <label id="error-message" class="text-error" v-if="!isError">{{
+            <label id="error-message" class="text-error" v-if="isError">{{
                 errorMessage
             }}</label>
             <div class="form-router">
@@ -81,9 +81,9 @@ export default {
     computed: {
         isError() {
             return (
-                this.isUsernameValid &&
-                this.isPasswordValid &&
-                this.isConfirmPasswordValid
+                !this.isUsernameValid ||
+                !this.isPasswordValid ||
+                !this.isConfirmPasswordValid
             )
         },
     },
@@ -138,9 +138,15 @@ export default {
             }
             return true
         },
-        clearError(error) {
-            this[error] = true
+        clearErrorUsername() {
+            this.isUsernameValid = true
         },
+        clearErrorPassword() {
+            this.isPasswordValid = true
+        },
+        clearErrorConfirmPassword() {
+            this.isConfirmPasswordValid = true
+        }
     },
 }
 </script>
