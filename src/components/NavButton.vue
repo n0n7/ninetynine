@@ -1,7 +1,7 @@
 <template>
   <div>
     <router-link :to="to">
-      <button>{{ text }}</button>
+      <button :disabled="!enable">{{ text }}</button>
     </router-link>
   </div>
 </template>
@@ -18,6 +18,10 @@ export default {
       type: String,
       required: true,
     },
+    enable: {
+      type: Boolean,
+      default: true,
+    },
   },
 };
 </script>
@@ -32,7 +36,12 @@ button {
   width: 13rem;
   height: 5rem;
 }
+
 button:hover {
   background: #8222ff;
+}
+
+button:disabled {
+  background: #aaaaaa;
 }
 </style>

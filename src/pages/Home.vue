@@ -32,16 +32,17 @@
         padding-left: 10px;
     }
 
-    .flex-container-button{
+    .flex-container-button {
+        margin-top: 15%;
         display: flex;
-        justify-content: center;
         flex-direction: row;
+        justify-content: center;
         flex-wrap: wrap;
-        gap: 10%
+        column-gap: 8vw;
     }
 
-    .flex-item-button{
-        margin: 0.5rem 0rem;
+    .flex-item-button {
+        margin-bottom: 0.5rem;
     }
 
 </style>
