@@ -1,5 +1,5 @@
 <template>
-    <div>room page {{  roomId }}</div>
+    <div>room page {{ roomId }}</div>
 </template>
 
 <script>

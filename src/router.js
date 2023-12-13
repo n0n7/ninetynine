@@ -16,7 +16,7 @@ const routes = [
     { path: "/gamestats", component: GameStatsPage },
     { path: "/accountsetting", component: AccountSettingPage },
     { path: "/room/:roomId?", component: RoomPage, props: true },
-    { path: "/joinroom", component: JoinRoom}
+    { path: "/joinroom", component: JoinRoom },
 ]
 
 const router = createRouter({

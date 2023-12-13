@@ -3,44 +3,61 @@
         <h1>Register</h1>
         <form class="register-form">
             <div class="form-input-container">
-                <label for="username" :class="{'text-error': !isUsernameValid }"> Username </label>
+                <label
+                    for="username"
+                    :class="{ 'text-error': !isUsernameValid }"
+                >
+                    Username
+                </label>
                 <input
                     type="text"
                     id="username"
                     name="username"
                     v-model="username"
                     placeholder="username"
-                    :class="{'input-error': !isUsernameValid }"
+                    :class="{ 'input-error': !isUsernameValid }"
                     @input="clearError('isUsernameValid')"
                 />
             </div>
             <div class="form-input-container">
-                <label for="password" :class="{'text-error': !isPasswordValid}"> Password </label>
+                <label
+                    for="password"
+                    :class="{ 'text-error': !isPasswordValid }"
+                >
+                    Password
+                </label>
                 <input
                     type="password"
                     id="password"
                     name="password"
                     v-model="password"
                     placeholder="password"
-                    :class="{'input-error': !isPasswordValid }"
+                    :class="{ 'input-error': !isPasswordValid }"
                     @input="clearError('isPasswordValid')"
                 />
             </div>
             <!--confirm password-->
             <div class="form-input-container">
-                <label for="confirm-password" :class="{'text-error': !isConfirmPasswordValid}"> Confirm Password </label>
+                <label
+                    for="confirm-password"
+                    :class="{ 'text-error': !isConfirmPasswordValid }"
+                >
+                    Confirm Password
+                </label>
                 <input
                     type="password"
                     id="confirm-password"
                     name="confirm-password"
                     v-model="confirmPassword"
                     placeholder="confirm password"
-                    :class="{'input-error': !isConfirmPasswordValid }"
+                    :class="{ 'input-error': !isConfirmPasswordValid }"
                     @input="clearError('isConfirmPasswordValid')"
                 />
             </div>
             <button type="submit" @click.prevent="register">Register</button>
-            <label id="error-message" class="text-error" v-if="!isError">{{ errorMessage }}</label>
+            <label id="error-message" class="text-error" v-if="!isError">{{
+                errorMessage
+            }}</label>
             <div class="form-router">
                 <router-link to="/login">Already have an account?</router-link>
             </div>
@@ -58,13 +75,17 @@ export default {
             isUsernameValid: true,
             isPasswordValid: true,
             isConfirmPasswordValid: true,
-            errorMessage: ""
+            errorMessage: "",
         }
     },
     computed: {
         isError() {
-            return this.isUsernameValid && this.isPasswordValid && this.isConfirmPasswordValid
-        }
+            return (
+                this.isUsernameValid &&
+                this.isPasswordValid &&
+                this.isConfirmPasswordValid
+            )
+        },
     },
     methods: {
         register() {
@@ -80,13 +101,18 @@ export default {
                 return
             }
 
-            if (!this.verifyConfirmPassword(this.password, this.confirmPassword)) {
+            if (
+                !this.verifyConfirmPassword(this.password, this.confirmPassword)
+            ) {
                 return
             }
 
             // send username and password
-            console.log("register" + this.username, this.password, this.confirmPassword)
-
+            console.log(
+                "register" + this.username,
+                this.password,
+                this.confirmPassword
+            )
         },
         verifyUsername(username) {
             if (username.length < 6) {
@@ -114,7 +140,7 @@ export default {
         },
         clearError(error) {
             this[error] = true
-        }
+        },
     },
 }
 </script>

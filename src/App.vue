@@ -10,14 +10,13 @@ import Navbar from "./components/NavBar.vue"
 </template>
 
 <style>
-    @import url('https://fonts.googleapis.com/css2?family=Monda&display=swap');
-    
-    *{
-        font-family: 'Monda', sans-serif;
-        
-    }
+@import url("https://fonts.googleapis.com/css2?family=Monda&display=swap");
 
-    html{
-        background: #18191A;
-    }
+* {
+    font-family: "Monda", sans-serif;
+}
+
+html {
+    background: #18191a;
+}
 </style>
