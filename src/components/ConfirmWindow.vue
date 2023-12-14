@@ -39,7 +39,7 @@ export default {
     },
     methods: {
         closeWindow() {
-            this.$emit("close");
+            this.$emit("closeWindow");
         },
         doShake() {
             this.isShaking = true;
