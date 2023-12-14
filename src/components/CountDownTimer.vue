@@ -17,13 +17,13 @@ export default {
 <style scoped>
 @keyframes momentum-rotate {
     20% {
-        transform: rotate(40deg);
+        transform: rotate(50deg);
     }
     50% {
         transform: rotate(-180deg);
     }
     70% {
-        transform: rotate(-220deg);
+        transform: rotate(-230deg);
     }
     100% {
         transform: rotate(0deg);

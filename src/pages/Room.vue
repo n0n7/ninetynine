@@ -8,10 +8,16 @@
             {{
                 currentPlayerIdx === null
                     ? "Not started yet"
-                    : playerList[currentPlayerIdx].name
+                    : playerList[currentPlayerIdx].username
             }}
         </p>
         <CountDownTimer :timer="timer" />
+    </div>
+    <div class="dropdown-menu">
+        <DropDownMenu @openWindow="toggleWindow()" />
+    </div>
+    <div>
+        <ConfirmWindow :isVisible="isWindowShow" @closeWindow="toggleWindow()" />
     </div>
     <div class="player-list-bar-right">
         <RoomPlayerListBar
@@ -24,6 +30,8 @@
 <script>
 import CountDownTimer from "/src/components/CountDownTimer.vue";
 import RoomPlayerListBar from "/src/components/RoomPlayerListBar.vue";
+import DropDownMenu from "/src/components/DropDownMenu.vue"
+import ConfirmWindow from "/src/components/ConfirmWindow.vue";
 export default {
     props: {
         roomId: {
@@ -34,6 +42,8 @@ export default {
     components: {
         RoomPlayerListBar,
         CountDownTimer,
+        ConfirmWindow,
+        DropDownMenu
     },
     data() {
         return {
@@ -43,14 +53,18 @@ export default {
 
             // These should put in the props (wait for backend)
             playerList: [
-                { name: "Nattee" },
-                { name: "TeaChanathip" },
-                { name: "AzusaChan~~~" },
-                { name: "Random Guy 6969" },
-            ], // A player object may contains profile picture, name, etc
-            currentPlayerIdx: null, // Index of the current player
-            myPlayerIdx: 1, // Index of this player
+                { userId: "", username: "Nattee", profilePicURL: "" },
+                { userId: "", username: "TeaChanathip", profilePicURL: "" },
+                { userId: "", username: "AzusaChan~~~", profilePicURL: "" },
+                { userId: "", username: "Random Guy 6969", profilePicURL: "" },
+            ],
+            currentPlayerIdx: null,
+            myPlayerIdx: 1, // temporary
+            currentStackValue: 0,
             direction: 1,
+            myCards: [],
+
+            isWindowShow: false,
         };
     },
     methods: {
@@ -74,6 +88,9 @@ export default {
                         this.totalPlayer;
                 }
             }, this.playTime * 100);
+        },
+        toggleWindow() {
+            this.isWindowShow = !this.isWindowShow;
         },
     },
     computed: {
@@ -124,4 +141,15 @@ export default {
     position: absolute;
     top: 50vh;
 }
+
+.dropdown-menu {
+    display: flex;
+    flex-direction: column;
+    align-items: right;
+    justify-content: center;
+
+    position: absolute;
+    right: 0%;
+}
+
 </style>

@@ -5,7 +5,7 @@
             v-for="(item, idx) in playerList"
             key="idx"
         >
-            {{ item.name }}
+            {{ item.username }}
         </li>
     </ul>
 </template>

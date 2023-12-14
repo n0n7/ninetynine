@@ -16,7 +16,7 @@ export default {
         },
         to: {
             type: String,
-            required: true,
+            default: ""
         },
         enable: {
             type: Boolean,
