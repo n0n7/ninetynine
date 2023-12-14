@@ -1,5 +1,5 @@
 <script setup>
-import Navbar from "./components/NavBar.vue"
+import Navbar from "./components/NavBar.vue";
 </script>
 
 <template>
@@ -18,5 +18,14 @@ import Navbar from "./components/NavBar.vue"
 
 html {
     background: #18191a;
+}
+
+::-webkit-scrollbar {
+    width: 3px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #a35bff;
+    border-radius: 10px;
 }
 </style>
