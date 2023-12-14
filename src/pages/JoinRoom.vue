@@ -4,7 +4,7 @@
         <form @submit.prevent="searchRoomID()">
             <input
                 :class="
-                    isRoomIDValid == null
+                    isRoomIDValid === null
                         ? ''
                         : isRoomIDValid
                         ? 'input-valid'
@@ -30,14 +30,14 @@
         <NavButton
             class="flex-item-button"
             text="Join"
-            :to="'/room/' + roomID"
+            :to="'/lobby/' + roomID"
             :enable="isRoomIDValid"
         />
         <NavButton
             class="flex-item-button"
             text="Spectate"
-            :to="'/room/' + roomID"
-            :enable="isRoomIDValid"
+            :to="'/lobby/' + roomID"
+            :enable="false"
         />
     </div>
 </template>
