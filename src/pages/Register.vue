@@ -4,6 +4,23 @@
         <form class="register-form">
             <div class="form-input-container">
                 <label
+                    for="email"
+                    :class="{ 'text-error': !isEmailValid }"
+                >
+                    Email
+                </label>
+                <input
+                    type="text"
+                    id="email"
+                    name="email"
+                    v-model="email"
+                    placeholder="email"
+                    :class="{ 'input-error': !isEmailValid }"
+                    @input="clearErrorEmail()"
+                />
+            </div>
+            <div class="form-input-container">
+                <label
                     for="username"
                     :class="{ 'text-error': !isUsernameValid }"
                 >
@@ -66,9 +83,11 @@
 export default {
     data() {
         return {
+            email: "",
             username: "",
             password: "",
             confirmPassword: "",
+            isEmailValid: true,
             isUsernameValid: true,
             isPasswordValid: true,
             isConfirmPasswordValid: true,
@@ -78,6 +97,7 @@ export default {
     computed: {
         isError() {
             return (
+                !this.isEmailValid ||
                 !this.isUsernameValid ||
                 !this.isPasswordValid ||
                 !this.isConfirmPasswordValid
@@ -87,9 +107,12 @@ export default {
     methods: {
         register() {
             // print username and password to console
-            console.log(this.username, this.password, this.confirmPassword);
+            console.log(this.email, this.username, this.password, this.confirmPassword);
 
             // check if form is valid
+            if (!this.verifyEmail(this.email)) {
+                return;
+            }
             if (!this.verifyUsername(this.username)) {
                 return;
             }
@@ -110,6 +133,14 @@ export default {
                 this.password,
                 this.confirmPassword
             );
+        },
+        verifyEmail(email) {
+            if (email.length < 1) {
+                this.isEmailValid = false;
+                this.errorMessage = "Email must not be empty";
+                return false;
+            }
+            return true;
         },
         verifyUsername(username) {
             if (username.length < 6) {
@@ -134,6 +165,9 @@ export default {
                 return false;
             }
             return true;
+        },
+        clearErrorEmail() {
+            this.isEmailValid = true;
         },
         clearErrorUsername() {
             this.isUsernameValid = true;
@@ -171,6 +205,7 @@ button {
     color: white;
     border-radius: 10px;
     border: 2px solid black;
+    margin-bottom: 10px;
 }
 
 button:hover {

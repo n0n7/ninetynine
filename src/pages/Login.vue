@@ -5,19 +5,19 @@
         <form class="login-form">
             <div class="form-input-container">
                 <label
-                    for="username"
-                    :class="{ 'text-error': !isUsernameValid }"
+                    for="email"
+                    :class="{ 'text-error': !isEmailValid }"
                 >
-                    Username
+                    Email
                 </label>
                 <input
                     type="text"
-                    id="username"
-                    name="username"
-                    v-model="username"
-                    placeholder="username"
-                    :class="{ 'input-error': !isUsernameValid }"
-                    @input="clearErrorUsername()"
+                    id="email"
+                    name="email"
+                    v-model="email"
+                    placeholder="email"
+                    :class="{ 'input-error': !isEmailValid }"
+                    @input="clearErrorEmail()"
                 />
             </div>
             <div class="form-input-container">
@@ -55,52 +55,52 @@
 export default {
     data() {
         return {
-            username: "",
+            email: "",
             password: "",
-            isUsernameValid: true,
+            isEmailValid: true,
             isPasswordValid: true,
             errorMessage: "",
         };
     },
     computed: {
         isError() {
-            return !this.isUsernameValid || !this.isPasswordValid;
+            return !this.isEmailValid || !this.isPasswordValid;
         },
     },
     methods: {
         login() {
             // print username and password to console
-            console.log(this.username, this.password);
+            console.log(this.email, this.password);
 
             // check if username is valid
-            if (!this.verifyUsername(this.username)) {
-                this.isUsernameValid = false;
-                this.errorMessage = "Username or Password is invalid";
-                console.log("username is invalid");
+            if (!this.verifyEmail(this.email)) {
+                this.isEmailValid = false;
+                this.errorMessage = "Email or Password is invalid";
+                console.log("Email is invalid");
             }
 
             // check if password is valid
             if (!this.verifyPassword(this.password)) {
                 this.isPasswordValid = false;
-                this.errorMessage = "Username or Password is invalid";
+                this.errorMessage = "Email or Password is invalid";
                 console.log("password is invalid");
             }
 
             // if username and password are valid, login
-            if (this.isUsernameValid && this.isPasswordValid) {
+            if (this.isEmailValid && this.isPasswordValid) {
                 console.log("login");
             }
         },
-        verifyUsername(username) {
+        verifyEmail(email) {
             // check if username is valid
-            return username.length > 0;
+            return email.length > 0;
         },
         verifyPassword(password) {
             // check if password is valid
             return password.length > 0;
         },
-        clearErrorUsername() {
-            this.isUsernameValid = true;
+        clearErrorEmail() {
+            this.isEmailValid = true;
         },
         clearErrorPassword() {
             this.isPasswordValid = true;
@@ -126,6 +126,7 @@ button {
     color: white;
     border-radius: 10px;
     border: 2px solid black;
+    margin-bottom: 10px;
 }
 
 button:hover {
