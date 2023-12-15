@@ -116,7 +116,7 @@ h1 {
     align-items: center;
     background-color: #2f3136;
     border-radius: 0px 5px 5px 0px;
-    margin-bottom: 10px;
+    margin-bottom: 15px;
     padding: 10px;
     background-color: #462472;
 }
@@ -124,6 +124,11 @@ h1 {
 .p-info:hover {
     cursor: pointer;
     filter: brightness(90%)
+}
+
+.p-info p {
+    color: white;
+    font-size: 24px;
 }
 .flex-container-button {
     margin-top: 30px;

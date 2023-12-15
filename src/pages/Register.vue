@@ -3,10 +3,7 @@
         <h1>Sign up</h1>
         <form class="register-form">
             <div class="form-input-container">
-                <label
-                    for="email"
-                    :class="{ 'text-error': !isEmailValid }"
-                >
+                <label for="email" :class="{ 'text-error': !isEmailValid }">
                     Email
                 </label>
                 <input
@@ -107,7 +104,12 @@ export default {
     methods: {
         register() {
             // print username and password to console
-            console.log(this.email, this.username, this.password, this.confirmPassword);
+            console.log(
+                this.email,
+                this.username,
+                this.password,
+                this.confirmPassword
+            );
 
             // check if form is valid
             if (!this.verifyEmail(this.email)) {
@@ -128,11 +130,7 @@ export default {
             }
 
             // send username and password
-            console.log(
-                "register" + this.username,
-                this.password,
-                this.confirmPassword
-            );
+            console.log("register");
         },
         verifyEmail(email) {
             if (email.length < 1) {
@@ -140,20 +138,42 @@ export default {
                 this.errorMessage = "Email must not be empty";
                 return false;
             }
+            const emailRegex =
+                /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+            if (!emailRegex.test(email)) {
+                this.isEmailValid = false;
+                this.errorMessage = "Email is invalid";
+                return false;
+            }
             return true;
         },
         verifyUsername(username) {
-            if (username.length < 6) {
+            if (username.includes(" ")) {
                 this.isUsernameValid = false;
-                this.errorMessage = "Username must be at least 6 characters";
+                this.errorMessage = "Username must not contain spaces";
+                return false;
+            }
+            if (username.length < 4) {
+                this.isUsernameValid = false;
+                this.errorMessage = "Username must be at least 4 characters";
+                return false;
+            }
+            if (username.length > 20) {
+                this.isUsernameValid = false;
+                this.errorMessage = "Username must be less than 20 characters";
                 return false;
             }
             return true;
         },
         verifyPassword(password) {
-            if (password.length < 8) {
+            if (password.length < 6) {
                 this.isPasswordValid = false;
-                this.errorMessage = "Password must be at least 8 characters";
+                this.errorMessage = "Password must be at least 6 characters";
+                return false;
+            }
+            if (password.length > 20) {
+                this.isPasswordValid = false;
+                this.errorMessage = "Password must be less than 20 characters";
                 return false;
             }
             return true;
