@@ -14,14 +14,18 @@
                 </router-link>
                 <ul class="nav-ul">
                     <li class="nav-list">
-                        <a href="/"> Home </a>
+                        <router-link to="/">
+                            <a> Home </a>
+                        </router-link>
                     </li>
                 </ul>
             </div>
             <div id="nav-profile">
                 <ul class="nav-ul">
                     <li class="nav-list">
-                        <a href="/login"> Login </a>
+                        <router-link to="/login">
+                            <a> Login </a>
+                        </router-link>
                     </li>
                     <router-link to="/AccountSetting">
                         <img
