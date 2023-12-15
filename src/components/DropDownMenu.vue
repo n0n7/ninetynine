@@ -2,9 +2,7 @@
     <img class="menu-icon" @click="toggleMenu()" src="/menu.svg" />
     <div
         :class="
-            isMenuShow
-                ? 'menu-list menu-list-show'
-                : 'menu-list menu-list-hide'
+            isMenuShow ? 'menu-list menu-list-show' : 'menu-list menu-list-hide'
         "
     >
         <button class="button-menu">How to Play?</button>
@@ -16,18 +14,18 @@
 export default {
     data() {
         return {
-            isMenuShow: false
-        }
+            isMenuShow: false,
+        };
     },
     methods: {
         toggleMenu() {
             this.isMenuShow = !this.isMenuShow;
         },
         toggleWindow() {
-            this.$emit("openWindow")
-        }
-    }
-}
+            this.$emit("openWindow");
+        },
+    },
+};
 </script>
 
 <style scoped>

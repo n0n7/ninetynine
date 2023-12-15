@@ -1,6 +1,8 @@
 <template>
-    <img src="/hourglass.svg" />
-    <p>{{ timer }}</p>
+    <div>
+        <img src="/hourglass.svg" />
+        <p>{{ timer }}</p>
+    </div>
 </template>
 
 <script>
@@ -34,15 +36,13 @@ img {
     display: inline;
     width: 3rem;
     height: 3rem;
-    vertical-align: middle;
-
     animation: momentum-rotate 2s ease-in-out infinite;
 }
 
 p {
     display: inline;
     font-size: 3rem;
-    margin: 0;
+    margin-left: 0.5rem;
     color: white;
 }
 </style>
