@@ -88,6 +88,7 @@ export default {
             isUsernameValid: true,
             isPasswordValid: true,
             isConfirmPasswordValid: true,
+            isResponsePassed: true,
             errorMessage: "",
         };
     },
@@ -97,12 +98,17 @@ export default {
                 !this.isEmailValid ||
                 !this.isUsernameValid ||
                 !this.isPasswordValid ||
-                !this.isConfirmPasswordValid
+                !this.isConfirmPasswordValid ||
+                !this.isResponsePassed
             );
         },
     },
     methods: {
-        register() {
+        async register() {
+            // clear error message
+            this.errorMessage = "";
+            this.isResponsePassed = true;
+
             // print username and password to console
             console.log(
                 this.email,
@@ -129,8 +135,36 @@ export default {
                 return;
             }
 
-            // send username and password
-            console.log("register");
+            // post data to server
+            const response = await fetch("http://localhost:8080/register", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    username: this.username,
+                    email: this.email,
+                    password: this.password,
+                }),
+            });
+            console.log(response);
+            const data = await response.json();
+            console.log(data);
+
+            // clear form
+            if(data.error === undefined){
+                this.clearForm();
+
+                // template literal
+                this.$router.push("/login");
+                //
+            }
+
+            // display error message
+            else {
+                this.isResponsePassed = false;
+                this.errorMessage = data.error;
+            }
         },
         verifyEmail(email) {
             if (email.length < 1) {
@@ -198,6 +232,16 @@ export default {
         clearErrorConfirmPassword() {
             this.isConfirmPasswordValid = true;
         },
+        clearForm() {
+            this.email = "";
+            this.username = "";
+            this.password = "";
+            this.confirmPassword = "";
+            this.isEmailValid = true;
+            this.isUsernameValid = true;
+            this.isPasswordValid = true;
+            this.isConfirmPasswordValid = true;
+        },  
     },
 };
 </script>

@@ -9,6 +9,17 @@ import Navbar from "./components/NavBar.vue";
     </div>
 </template>
 
+<script>
+export default {
+    data() {
+        return {
+            user: null,
+            userData: null,
+        };
+    },
+};
+</script>
+
 <style>
 @import url("https://fonts.googleapis.com/css2?family=Monda&display=swap");
 
