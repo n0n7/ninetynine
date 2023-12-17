@@ -7,19 +7,24 @@
         >
             <h2 v-show="isPlayerOut[idx]" v-if="side === 'right'">Out!</h2>
             <div :class="getPlayerFrameClass(idx)">
-                <p
-                    class="timer"
-                    v-if="side === 'right' && idx === currentPlayerIdx"
-                >
-                    {{ timer }}
-                </p>
-                <img class="profile-pic" :src="item.profilePicURL" />
-                <p
-                    class="timer"
-                    v-if="side === 'left' && idx === currentPlayerIdx"
-                >
-                    {{ timer }}
-                </p>
+                <transition>
+                    <p
+                        class="timer"
+                        v-if="side === 'right' && idx === currentPlayerIndex"
+                    >
+                        {{ timer }}
+                    </p>
+                </transition>
+                <img class="profile-pic" :src="item.playerAvatarURL" />
+                <!-- {{getPlayerFrameClass(idx)}} -->
+                <transition>
+                    <p
+                        class="timer"
+                        v-if="side === 'left' && idx === currentPlayerIndex"
+                    >
+                        {{ timer }}
+                    </p>
+                </transition>
             </div>
             <h2 v-show="isPlayerOut[idx]" v-if="side === 'left'">Out!</h2>
         </div>
@@ -37,7 +42,7 @@ export default {
             type: Array,
             required: true,
         },
-        currentPlayerIdx: {
+        currentPlayerIndex: {
             type: Number,
             default: null,
         },
@@ -51,10 +56,9 @@ export default {
             let classes = "player-frame " + this.side + " ";
             if (this.isPlayerOut[idx]) {
                 classes = classes + "out ";
-            } else if (idx === this.currentPlayerIdx) {
+            } else if (idx === this.currentPlayerIndex) {
                 classes = classes + "highlighted";
             }
-            console.log(classes);
             return classes;
         },
     },
@@ -71,7 +75,7 @@ export default {
     color: white;
     display: flex;
     flex-direction: column;
-    row-gap: 1.5rem;
+    row-gap: 2vh;
 }
 
 .player-bar {
@@ -90,28 +94,19 @@ export default {
     align-content: center;
 
     background: #a35bff;
-    /* padding: 0.3rem 1.5rem; */
-    width: 8rem;
+    width: 14vh;
     transition: width 0.5s ease;
 }
 
 .player-frame.left {
-    border-top-right-radius: 8px;
-    border-bottom-right-radius: 8px;
+    border-top-right-radius: 1vh;
+    border-bottom-right-radius: 1vh;
 }
 
 .player-frame.right {
-    border-top-left-radius: 8px;
-    border-bottom-left-radius: 8px;
+    border-top-left-radius: 1vh;
+    border-bottom-left-radius: 1vh;
     justify-content: flex-end;
-}
-
-.profile-pic {
-    width: 5rem;
-    height: 5rem;
-    border-radius: 50%;
-    border: 1px solid #4e4f50;
-    margin: 0.3rem 1.5rem;
 }
 
 .out {
@@ -119,18 +114,40 @@ export default {
 }
 
 .highlighted {
-    width: 11.5rem;
+    width: 20vh;
     transition: width 0.5s ease;
 }
 
+.profile-pic {
+    width: 10vh;
+    height: 10vh;
+
+    border-radius: 50%;
+    margin: 1vh 2vh;
+    /* border: 1px solid #8222ff; */
+}
+
 h2 {
-    padding-top: 0.3rem;
+    font-size: 3vh;
+    padding: 0;
+    margin: auto;
+    vertical-align: middle;
 }
 
 .timer {
-    font-size: 3rem;
-    margin-top: 0.5rem;
-    margin-bottom: 0;
+    font-size: 5vh;
+    padding: 0;
+    margin: auto 0;
     color: white;
+}
+
+.v-enter-active,
+.v-leave-active {
+    transition: opacity 0.3s ease;
+}
+
+.v-enter-from,
+.v-leave-to {
+    opacity: 0;
 }
 </style>

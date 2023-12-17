@@ -1,12 +1,16 @@
 <template>
-    <img class="menu-icon" @click="toggleMenu()" src="/menu.svg" />
-    <div
-        :class="
-            isMenuShow ? 'menu-list menu-list-show' : 'menu-list menu-list-hide'
-        "
-    >
-        <button class="button-menu">How to Play?</button>
-        <button class="button-menu" @click="toggleWindow()">Leave</button>
+    <div class="menu-container">
+        <img class="menu-icon" @click="toggleMenu()" src="/menu.svg" />
+        <div
+            :class="
+                isMenuShow
+                    ? 'menu-list menu-list-show'
+                    : 'menu-list menu-list-hide'
+            "
+        >
+            <button class="button-menu" @click="toggleWindow()">Leave</button>
+            <button class="button-menu" :disabled="true">How to Play?</button>
+        </div>
     </div>
 </template>
 
@@ -29,18 +33,25 @@ export default {
 </script>
 
 <style scoped>
+.menu-container {
+    display: flex;
+    flex-direction: column;
+}
+
 .menu-icon {
-    width: 3rem;
-    height: 3rem;
+    width: 6vh;
+    height: 6vh;
     filter: invert(37%) sepia(90%) saturate(2023%) hue-rotate(240deg)
         brightness(103%) contrast(104%);
     cursor: pointer;
 
-    position: relative;
+    position: absolute;
     left: 100%;
-    transform: translate(calc(-100%));
-    padding-right: 1rem;
-    padding-bottom: 0.5rem;
+    transform: translate(-100%);
+    padding-right: 2vh;
+    padding-top: 3vh;
+    z-index: 81;
+    /* padding-bottom: 0.5rem; */
 }
 
 .menu-icon:hover {
@@ -49,18 +60,20 @@ export default {
 }
 
 .menu-list {
-    background: #4e4f50;
-    padding: 1rem;
-    border-top-left-radius: 8px;
-    border-bottom-left-radius: 8px;
+    background: #2c2f32;
+    padding: 1vh;
+    border-top-left-radius: 1vh;
+    border-bottom-left-radius: 1vh;
 
     display: flex;
     flex-direction: row;
-    column-gap: 1rem;
+    column-gap: 1vh;
 
     position: fixed;
-    top: 12.5rem;
+    /* margin-top: 8vh; */
     right: 0;
+    width: 42vh;
+    z-index: 80;
 
     transition: transform 0.5s ease-out;
 }
@@ -74,17 +87,21 @@ export default {
 }
 
 .button-menu {
-    font-size: 1.5rem;
+    font-size: 3vh;
     color: white;
     background: #a35bff;
     border: 0px;
     border-radius: 8px;
-    width: 8rem;
-    height: 5rem;
+    width: 16vh;
+    height: 10vh;
     cursor: pointer;
 }
 
 .button-menu:hover {
     background: #8222ff;
+}
+
+button:disabled {
+    background: #aaaaaa;
 }
 </style>

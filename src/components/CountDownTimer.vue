@@ -34,14 +34,14 @@ export default {
 
 img {
     display: inline;
-    width: 3rem;
-    height: 3rem;
+    width: 6vh;
+    height: 6vh;
     animation: momentum-rotate 2s ease-in-out infinite;
 }
 
 p {
     display: inline;
-    font-size: 3rem;
+    font-size: 6vh;
     margin-left: 0.5rem;
     color: white;
 }
