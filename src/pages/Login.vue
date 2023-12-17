@@ -59,45 +59,91 @@ export default {
             password: "",
             isEmailValid: true,
             isPasswordValid: true,
+            isResponsePassed: true,
             errorMessage: "",
         };
     },
     computed: {
         isError() {
-            return !this.isEmailValid || !this.isPasswordValid;
+            return !this.isEmailValid || !this.isPasswordValid || !this.isResponsePassed;
         },
     },
     methods: {
-        login() {
+        async login() {
             // print username and password to console
             console.log(this.email, this.password);
 
-            // check if username is valid
+            // clear error message
+            this.errorMessage = "";
+            this.isResponsePassed = true;
+
+            // check if email is valid
             if (!this.verifyEmail(this.email)) {
-                this.isEmailValid = false;
-                this.errorMessage = "Email or Password is invalid";
-                console.log("Email is invalid");
+                return;
             }
 
             // check if password is valid
             if (!this.verifyPassword(this.password)) {
-                this.isPasswordValid = false;
-                this.errorMessage = "Email or Password is invalid";
-                console.log("password is invalid");
+                return;
             }
 
             // if username and password are valid, login
             if (this.isEmailValid && this.isPasswordValid) {
-                console.log("login");
+                // post data to server
+                try {
+                    const response = await fetch("http://localhost:8080/login", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify(
+                            {
+                                email: this.email,
+                                password: this.password,
+                            },
+                        ),
+                    });
+                    const data = await response.json();
+                    console.log(data);
+                    if (data.error === undefined) {
+                        this.$router.push("/");
+                    } else {
+                        this.isResponsePassed = false;
+                        this.errorMessage = data.error;
+                    }
+                } catch (error) {
+                    this.isResponsePassed = false;
+                    this.errorMessage = "Cannot connect to server. Please try again later."
+                }
             }
         },
         verifyEmail(email) {
-            // check if username is valid
-            return email.length > 0;
+            if (email.length < 1) {
+                this.isEmailValid = false;
+                this.errorMessage = "Email is invalid";
+                return false;
+            }
+            const emailRegex =
+                /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+            if (!emailRegex.test(email)) {
+                this.isEmailValid = false;
+                this.errorMessage = "Email is invalid";
+                return false;
+            }
+            return true;
         },
         verifyPassword(password) {
-            // check if password is valid
-            return password.length > 0;
+            if (password.length < 6) {
+                this.isPasswordValid = false;
+                this.errorMessage = "Password is invalid";
+                return false;
+            }
+            if (password.length > 20) {
+                this.isPasswordValid = false;
+                this.errorMessage = "Password is invalid";
+                return false;
+            }
+            return true;
         },
         clearErrorEmail() {
             this.isEmailValid = true;

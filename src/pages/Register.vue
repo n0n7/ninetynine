@@ -136,34 +136,38 @@ export default {
             }
 
             // post data to server
-            const response = await fetch("http://localhost:8080/register", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                    username: this.username,
-                    email: this.email,
-                    password: this.password,
-                }),
-            });
-            console.log(response);
-            const data = await response.json();
-            console.log(data);
+            try {
+                const response = await fetch("http://localhost:8080/register", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        username: this.username,
+                        email: this.email,
+                        password: this.password,
+                    }),
+                });
+                console.log(response);
+                const data = await response.json();
+                console.log(data);
 
-            // clear form
-            if(data.error === undefined){
-                this.clearForm();
+                if (data.error === undefined) {
+                    this.clearForm();
 
-                // template literal
-                this.$router.push("/login");
-                //
-            }
+                    // template literal
+                    this.$router.push("/login");
+                    //
+                }
 
-            // display error message
-            else {
+                // display error message
+                else {
+                    this.isResponsePassed = false;
+                    this.errorMessage = data.error;
+                }
+            } catch (error) {
                 this.isResponsePassed = false;
-                this.errorMessage = data.error;
+                this.errorMessage = "Cannot connect to server. Please try again later.";
             }
         },
         verifyEmail(email) {
