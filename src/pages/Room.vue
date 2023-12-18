@@ -38,16 +38,14 @@
             :timer="timer"
         />
     </div>
-    <div class="on-table">
-        <OnTableCard
+    <div class="player-card">
+        <AllCard
+            :playerCards="playerCards"
             :stackValue="stackValue"
             :maxStackValue="maxStackValue"
             :lastPlayedCard="lastPlayedCard"
             @playCard="playCard"
         />
-    </div>
-    <div class="player-card">
-        <OnHandCard :playerCards="playerCards" />
     </div>
 </template>
 
@@ -56,8 +54,7 @@ import CountDownTimer from "/src/components/CountDownTimer.vue";
 import RoomPlayerListBar from "/src/components/RoomPlayerListBar.vue";
 import DropDownMenu from "/src/components/DropDownMenu.vue";
 import ConfirmWindow from "/src/components/ConfirmWindow.vue";
-import OnHandCard from "/src/components/OnHandCard.vue";
-import OnTableCard from "/src/components/OnTableCard.vue";
+import AllCard from "/src/components/AllCard.vue";
 
 export default {
     props: {
@@ -71,8 +68,7 @@ export default {
         CountDownTimer,
         ConfirmWindow,
         DropDownMenu,
-        OnHandCard,
-        OnTableCard,
+        AllCard,
     },
     data() {
         return {
@@ -350,14 +346,6 @@ export default {
 
 .player-card {
     /* z-index: 70; */
-}
-
-.on-table {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    /* z-index: 0; */
 }
 
 .v-enter-active,
