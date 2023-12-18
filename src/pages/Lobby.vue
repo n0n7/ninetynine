@@ -3,7 +3,7 @@
         <h1>Lobby</h1>
         <div class="lobby-id-container">
             <p class="p-gray">Your Room ID:</p>
-            <p class="p-white">{{ roomId }}</p>
+            <p class="p-white">{{ lobbyId }}</p>
             <img src="/copy_icon.png" style="width: 40px" alt="copy" />
         </div>
         <div class="lobby-member-list">
@@ -72,6 +72,9 @@ export default {
                 { name: "Random Guy 6969" },
             ],
         };
+    },
+    props: {
+        lobbyId: String,
     },
     components: {
         NavButton,

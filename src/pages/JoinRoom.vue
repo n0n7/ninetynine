@@ -3,42 +3,23 @@
     <div class="search-bar">
         <form @submit.prevent="searchRoomID()">
             <input
-                :class="
-                    isRoomIDValid === null
-                        ? ''
-                        : isRoomIDValid
-                        ? 'input-valid'
-                        : 'input-invalid'
-                "
+                :class="{'input-invalid': isError}"
                 type="text"
-                placeholder="Room ID: xxxx-xxxx-xxxx"
+                placeholder="Room ID: xxxxxxxxxxxx"
                 maxlength="12"
-                ref="inputRoomID"
+                v-model="roomID"
             />
-            <button class="search-button">
-                <img src="/search.svg" class="search-icon" />
-            </button>
         </form>
     </div>
     <p
-        v-show="isStatusVisible"
-        :id="isRoomIDValid ? 'valid-status' : 'invalid-status'"
+        v-show="isError"
+        id="invalid-status"
     >
         {{ status }}
     </p>
     <div class="flex-container-button">
-        <NavButton
-            class="flex-item-button"
-            text="Join"
-            :to="'/lobby/' + roomID"
-            :enable="isRoomIDValid"
-        />
-        <NavButton
-            class="flex-item-button"
-            text="Spectate"
-            :to="'/lobby/' + roomID"
-            :enable="false"
-        />
+        <NavButton class="flex-item-button" text="Join" @click="joinRoom" />
+        <NavButton class="flex-item-button" text="Spectate" @click="joinRoom" />
     </div>
 </template>
 
@@ -50,23 +31,47 @@ export default {
     },
     data() {
         return {
-            isStatusVisible: false,
-            isRoomIDValid: null,
-            status: "Invalid status message",
+            isError: false,
+            status: "",
             roomID: "",
         };
     },
     methods: {
-        searchRoomID() {
-            this.roomID = this.$refs.inputRoomID.value;
-            this.isStatusVisible = true;
+        async joinRoom() {
+            console.log("joinRoom");
+            this.isError = false;
             if (this.roomID.length < 12) {
-                this.isRoomIDValid = false;
+                this.isError = true;
                 this.status = "Invalid format";
             } else {
-                // Add condition to check if Room ID is available on database
-                this.isRoomIDValid = true;
-                this.status = "Ready to join!";
+                try {
+                    const response = await fetch(
+                        "http://localhost:8080/joinroom",
+                        {
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/json",
+                            },
+                            body: JSON.stringify({
+                                userId: "7gtuWXORKjYzTIhetV4ZknC7orC3",
+                                roomId: this.roomID,
+                            }),
+                        }
+                    );
+                    const data = await response.json();
+                    console.log(data);
+                    if (data.error === undefined) {
+                        this.$router.push("/lobby/" + this.roomID);
+                    } else {
+                        this.isError = true;
+                        //if(data.error === "Invalid user") data.error = "Please login first";
+                        this.status = data.error;
+                    }
+                } catch (error) {
+                    this.isError = true;
+                    this.status =
+                        "Cannot connect to server. Please try again later.";
+                }
             }
         },
     },
