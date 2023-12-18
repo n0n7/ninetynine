@@ -1,10 +1,16 @@
 <template>
-    <div class="container" >
+    <div class="container">
         <div class="stack-value">
-            <p>{{stackValue}}</p>
+            <p>{{ stackValue }}</p>
         </div>
         <div class="top-card">
-            <img :src="topCard.src" @drop="onDrop($event)" @dragenter.prevent @dragover.prevent />
+            <img
+                :src="topCard.src"
+                draggable="false"
+                @drop="onDrop($event)"
+                @dragenter.prevent
+                @dragover.prevent
+            />
         </div>
     </div>
 </template>
@@ -16,23 +22,23 @@ export default {
     props: {
         stackValue: {
             type: Number,
-            required: true
+            required: true,
         },
         maxStackValue: {
             type: Number,
-            default: 99
+            default: 99,
         },
         lastPlayedCard: {
             type: Object,
-            default: null
-        }
+            default: null,
+        },
     },
     methods: {
         test() {
             console.log(test);
-        }
+        },
     },
-    setup(props, {emit}) {
+    setup(props, { emit }) {
         const Neg = ["/cards/Neg10.png", "/cards/Neg9.png"];
         const Pos = [
             "/cards/Pos1.png",
@@ -44,56 +50,59 @@ export default {
             "/cards/Pos7.png",
             "/cards/Pos8.png",
             "/cards/Pos9.png",
-            "/cards/Pos10.png"
+            "/cards/Pos10.png",
         ];
         const Sp = [
             "/cards/Sp0_skip.png",
             "/cards/Sp1_reverse.png",
             "/cards/Sp2_random.png",
-            "/cards/Sp3_set99.png"
+            "/cards/Sp3_set99.png",
         ];
 
         const topCard = computed(() => {
             if (props.lastPlayedCard.isSpecial) {
                 return {
-                    src: Sp[props.lastPlayedCard.value]
+                    src: Sp[props.lastPlayedCard.value],
                 };
             } else if (props.lastPlayedCard.value > 0) {
-                return{
-                    src: Pos[props.lastPlayedCard.value - 1]
+                return {
+                    src: Pos[props.lastPlayedCard.value - 1],
                 };
             } else {
-                return{
-                    src: Sp[props.lastPlayedCard.value + 10]
+                return {
+                    src: Sp[props.lastPlayedCard.value + 10],
                 };
             }
         });
-        
-        const onDrop = ((event) => {
-            const itemID = event.dataTransfer.getData('CardID');
+
+        const onDrop = (event) => {
+            const itemID = event.dataTransfer.getData("CardID");
             console.log(itemID);
             emit("playCard", itemID);
-        });
+        };
 
         return {
             topCard,
-            onDrop
+            onDrop,
         };
-    }
-}
+    },
+};
 </script>
 
 <style scoped>
-
 .container {
     /* background-color: white; */
     display: flex;
     flex-direction: column;
     row-gap: 1vh;
+
+    -webkit-user-select: none; /* Safari */
+    -ms-user-select: none; /* IE 10 and IE 11 */
+    user-select: none; /* Standard syntax */
 }
 
 .stack-value {
-    background: #2C2F32;
+    background: #2c2f32;
     border-radius: 1vh;
 }
 

@@ -8,7 +8,7 @@
         <div
             class="timer-self"
             v-if="receivedData.gameData.currentPlayerIndex === myPlayerIndex"
-        >   
+        >
             <p style="font-size: 6vh">Your turn!</p>
             <CountDownTimer :timer="timer" />
         </div>
@@ -38,11 +38,16 @@
             :timer="timer"
         />
     </div>
+    <div class="on-table">
+        <OnTableCard
+            :stackValue="stackValue"
+            :maxStackValue="maxStackValue"
+            :lastPlayedCard="lastPlayedCard"
+            @playCard="playCard"
+        />
+    </div>
     <div class="player-card">
         <OnHandCard :playerCards="playerCards" />
-    </div>
-    <div class="on-table">
-        <OnTableCard :stackValue="stackValue" :maxStackValue="maxStackValue" :lastPlayedCard="lastPlayedCard" @playCard="playCard" />
     </div>
 </template>
 
@@ -67,7 +72,7 @@ export default {
         ConfirmWindow,
         DropDownMenu,
         OnHandCard,
-        OnTableCard
+        OnTableCard,
     },
     data() {
         return {
@@ -261,22 +266,23 @@ export default {
         toggleWindow() {
             this.isWindowShow = !this.isWindowShow;
         },
-        playCard(value) { // Work on mockup data, might change when use with backend
+        playCard(value) {
+            // Work on mockup data, might change when use with backend
             // console.log(value);
             this.receivedData.gameData.lastPlayedCard = this.playerCards[value];
-            this.playerCards.splice(value,1);
+            this.playerCards.splice(value, 1);
         },
         sendMessage(message) {
             console.log(JSON.stringify(message));
 
             this.connection.send(JSON.stringify(message));
-        }
+        },
     },
     watch: {
         currentPlayerIndex(value) {
             clearInterval(this.timerInterval);
             this.countdown();
-        }
+        },
     },
     created: function () {
         console.log("Starting connection to WebSocket Server");
@@ -339,14 +345,11 @@ export default {
 
     position: absolute;
     right: 0%;
-    z-index: 99;
+    z-index: 100;
 }
 
 .player-card {
-    position: absolute;
-    left: 50%;
-    bottom: 0%;
-    transform: translateX(-50%);
+    /* z-index: 70; */
 }
 
 .on-table {
@@ -354,6 +357,7 @@ export default {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
+    /* z-index: 0; */
 }
 
 .v-enter-active,

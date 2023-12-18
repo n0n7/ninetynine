@@ -36,6 +36,10 @@ export default {
 .menu-container {
     display: flex;
     flex-direction: column;
+
+    -webkit-user-select: none; /* Safari */
+    -ms-user-select: none; /* IE 10 and IE 11 */
+    user-select: none; /* Standard syntax */
 }
 
 .menu-icon {
@@ -50,7 +54,7 @@ export default {
     transform: translate(-100%);
     padding-right: 2vh;
     padding-top: 3vh;
-    z-index: 81;
+    z-index: 80;
     /* padding-bottom: 0.5rem; */
 }
 
@@ -73,7 +77,7 @@ export default {
     /* margin-top: 8vh; */
     right: 0;
     width: 42vh;
-    z-index: 80;
+    z-index: 79;
 
     transition: transform 0.5s ease-out;
 }
@@ -101,7 +105,7 @@ export default {
     background: #8222ff;
 }
 
-button:disabled {
+.button-menu:disabled {
     background: #aaaaaa;
 }
 </style>

@@ -50,9 +50,9 @@ export default {
                 { name: "Login", path: "/login" },
                 { name: "Contact", path: "/contact" },
             ],
-        }
+        };
     },
-}
+};
 </script>
 
 <style scoped>
