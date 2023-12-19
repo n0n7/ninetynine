@@ -8,17 +8,18 @@
         </div>
     </div>
     <div class="card-container" ref="container">
-        <div v-for="card in cards" :key="card.id">
+        <div v-for="(card, index) in cards" :key="index" ref="draggableCards">
             <img
                 class="card"
                 draggable="false"
                 :src="card.src"
-                @mousedown="startDragging($event, card.id)"
-                @mouseup="stopDragging($event, card.id)"
+                @mousedown="startDragging($event, card)"
+                @mousemove="moveCard"
+                @mouseup="stopDragging"
+                style="position: relative; left: 0; top: 0"
             />
         </div>
     </div>
-    <!-- <p style="color:white; font-size:10rem; position:absolute;">{{bool}}</p> -->
 </template>
 
 <script>
@@ -64,80 +65,102 @@ export default {
                 "/cards/Sp3_set99.png",
             ],
 
-            mousePos: [0, 0],
-
-            currentOffsetX: 0,
-            currentOffsetY: 0,
-
-            currentEvent: null,
-            currentId: null,
-
             cards: null,
-            isOnDrag: false,
+
+            isDragging: false,
+            currOffsetX: 0,
+            currOffsetY: 0,
+            currCard: null,
 
             droppableArea: null,
         };
     },
     methods: {
-        startDragging(event, id) {
-            console.log("start dragging " + id);
-            event.target.style.transition = "";
-            event.target.className = "card dragged";
-            const rect = event.target.getBoundingClientRect();
-            const curX = event.clientX;
-            const curY = event.clientY;
+        startDragging(event, card) {
+            console.log("start dragging ");
 
-            this.currentOffsetX = curX - rect.left;
-            this.currentOffsetY = curY - rect.top;
+            this.$refs.draggableCards[card.id].style.transition = "";
+            this.$refs.draggableCards[card.id].style.transform = "scale(1.2)";
 
-            this.isOnDrag = true;
+            this.currCard = card;
+            this.isDragging = true;
 
-            this.currentEvent = event;
-            this.currentId = id;
+            const rect =
+                this.$refs.draggableCards[card.id].getBoundingClientRect();
+
+            this.currOffsetX = event.clientX - rect.left;
+            this.currOffsetY = event.clientY - rect.top;
+
+            window.addEventListener("mousemove", this.moveCard);
+            window.addEventListener("mouseup", this.stopDragging);
         },
-        stopDragging(event, id) {
-            console.log("stop dragging " + id);
-
-            this.isOnDrag = false;
-            this.currentEvent = null;
-            this.currentId = null;
+        stopDragging(event) {
+            console.log("stop dragging ");
+            this.isDragging = false;
 
             if (this.isDroppable(event.clientX, event.clientY)) {
                 event.target.style.transition = "";
-                this.$emit("playCard", id);
+                this.$emit("playCard", this.currCard.id);
             } else {
-                event.target.style.transition = "left 0.5s, top 0.5s ease-out";
+                this.$refs.draggableCards[this.currCard.id].style.transition =
+                    "left 0.5s, top 0.5s ease-out";
             }
 
-            event.target.className = "card";
-            event.target.style.zIndex = "60";
-            event.target.style.position = "relative";
-            event.target.style.left = "0";
-            event.target.style.top = "0";
+            this.$refs.draggableCards[this.currCard.id].style.boxShadow = "";
+            this.$refs.draggableCards[this.currCard.id].style.transform =
+                "scale(1)";
+            this.$refs.draggableCards[this.currCard.id].style.zIndex = "60";
+            this.$refs.draggableCards[this.currCard.id].style.position =
+                "relative";
+            this.$refs.draggableCards[this.currCard.id].style.left = "0";
+            this.$refs.draggableCards[this.currCard.id].style.top = "0";
+
+            window.removeEventListener("mousemove", this.moveCard);
+            window.removeEventListener("mouseup", this.stopDragging);
+            this.currCard = null;
         },
-        moveCard(event, id) {
-            if (this.isOnDrag) {
+        moveCard(event) {
+            if (this.isDragging) {
+                console.log("moving");
+
                 const container = this.$refs.container.getBoundingClientRect();
 
-                //hold position ver1
-                let x = this.mousePos[0] - this.currentOffsetX - container.left;
-                let y = this.mousePos[1] - this.currentOffsetY - container.top;
+                let mouseX =
+                    event.clientX < 0
+                        ? 0
+                        : event.clientX > window.innerWidth
+                        ? window.innerWidth
+                        : event.clientX;
+                let mouseY =
+                    event.clientY < 0
+                        ? 0
+                        : event.clientY > window.innerHeight
+                        ? window.innerHeight
+                        : event.clientY;
 
-                // hold position ver2
-                // const rect = event.target.getBoundingClientRect();
-                // let x = this.mousePos[0] - rect.width / 2 - container.x;
-                // let y = this.mousePos[1] - rect.height / 2 - container.y;
+                let x = mouseX - this.currOffsetX - container.left;
+                let y = mouseY - this.currOffsetY - container.top;
 
-                if (this.isDroppable(this.mousePos[0], this.mousePos[1])) {
-                    event.target.className = "card dragged highlighted";
+                if (this.isDroppable(event.clientX, event.clientY)) {
+                    this.$refs.draggableCards[
+                        this.currCard.id
+                    ].style.boxShadow = "0 0 5px 5px #a35bff";
+                    this.$refs.draggableCards[
+                        this.currCard.id
+                    ].style.borderRadius = "1vh";
                 } else {
-                    event.target.className = "card dragged";
+                    this.$refs.draggableCards[
+                        this.currCard.id
+                    ].style.boxShadow = "";
                 }
 
-                event.target.style.position = "absolute";
-                event.target.style.zIndex = "61";
-                event.target.style.left = x + "px";
-                event.target.style.top = y + "px";
+                this.$refs.draggableCards[this.currCard.id].style.position =
+                    "absolute";
+                this.$refs.draggableCards[this.currCard.id].style.zIndex = "61";
+                this.$refs.draggableCards[this.currCard.id].style.left =
+                    x + "px";
+                this.$refs.draggableCards[this.currCard.id].style.top =
+                    y + "px";
             }
         },
         isDroppable(posX, posY) {
@@ -197,31 +220,8 @@ export default {
             }
         },
     },
-    watch: {
-        mousePos(value) {
-            if (this.currentEvent !== null && this.currentId !== null) {
-                if (
-                    value[0] < 0 ||
-                    value[0] > screen.width ||
-                    value[1] < 0 ||
-                    value[1] > screen.height
-                ) {
-                    this.stopDragging(this.currentEvent, this.currentId);
-                } else {
-                    this.moveCard(this.currentEvent, this.currentId);
-                }
-            }
-        },
-    },
     mounted() {
-        document.addEventListener("mousemove", (event) => {
-            this.mousePos = [event.clientX, event.clientY];
-        });
-
-        // this.droppableArea = this.$refs.droppable.getBoundingClientRect();
-    },
-    beforeDestroy() {
-        document.removeEventListener("mousemove", this.updateDroppableArea);
+        console.log(this.$refs.draggableCards);
     },
 };
 </script>
@@ -231,9 +231,6 @@ export default {
     /* background: white; */
     /* border: 2px solid white; */
     position: fixed;
-    /* width: 60vw;
-    height: 61vh; */
-
     bottom: 0;
     left: 50%;
     transform: translateX(-50%);
@@ -259,15 +256,6 @@ export default {
 
 .card:active {
     cursor: grabbing;
-}
-
-.dragged {
-    height: 25vh;
-}
-
-.highlighted {
-    box-shadow: 0 0 5px 5px #a35bff;
-    cursor: ;
 }
 
 .v-enter-active,
