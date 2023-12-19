@@ -13,9 +13,12 @@
                 class="card"
                 draggable="false"
                 :src="card.src"
-                @mousedown="startDragging($event, card)"
-                @mousemove="moveCard"
-                @mouseup="stopDragging"
+                @mousedown="mouseStartDragging($event, card)"
+                @mousemove="mouseMoveCard"
+                @mouseup="mouseStopDragging"
+                @touchstart="touchStartDragging($event, card)"
+                @touchmove="touchMoveCard"
+                @touchend="touchStopDragging"
                 style="position: relative; left: 0; top: 0"
             />
         </div>
@@ -23,7 +26,6 @@
 </template>
 
 <script>
-import CountDownTimerVue from "./CountDownTimer.vue";
 export default {
     props: {
         playerCards: {
@@ -76,25 +78,43 @@ export default {
         };
     },
     methods: {
-        startDragging(event, card) {
-            console.log("start dragging ");
+        isDroppable(posX, posY) {
+            this.droppableArea = this.$refs.droppable.getBoundingClientRect();
+            // console.log(this.droppableArea);
+            // console.log(event);
+            if (!this.droppableArea) {
+                return false; // or handle it accordingly
+            }
 
-            this.$refs.draggableCards[card.id].style.transition = "";
-            this.$refs.draggableCards[card.id].style.transform = "scale(1.2)";
+            let x =
+                posY > this.droppableArea.y &&
+                posY < this.droppableArea.y + this.droppableArea.height &&
+                posX > this.droppableArea.x &&
+                posX < this.droppableArea.x + this.droppableArea.width;
 
-            this.currCard = card;
-            this.isDragging = true;
-
-            const rect =
-                this.$refs.draggableCards[card.id].getBoundingClientRect();
-
-            this.currOffsetX = event.clientX - rect.left;
-            this.currOffsetY = event.clientY - rect.top;
-
-            window.addEventListener("mousemove", this.moveCard);
-            window.addEventListener("mouseup", this.stopDragging);
+            return x;
         },
-        stopDragging(event) {
+        mouseStartDragging(event, card) {
+            if(!this.isDragging) {
+                console.log("start dragging ");
+
+                this.$refs.draggableCards[card.id].style.transition = "";
+                this.$refs.draggableCards[card.id].style.transform = "scale(1.2)";
+
+                this.currCard = card;
+                this.isDragging = true;
+
+                const rect =
+                    this.$refs.draggableCards[card.id].getBoundingClientRect();
+
+                this.currOffsetX = event.clientX - rect.left;
+                this.currOffsetY = event.clientY - rect.top;
+
+                window.addEventListener("mousemove", this.mouseMoveCard);
+                window.addEventListener("mouseup", this.mouseStopDragging);
+            }
+        },
+        mouseStopDragging(event) {
             console.log("stop dragging ");
             this.isDragging = false;
 
@@ -115,11 +135,11 @@ export default {
             this.$refs.draggableCards[this.currCard.id].style.left = "0";
             this.$refs.draggableCards[this.currCard.id].style.top = "0";
 
-            window.removeEventListener("mousemove", this.moveCard);
-            window.removeEventListener("mouseup", this.stopDragging);
+            window.removeEventListener("mousemove", this.mouseMoveCard);
+            window.removeEventListener("mouseup", this.mouseStopDragging);
             this.currCard = null;
         },
-        moveCard(event) {
+        mouseMoveCard(event) {
             if (this.isDragging) {
                 console.log("moving");
 
@@ -163,22 +183,130 @@ export default {
                     y + "px";
             }
         },
-        isDroppable(posX, posY) {
-            this.droppableArea = this.$refs.droppable.getBoundingClientRect();
-            // console.log(this.droppableArea);
+        touchStartDragging(event, card){
+            if(!this.isDragging) {
+                console.log("touch start dragging ");
+                
+                const touch = event.touches[0];
+                // console.log(touch);
+
+                this.$refs.draggableCards[card.id].style.transition = "";
+                this.$refs.draggableCards[card.id].style.transform = "scale(1.2)";
+
+                this.currCard = card;
+                this.isDragging = true;
+
+                const rect =
+                    this.$refs.draggableCards[card.id].getBoundingClientRect();
+                
+                this.currOffsetX = touch.clientX - rect.left;
+                this.currOffsetY = touch.clientY - rect.top;
+
+                window.addEventListener("touchmove", this.touchMoveCard);
+                window.addEventListener("touchend", this.touchStopDragging);
+            }
+        },
+        touchStopDragging(event) {
+            console.log("stop dragging ");
+            this.isDragging = false;
+
             // console.log(event);
-            if (!this.droppableArea) {
-                return false; // or handle it accordingly
+            const touch = event.changedTouches[0];
+
+            if (this.isDroppable(touch.clientX, touch.clientY)) {
+                event.target.style.transition = "";
+                this.$emit("playCard", this.currCard.id);
+            } else {
+                this.$refs.draggableCards[this.currCard.id].style.transition =
+                    "left 0.5s, top 0.5s ease-out";
             }
 
-            let x =
-                posY > this.droppableArea.y &&
-                posY < this.droppableArea.y + this.droppableArea.height &&
-                posX > this.droppableArea.x &&
-                posX < this.droppableArea.x + this.droppableArea.width;
+            this.$refs.draggableCards[this.currCard.id].style.boxShadow = "";
+            this.$refs.draggableCards[this.currCard.id].style.transform =
+                "scale(1)";
+            this.$refs.draggableCards[this.currCard.id].style.zIndex = "60";
+            this.$refs.draggableCards[this.currCard.id].style.position =
+                "relative";
+            this.$refs.draggableCards[this.currCard.id].style.left = "0";
+            this.$refs.draggableCards[this.currCard.id].style.top = "0";
 
-            return x;
+            window.removeEventListener("touchmove", this.touchMoveCard);
+            window.removeEventListener("touchend", this.touchStopDragging);
+            this.currCard = null;
         },
+        touchMoveCard(event) {
+            if (this.isDragging) {
+                console.log("touch moving");
+
+                const container = this.$refs.container.getBoundingClientRect();
+                // console.log(container);
+                
+                let touch = null;
+
+                // the touchmove event is seperate into moving and standstill
+                if("clientX" in event) {
+                    touch = event;
+                }
+                else {
+                    touch = event.touches[0];
+                }
+
+                let touchX =
+                    touch.clientX < 0
+                        ? 0
+                        : touch.clientX > window.innerWidth
+                        ? window.innerWidth
+                        : touch.clientX;
+                let touchY =
+                    touch.clientY < 0
+                        ? 0
+                        : touch.clientY > window.innerHeight
+                        ? window.innerHeight
+                        : touch.clientY;
+
+                let x = touchX - this.currOffsetX - container.left;
+                let y = touchY - this.currOffsetY - container.top;
+
+                if (this.isDroppable(touch.clientX, touch.clientY)) {
+                    this.$refs.draggableCards[
+                        this.currCard.id
+                    ].style.boxShadow = "0 0 5px 5px #a35bff";
+                    this.$refs.draggableCards[
+                        this.currCard.id
+                    ].style.borderRadius = "1vh";
+                } else {
+                    this.$refs.draggableCards[
+                        this.currCard.id
+                    ].style.boxShadow = "";
+                }
+                
+                // if("clientX" in event) {
+                //     console.log("clientX standstill"+event.clientX);
+                // }
+                // else {
+                //     console.log("clientX moving"+event.touches[0].clientX);
+                // }
+
+                // console.log("offSetX: "+this.currOffsetX);
+                // console.log("offSetY: "+this.currOffsetY);
+                // console.log("x: "+x);
+                // console.log("y: "+y);
+                // console.log("touchX: "+touchX);
+                // console.log("touchY: "+touchY);
+                // console.log("clientX: "+event.clientX);
+                // console.log("clientY: "+event.clientY);
+                // console.log("innerWeigth: "+window.innerWidth);
+                // console.log("innerHeight: "+window.innerHeight);
+
+                this.$refs.draggableCards[this.currCard.id].style.position =
+                    "absolute";
+                this.$refs.draggableCards[this.currCard.id].style.zIndex = "61";
+                this.$refs.draggableCards[this.currCard.id].style.left =
+                    x + "px";
+                this.$refs.draggableCards[this.currCard.id].style.top =
+                    y + "px";
+            }
+        }
     },
     computed: {
         cards() {
@@ -222,7 +350,7 @@ export default {
     },
     mounted() {
         console.log(this.$refs.draggableCards);
-    },
+    }
 };
 </script>
 

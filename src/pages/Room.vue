@@ -38,7 +38,7 @@
             :timer="timer"
         />
     </div>
-    <div class="player-card">
+    <div class="player-card" @wheel.prevent @touchmove.prevent @scroll.prevent>
         <AllCard
             :playerCards="playerCards"
             :stackValue="stackValue"
