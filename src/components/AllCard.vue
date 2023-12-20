@@ -4,7 +4,12 @@
             <p>{{ stackValue }}</p>
         </div>
         <div class="top-card">
-            <img ref="droppable" :src="topCard.src" @mouseover="toggle" />
+            <img
+                ref="droppable"
+                :src="topCard"
+                @mouseover="toggle"
+                draggable="false"
+            />
         </div>
     </div>
     <div class="card-container" ref="container">
@@ -95,11 +100,12 @@ export default {
             return x;
         },
         mouseStartDragging(event, card) {
-            if(!this.isDragging) {
+            if (!this.isDragging) {
                 console.log("start dragging ");
 
                 this.$refs.draggableCards[card.id].style.transition = "";
-                this.$refs.draggableCards[card.id].style.transform = "scale(1.2)";
+                this.$refs.draggableCards[card.id].style.transform =
+                    "scale(1.2)";
 
                 this.currCard = card;
                 this.isDragging = true;
@@ -183,22 +189,23 @@ export default {
                     y + "px";
             }
         },
-        touchStartDragging(event, card){
-            if(!this.isDragging) {
+        touchStartDragging(event, card) {
+            if (!this.isDragging) {
                 console.log("touch start dragging ");
-                
+
                 const touch = event.touches[0];
                 // console.log(touch);
 
                 this.$refs.draggableCards[card.id].style.transition = "";
-                this.$refs.draggableCards[card.id].style.transform = "scale(1.2)";
+                this.$refs.draggableCards[card.id].style.transform =
+                    "scale(1.2)";
 
                 this.currCard = card;
                 this.isDragging = true;
 
                 const rect =
                     this.$refs.draggableCards[card.id].getBoundingClientRect();
-                
+
                 this.currOffsetX = touch.clientX - rect.left;
                 this.currOffsetY = touch.clientY - rect.top;
 
@@ -240,14 +247,13 @@ export default {
 
                 const container = this.$refs.container.getBoundingClientRect();
                 // console.log(container);
-                
+
                 let touch = null;
 
                 // the touchmove event is seperate into moving and standstill
-                if("clientX" in event) {
+                if ("clientX" in event) {
                     touch = event;
-                }
-                else {
+                } else {
                     touch = event.touches[0];
                 }
 
@@ -279,7 +285,7 @@ export default {
                         this.currCard.id
                     ].style.boxShadow = "";
                 }
-                
+
                 // if("clientX" in event) {
                 //     console.log("clientX standstill"+event.clientX);
                 // }
@@ -306,7 +312,7 @@ export default {
                 this.$refs.draggableCards[this.currCard.id].style.top =
                     y + "px";
             }
-        }
+        },
     },
     computed: {
         cards() {
@@ -334,23 +340,21 @@ export default {
         },
         topCard() {
             if (this.lastPlayedCard.isSpecial) {
-                return {
-                    src: this.Sp[this.lastPlayedCard.value],
-                };
+                if (this.lastPlayedCard.value == -1) {
+                    return "/cards/Empty.png";
+                } else {
+                    return this.Sp[this.lastPlayedCard.value];
+                }
             } else if (this.lastPlayedCard.value > 0) {
-                return {
-                    src: this.Pos[this.lastPlayedCard.value - 1],
-                };
+                return this.Pos[this.lastPlayedCard.value - 1];
             } else {
-                return {
-                    src: this.Neg[this.lastPlayedCard.value + 10],
-                };
+                return this.Neg[this.lastPlayedCard.value + 10];
             }
         },
     },
     mounted() {
         console.log(this.$refs.draggableCards);
-    }
+    },
 };
 </script>
 
@@ -377,9 +381,12 @@ export default {
     vertical-align: middle;
     cursor: grab;
 
-    -webkit-user-select: none; /* Safari */
-    -ms-user-select: none; /* IE 10 and IE 11 */
-    user-select: none; /* Standard syntax */
+    -webkit-user-select: none;
+    /* Safari */
+    -ms-user-select: none;
+    /* IE 10 and IE 11 */
+    user-select: none;
+    /* Standard syntax */
 }
 
 .card:active {
@@ -388,7 +395,6 @@ export default {
 
 .v-enter-active,
 .v-leave-active {
-    transition: ;
     transition: all 0.3s ease;
 }
 
@@ -409,9 +415,12 @@ export default {
     left: 50%;
     transform: translate(-50%, -50%);
 
-    -webkit-user-select: none; /* Safari */
-    -ms-user-select: none; /* IE 10 and IE 11 */
-    user-select: none; /* Standard syntax */
+    -webkit-user-select: none;
+    /* Safari */
+    -ms-user-select: none;
+    /* IE 10 and IE 11 */
+    user-select: none;
+    /* Standard syntax */
 }
 
 .stack-value {

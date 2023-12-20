@@ -2,50 +2,69 @@
     <div class="debug-button">
         <button @click="setToMyTurn">Set to my turn</button>
         <button @click="nextPlayerTurn">Next player turn</button>
+        <button @click="toggleError">Toggle Error</button>
         <button @click="sendMessage(playerCards[0])">Send Message</button>
     </div>
-    <transition>
-        <div
-            class="timer-self"
-            v-if="receivedData.gameData.currentPlayerIndex === myPlayerIndex"
-        >
-            <p style="font-size: 6vh">Your turn!</p>
-            <CountDownTimer :timer="timer" />
+
+    <div v-if="errorMessage.length != 0" class="game-error">
+        <h2 style="text-align: center; font-size: 8vw; margin-bottom: 0">
+            Error :\
+        </h2>
+        <p style="text-align: center; font-size: 4vw; margin-top: 0">
+            {{ errorMessage }}
+        </p>
+    </div>
+    <div v-else @contextmenu.prevent="disableContextMenu">
+        <transition>
+            <div
+                class="timer-self"
+                v-if="
+                    receivedData.gameData.currentPlayerIndex === myPlayerIndex
+                "
+            >
+                <p style="font-size: 6vh">Your turn!</p>
+                <CountDownTimer :timer="timer" />
+            </div>
+        </transition>
+        <div class="dropdown-menu">
+            <DropDownMenu @openWindow="toggleWindow()" />
         </div>
-    </transition>
-    <div class="dropdown-menu">
-        <DropDownMenu @openWindow="toggleWindow()" />
-    </div>
-    <div>
-        <ConfirmWindow
-            :isVisible="isWindowShow"
-            @closeWindow="toggleWindow()"
-        />
-    </div>
-    <div class="player-list-bar left">
-        <RoomPlayerListBar
-            side="left"
-            :playerList="pListLeft"
-            :currentPlayerIndex="currentPlayerIndex"
-            :timer="timer"
-        />
-    </div>
-    <div class="player-list-bar right" :v-if="totalPlayer > 4">
-        <RoomPlayerListBar
-            side="right"
-            :playerList="pListRight"
-            :currentPlayerIndex="currentPlayerIndex - 4"
-            :timer="timer"
-        />
-    </div>
-    <div class="player-card" @wheel.prevent @touchmove.prevent @scroll.prevent>
-        <AllCard
-            :playerCards="playerCards"
-            :stackValue="stackValue"
-            :maxStackValue="maxStackValue"
-            :lastPlayedCard="lastPlayedCard"
-            @playCard="playCard"
-        />
+        <div>
+            <ConfirmWindow
+                :isVisible="isWindowShow"
+                @closeWindow="toggleWindow()"
+            />
+        </div>
+        <div class="player-list-bar left">
+            <RoomPlayerListBar
+                side="left"
+                :playerList="pListLeft"
+                :currentPlayerIndex="currentPlayerIndex"
+                :timer="timer"
+            />
+        </div>
+        <div class="player-list-bar right" :v-if="totalPlayer > 4">
+            <RoomPlayerListBar
+                side="right"
+                :playerList="pListRight"
+                :currentPlayerIndex="currentPlayerIndex - 4"
+                :timer="timer"
+            />
+        </div>
+        <div
+            class="player-card"
+            @wheel.prevent
+            @touchmove.prevent
+            @scroll.prevent
+        >
+            <AllCard
+                :playerCards="playerCards"
+                :stackValue="stackValue"
+                :maxStackValue="maxStackValue"
+                :lastPlayedCard="lastPlayedCard"
+                @playCard="playCard"
+            />
+        </div>
     </div>
 </template>
 
@@ -163,7 +182,7 @@ export default {
                     stackValue: 0,
                     maxStackValue: 99,
                     lastPlayedCard: {
-                        value: 1,
+                        value: -1,
                         isSpecial: true,
                     },
                 },
@@ -222,6 +241,9 @@ export default {
             }
             return p;
         },
+        errorMessage() {
+            return this.receivedData.error;
+        },
         isGameEnd() {
             // for debugging
             return this.remainPlayerIdx.length === 1;
@@ -249,6 +271,18 @@ export default {
                         (this.currentPlayerIndex + 1) % this.totalPlayer;
                 }
             }
+        },
+        toggleError() {
+            // for debugging
+            if (this.errorMessage.length != 0) {
+                this.receivedData.error = "";
+            } else {
+                this.receivedData.error = "test error message";
+            }
+        },
+        disableContextMenu(event) {
+            // Prevent the default right-click context menu
+            event.preventDefault();
         },
         countdown() {
             this.timer = this.playTime - 1;
@@ -301,6 +335,10 @@ export default {
 .debug-button {
     position: absolute;
     bottom: 0;
+
+    display: flex;
+    flex-direction: column;
+    z-index: 200;
 }
 
 .timer-self {
@@ -356,5 +394,19 @@ export default {
 .v-enter-from,
 .v-leave-to {
     opacity: 0;
+}
+
+.game-error {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-content: center;
+
+    color: white;
 }
 </style>
