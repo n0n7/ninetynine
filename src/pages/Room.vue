@@ -3,6 +3,10 @@
         <button @click="setToMyTurn">Set to my turn</button>
         <button @click="nextPlayerTurn">Next player turn</button>
         <button @click="toggleError">Toggle Error</button>
+        <button @click="setPlayerOut">Set player out</button>
+        <button @click="setGameStatus('waiting')">set status "waiting"</button>
+        <button @click="setGameStatus('playing')">set status "playing"</button>
+        <button @click="setGameStatus('ended')">set status "ended"</button>
         <button @click="sendMessage(playerCards[0])">Send Message</button>
     </div>
 
@@ -14,8 +18,21 @@
             {{ errorMessage }}
         </p>
     </div>
-    <div v-else @contextmenu.prevent="disableContextMenu">
-        <transition>
+    <div v-else-if="gameStatus == 'ended'">
+        <GameResult :playerRankings="playerRankings" />
+    </div>
+    <div
+        v-else-if="gameStatus == 'playing' || gameStatus == 'waiting'"
+        @contextmenu.prevent="disableContextMenu"
+        class="game-playing-container"
+    >
+        <transition v-if="gameStatus == 'waiting'">
+            <div class="game-waiting">
+                <p style="font-size: 6vh">Waiting</p>
+                <CountDownTimer />
+            </div>
+        </transition>
+        <transition v-if="gameStatus == 'playing'">
             <div
                 class="timer-self"
                 v-if="
@@ -74,6 +91,7 @@ import RoomPlayerListBar from "/src/components/RoomPlayerListBar.vue";
 import DropDownMenu from "/src/components/DropDownMenu.vue";
 import ConfirmWindow from "/src/components/ConfirmWindow.vue";
 import AllCard from "/src/components/AllCard.vue";
+import GameResult from "/src/components/GameResult.vue";
 
 export default {
     props: {
@@ -88,6 +106,7 @@ export default {
         ConfirmWindow,
         DropDownMenu,
         AllCard,
+        GameResult,
     },
     data() {
         return {
@@ -95,9 +114,11 @@ export default {
             timer: 9,
             timerInterval: null, // timerInternal ref
             isWindowShow: false,
-
             connection: null,
+            playerRankings: [],
+            remainPlayer: null,
 
+            remainPlayerIdx: [], // for debugging
             // Mockup data
             myPlayerIndex: 1, // for debugging
             receivedData: {
@@ -131,7 +152,7 @@ export default {
                             playerName: "Random Guy 6969",
                             playerAvatarURL:
                                 "https://drive.google.com/uc?export=view&id=1V-C0PODkyrK_U84pGHys0NRWBBen2Ayz",
-                            status: "out",
+                            status: "playing",
                         },
                         {
                             playerId: "6776577",
@@ -145,7 +166,7 @@ export default {
                             playerName: "Random Cat 9696",
                             playerAvatarURL:
                                 "https://drive.google.com/uc?export=view&id=1UuOiIvuI6q6J02aXWjVpmvYrpmatNtHY",
-                            status: "out",
+                            status: "playing",
                         },
                         {
                             playerId: "6524345",
@@ -159,7 +180,7 @@ export default {
                             playerName: "CheesyDoritos",
                             playerAvatarURL:
                                 "https://drive.google.com/uc?export=view&id=19PBu3logUfNweezw723ThssGgPVwfyWC",
-                            status: "out",
+                            status: "playing",
                         },
                     ],
                     playerCards: [
@@ -176,8 +197,8 @@ export default {
                             isSpecial: true,
                         },
                     ],
-                    status: "playing",
-                    currentPlayerIndex: 0,
+                    status: "waiting",
+                    currentPlayerIndex: null,
                     currentDirection: 1,
                     stackValue: 0,
                     maxStackValue: 99,
@@ -214,10 +235,16 @@ export default {
         lastPlayedCard() {
             return this.receivedData.gameData.lastPlayedCard;
         },
-
+        errorMessage() {
+            return this.receivedData.error;
+        },
+        gameStatus() {
+            return this.receivedData.gameData.status;
+        },
         totalPlayer() {
             return this.players.length;
         },
+
         isMyturn() {
             // temporary
             return this.currentPlayerIndex == this.myPlayerIndex;
@@ -231,22 +258,8 @@ export default {
         pListRight() {
             return this.totalPlayer > 4 ? this.players.slice(4) : [];
         },
-        remainPlayerIdx() {
-            // for debugging
-            let p = [];
-            for (let i = 0; i < this.totalPlayer; i++) {
-                if (this.players[i].status === "playing") {
-                    p.push(i);
-                }
-            }
-            return p;
-        },
-        errorMessage() {
-            return this.receivedData.error;
-        },
         isGameEnd() {
-            // for debugging
-            return this.remainPlayerIdx.length === 1;
+            return this.gameStatus == "ended";
         },
     },
     methods: {
@@ -280,10 +293,31 @@ export default {
                 this.receivedData.error = "test error message";
             }
         },
+        setGameStatus(newStatus) {
+            // for debugging
+            this.receivedData.gameData.status = newStatus;
+        },
+        setPlayerOut() {
+            // for debugging
+            this.receivedData.gameData.players[this.currentPlayerIndex].status =
+                "out";
+        },
+
         disableContextMenu(event) {
             // Prevent the default right-click context menu
             event.preventDefault();
         },
+        updateRemainPlayerIdx(value) {
+            // for debugging
+            let p = [];
+            for (let i = 0; i < this.totalPlayer; i++) {
+                if (value[i].status === "playing") {
+                    p.push(i);
+                }
+            }
+            this.remainPlayerIdx = p;
+        },
+
         countdown() {
             this.timer = this.playTime - 1;
             this.timerInterval = setInterval(() => {
@@ -296,6 +330,34 @@ export default {
         toggleWindow() {
             this.isWindowShow = !this.isWindowShow;
         },
+        updatePlayerRanking(value) {
+            for (const player of value) {
+                if (player.status === "out") {
+                    if (
+                        this.playerRankings.find(
+                            ({ playerId }) => playerId === player.playerId
+                        ) === undefined
+                    ) {
+                        this.playerRankings.push(player);
+                        break;
+                    }
+                }
+            }
+
+            if (this.remainPlayer == 1) {
+                const winner = value.find(({ status }) => status === "playing");
+                this.playerRankings.push(winner);
+            }
+        },
+        updateRemainPlayer(value) {
+            let remainPlayer = 0;
+            for (const player of value) {
+                if (player.status === "playing") {
+                    remainPlayer++;
+                }
+            }
+            this.remainPlayer = remainPlayer;
+        },
         playCard(value) {
             // Work on mockup data, might change when use with backend
             // console.log(value);
@@ -304,7 +366,6 @@ export default {
         },
         sendMessage(message) {
             console.log(JSON.stringify(message));
-
             this.connection.send(JSON.stringify(message));
         },
     },
@@ -312,6 +373,19 @@ export default {
         currentPlayerIndex(value) {
             clearInterval(this.timerInterval);
             this.countdown();
+        },
+
+        players: {
+            handler(newValue, oldValue) {
+                console.log("players changed");
+
+                // for debugging
+                this.updateRemainPlayerIdx(newValue);
+
+                this.updateRemainPlayer(newValue);
+                this.updatePlayerRanking(newValue);
+            },
+            deep: true,
         },
     },
     created: function () {
@@ -327,6 +401,20 @@ export default {
             console.log(event);
             console.log("Successfully connected to the WebSocket server...");
         };
+
+        this.connection.onclose = function (event) {
+            console.log(event);
+            console.log("Connection closed");
+        };
+
+        this.connection.onerror = function (event) {
+            console.log(event);
+            console.log("Connection error");
+        };
+
+        // for debugging
+        this.updateRemainPlayerIdx(this.players);
+        this.updateRemainPlayer(this.players);
     },
 };
 </script>
@@ -334,11 +422,18 @@ export default {
 <style scoped>
 .debug-button {
     position: absolute;
-    bottom: 0;
+    top: 0;
 
     display: flex;
     flex-direction: column;
     z-index: 200;
+
+    -webkit-user-select: none;
+    /* Safari */
+    -ms-user-select: none;
+    /* IE 10 and IE 11 */
+    user-select: none;
+    /* Standard syntax */
 }
 
 .timer-self {
@@ -407,6 +502,32 @@ export default {
     justify-content: center;
     align-content: center;
 
+    color: white;
+}
+
+.game-waiting {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    column-gap: 0.5rem;
+
+    position: absolute;
+    left: 50%;
+    transform: translate(-50%);
+
+    -webkit-user-select: none;
+    /* Safari */
+    -ms-user-select: none;
+    /* IE 10 and IE 11 */
+    user-select: none;
+    /* Standard syntax */
+}
+
+.game-waiting p {
+    display: inline;
+    font-size: 3rem;
+    margin: 0;
     color: white;
 }
 </style>

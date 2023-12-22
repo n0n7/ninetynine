@@ -121,29 +121,33 @@ export default {
             }
         },
         mouseStopDragging(event) {
-            console.log("stop dragging ");
-            this.isDragging = false;
+            if (this.isDragging) {
+                console.log("stop dragging ");
+                this.isDragging = false;
 
-            if (this.isDroppable(event.clientX, event.clientY)) {
-                event.target.style.transition = "";
-                this.$emit("playCard", this.currCard.id);
-            } else {
-                this.$refs.draggableCards[this.currCard.id].style.transition =
-                    "left 0.5s, top 0.5s ease-out";
+                if (this.isDroppable(event.clientX, event.clientY)) {
+                    event.target.style.transition = "";
+                    this.$emit("playCard", this.currCard.id);
+                } else {
+                    this.$refs.draggableCards[
+                        this.currCard.id
+                    ].style.transition = "left 0.5s, top 0.5s ease-out";
+                }
+
+                this.$refs.draggableCards[this.currCard.id].style.boxShadow =
+                    "";
+                this.$refs.draggableCards[this.currCard.id].style.transform =
+                    "scale(1)";
+                this.$refs.draggableCards[this.currCard.id].style.zIndex = "60";
+                this.$refs.draggableCards[this.currCard.id].style.position =
+                    "relative";
+                this.$refs.draggableCards[this.currCard.id].style.left = "0";
+                this.$refs.draggableCards[this.currCard.id].style.top = "0";
+
+                window.removeEventListener("mousemove", this.mouseMoveCard);
+                window.removeEventListener("mouseup", this.mouseStopDragging);
+                this.currCard = null;
             }
-
-            this.$refs.draggableCards[this.currCard.id].style.boxShadow = "";
-            this.$refs.draggableCards[this.currCard.id].style.transform =
-                "scale(1)";
-            this.$refs.draggableCards[this.currCard.id].style.zIndex = "60";
-            this.$refs.draggableCards[this.currCard.id].style.position =
-                "relative";
-            this.$refs.draggableCards[this.currCard.id].style.left = "0";
-            this.$refs.draggableCards[this.currCard.id].style.top = "0";
-
-            window.removeEventListener("mousemove", this.mouseMoveCard);
-            window.removeEventListener("mouseup", this.mouseStopDragging);
-            this.currCard = null;
         },
         mouseMoveCard(event) {
             if (this.isDragging) {
@@ -214,32 +218,36 @@ export default {
             }
         },
         touchStopDragging(event) {
-            console.log("stop dragging ");
-            this.isDragging = false;
+            if (this.isDragging) {
+                console.log("stop dragging ");
+                this.isDragging = false;
 
-            // console.log(event);
-            const touch = event.changedTouches[0];
+                // console.log(event);
+                const touch = event.changedTouches[0];
 
-            if (this.isDroppable(touch.clientX, touch.clientY)) {
-                event.target.style.transition = "";
-                this.$emit("playCard", this.currCard.id);
-            } else {
-                this.$refs.draggableCards[this.currCard.id].style.transition =
-                    "left 0.5s, top 0.5s ease-out";
+                if (this.isDroppable(touch.clientX, touch.clientY)) {
+                    event.target.style.transition = "";
+                    this.$emit("playCard", this.currCard.id);
+                } else {
+                    this.$refs.draggableCards[
+                        this.currCard.id
+                    ].style.transition = "left 0.5s, top 0.5s ease-out";
+                }
+
+                this.$refs.draggableCards[this.currCard.id].style.boxShadow =
+                    "";
+                this.$refs.draggableCards[this.currCard.id].style.transform =
+                    "scale(1)";
+                this.$refs.draggableCards[this.currCard.id].style.zIndex = "60";
+                this.$refs.draggableCards[this.currCard.id].style.position =
+                    "relative";
+                this.$refs.draggableCards[this.currCard.id].style.left = "0";
+                this.$refs.draggableCards[this.currCard.id].style.top = "0";
+
+                window.removeEventListener("touchmove", this.touchMoveCard);
+                window.removeEventListener("touchend", this.touchStopDragging);
+                this.currCard = null;
             }
-
-            this.$refs.draggableCards[this.currCard.id].style.boxShadow = "";
-            this.$refs.draggableCards[this.currCard.id].style.transform =
-                "scale(1)";
-            this.$refs.draggableCards[this.currCard.id].style.zIndex = "60";
-            this.$refs.draggableCards[this.currCard.id].style.position =
-                "relative";
-            this.$refs.draggableCards[this.currCard.id].style.left = "0";
-            this.$refs.draggableCards[this.currCard.id].style.top = "0";
-
-            window.removeEventListener("touchmove", this.touchMoveCard);
-            window.removeEventListener("touchend", this.touchStopDragging);
-            this.currCard = null;
         },
         touchMoveCard(event) {
             if (this.isDragging) {
@@ -373,13 +381,6 @@ export default {
     justify-content: center;
     align-items: flex-end;
     column-gap: 2vh;
-}
-
-.card {
-    height: 20vh;
-    border-radius: 1vh;
-    vertical-align: middle;
-    cursor: grab;
 
     -webkit-user-select: none;
     /* Safari */
@@ -387,6 +388,13 @@ export default {
     /* IE 10 and IE 11 */
     user-select: none;
     /* Standard syntax */
+}
+
+.card {
+    height: 20vh;
+    border-radius: 1vh;
+    vertical-align: middle;
+    cursor: grab;
 }
 
 .card:active {
