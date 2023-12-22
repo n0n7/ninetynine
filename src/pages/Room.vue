@@ -28,10 +28,11 @@
     >
         <transition v-if="gameStatus == 'waiting'">
             <div class="game-waiting">
-                <p style="font-size: 6vh">Waiting</p>
-                <CountDownTimer />
+                <p>Waiting</p>
+                <CountDownTimer style="transform: scale(2)" />
             </div>
         </transition>
+
         <transition v-if="gameStatus == 'playing'">
             <div
                 class="timer-self"
@@ -39,7 +40,7 @@
                     receivedData.gameData.currentPlayerIndex === myPlayerIndex
                 "
             >
-                <p style="font-size: 6vh">Your turn!</p>
+                <p>Your turn!</p>
                 <CountDownTimer :timer="timer" />
             </div>
         </transition>
@@ -68,20 +69,26 @@
                 :timer="timer"
             />
         </div>
-        <div
-            class="player-card"
-            @wheel.prevent
-            @touchmove.prevent
-            @scroll.prevent
-        >
-            <AllCard
-                :playerCards="playerCards"
-                :stackValue="stackValue"
-                :maxStackValue="maxStackValue"
-                :lastPlayedCard="lastPlayedCard"
-                @playCard="playCard"
-            />
-        </div>
+        <transition>
+            <div
+                class="player-card"
+                v-if="gameStatus == 'playing'"
+                @wheel.prevent
+                @touchmove.prevent
+                @scroll.prevent
+            >
+                <AllCard
+                    :playerCards="playerCards"
+                    :stackValue="stackValue"
+                    :maxStackValue="maxStackValue"
+                    :lastPlayedCard="lastPlayedCard"
+                    @playCard="playCard"
+                />
+            </div>
+        </transition>
+        <transition>
+            <p class="warning" v-if="showWarning">{{ warningMessage }}</p>
+        </transition>
     </div>
 </template>
 
@@ -117,6 +124,10 @@ export default {
             connection: null,
             playerRankings: [],
             remainPlayer: null,
+            warningMessage: "",
+            showWarning: false,
+            warningTimeOut: null,
+            allowPlay: false,
 
             remainPlayerIdx: [], // for debugging
             // Mockup data
@@ -359,10 +370,28 @@ export default {
             this.remainPlayer = remainPlayer;
         },
         playCard(value) {
-            // Work on mockup data, might change when use with backend
             // console.log(value);
-            this.receivedData.gameData.lastPlayedCard = this.playerCards[value];
-            this.playerCards.splice(value, 1);
+            if (!this.isMyturn) {
+                this.warningMessage = "Not your turn!";
+                clearTimeout(this.warningTimeOut);
+                this.showWarning = true;
+                this.warningTimeOut = setTimeout(() => {
+                    this.showWarning = false;
+                }, 1000);
+            } else if (this.allowPlay) {
+                // Work on mockup data, might change when use with backend
+                this.receivedData.gameData.lastPlayedCard =
+                    this.playerCards[value];
+                this.playerCards.splice(value, 1);
+                this.allowPlay = false;
+            } else {
+                this.warningMessage = "You played already!";
+                clearTimeout(this.warningTimeOut);
+                this.showWarning = true;
+                this.warningTimeOut = setTimeout(() => {
+                    this.showWarning = false;
+                }, 1000);
+            }
         },
         sendMessage(message) {
             console.log(JSON.stringify(message));
@@ -373,6 +402,12 @@ export default {
         currentPlayerIndex(value) {
             clearInterval(this.timerInterval);
             this.countdown();
+
+            if (value === this.myPlayerIndex) {
+                this.allowPlay = true;
+            } else {
+                this.allowPlay = false;
+            }
         },
 
         players: {
@@ -450,7 +485,7 @@ export default {
 
 .timer-self p {
     display: inline;
-    font-size: 3rem;
+    font-size: 6vh;
     margin: 0;
     color: white;
 }
@@ -483,7 +518,7 @@ export default {
 
 .v-enter-active,
 .v-leave-active {
-    transition: opacity 0.2s ease;
+    transition: opacity 0.5s ease;
 }
 
 .v-enter-from,
@@ -510,11 +545,12 @@ export default {
     flex-direction: row;
     align-items: center;
     justify-content: center;
-    column-gap: 0.5rem;
+    column-gap: 3rem;
 
     position: absolute;
+    top: 50%;
     left: 50%;
-    transform: translate(-50%);
+    transform: translate(-50%, -50%);
 
     -webkit-user-select: none;
     /* Safari */
@@ -526,8 +562,18 @@ export default {
 
 .game-waiting p {
     display: inline;
-    font-size: 3rem;
+    font-size: 10vh;
     margin: 0;
     color: white;
+}
+
+.warning {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+
+    font-size: 6vh;
+    margin: 0;
+    color: #ff0033;
 }
 </style>
