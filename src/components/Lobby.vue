@@ -3,7 +3,7 @@
         <h1>Lobby</h1>
         <div class="lobby-id-container">
             <p class="p-gray">Your Room ID:</p>
-            <p class="p-white">{{ lobbyId }}</p>
+            <p class="p-white">{{ roomId }}</p>
             <img src="/copy_icon.png" style="width: 40px" alt="copy" />
         </div>
         <div class="lobby-member-list">
@@ -46,8 +46,8 @@
             </div>
         </div>
         <div class="flex-container-button">
-            <NavButton class="flex-item-button" text="Start" to="/" />
-            <NavButton class="flex-item-button" text="Leave Room" to="/" />
+            <NavButton class="flex-item-button" text="Start" @click="startGame" />
+            <NavButton class="flex-item-button" text="Leave Room" @click="leaveRoom" />
         </div>
     </div>
 </template>
@@ -57,7 +57,6 @@ import NavButton from "/src/components/NavButton.vue";
 export default {
     data() {
         return {
-            roomId: "1234-5678-9000",
             owner: "Nattee",
             playerList: [
                 { name: "Nattee" },
@@ -74,7 +73,23 @@ export default {
         };
     },
     props: {
-        lobbyId: String,
+        roomId: String,
+        connection: Object,
+    },
+    created: function () {
+        //this.connection = new WebSocket("ws://localhost:8080/ws/" + this.lobbyId);
+
+        //this.sendJoinAction();
+    },
+    methods: {
+        startGame() {
+            // need test if owner then change inProgress in Gameroom to true
+            console.log("startGame");
+        },
+        leaveRoom() {
+            // push logic
+            this.$router.push("/");
+        },
     },
     components: {
         NavButton,

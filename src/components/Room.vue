@@ -106,6 +106,10 @@ export default {
             type: String,
             required: false,
         },
+        connection: {
+            type: Object,
+            required: false,
+        }
     },
     components: {
         RoomPlayerListBar,
@@ -424,29 +428,6 @@ export default {
         },
     },
     created: function () {
-        console.log("Starting connection to WebSocket Server");
-        this.connection = new WebSocket("ws://localhost:8080/ws/000000000000");
-
-        this.connection.onmessage = function (event) {
-            console.log(event);
-            // console.log(JSON.parse(event.data));
-        };
-
-        this.connection.onopen = function (event) {
-            console.log(event);
-            console.log("Successfully connected to the WebSocket server...");
-        };
-
-        this.connection.onclose = function (event) {
-            console.log(event);
-            console.log("Connection closed");
-        };
-
-        this.connection.onerror = function (event) {
-            console.log(event);
-            console.log("Connection error");
-        };
-
         // for debugging
         this.updateRemainPlayerIdx(this.players);
         this.updateRemainPlayer(this.players);

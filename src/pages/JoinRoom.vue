@@ -61,10 +61,9 @@ export default {
                     const data = await response.json();
                     console.log(data);
                     if (data.error === undefined) {
-                        this.$router.push("/lobby/" + this.roomID);
+                        this.$router.push("/room/" + this.roomID);
                     } else {
                         this.isError = true;
-                        //if(data.error === "Invalid user") data.error = "Please login first";
                         this.status = data.error;
                     }
                 } catch (error) {
