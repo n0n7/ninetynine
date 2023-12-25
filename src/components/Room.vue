@@ -1,14 +1,28 @@
 <template>
+    <p
+        style="
+            color: white;
+            position: absolute;
+            top: 50%;
+            right: 0;
+            transform: translateY(-50%);
+        "
+    >
+        {{ userId }}
+    </p>
     <div class="debug-button">
+        <button @click="sendMessage(playerCards[0])">Send Message</button>
         <button @click="setToMyTurn">Set to my turn</button>
         <button @click="nextPlayerTurn">Next player turn</button>
-        <button @click="toggleError">Toggle Error</button>
         <button @click="setPlayerOut">Set player out</button>
-        <button @click="setGameStatus('waiting')">set status "waiting"</button>
+        <!-- <button @click="setGameStatus('waiting')">set status "waiting"</button> -->
         <button @click="setGameStatus('playing')">set status "playing"</button>
         <button @click="setGameStatus('ended')">set status "ended"</button>
-        <button @click="sendMessage(playerCards[0])">Send Message</button>
+        <button @click="toggleError">Toggle Error</button>
     </div>
+    <p style="color: white; position: absolute; bottom: 0%">
+        {{ receivedData }}
+    </p>
 
     <div v-if="errorMessage.length != 0" class="game-error">
         <h2 style="text-align: center; font-size: 8vw; margin-bottom: 0">
@@ -22,18 +36,11 @@
         <GameResult :playerRankings="playerRankings" />
     </div>
     <div
-        v-else-if="gameStatus == 'playing' || gameStatus == 'waiting'"
+        v-else-if="gameStatus == 'playing'"
         @contextmenu.prevent="disableContextMenu"
         class="game-playing-container"
     >
-        <transition v-if="gameStatus == 'waiting'">
-            <div class="game-waiting">
-                <p>Waiting</p>
-                <CountDownTimer style="transform: scale(2)" />
-            </div>
-        </transition>
-
-        <transition v-if="gameStatus == 'playing'">
+        <transition>
             <div
                 class="timer-self"
                 v-if="
@@ -109,7 +116,11 @@ export default {
         connection: {
             type: Object,
             required: false,
-        }
+        },
+        userId: {
+            type: String,
+            required: true,
+        },
     },
     components: {
         RoomPlayerListBar,
@@ -125,7 +136,6 @@ export default {
             timer: 9,
             timerInterval: null, // timerInternal ref
             isWindowShow: false,
-            connection: null,
             playerRankings: [],
             remainPlayer: null,
             warningMessage: "",
@@ -137,84 +147,14 @@ export default {
             // Mockup data
             myPlayerIndex: 1, // for debugging
             receivedData: {
-                error: "",
-                action: "game started",
+                error: "Null",
+                action: "",
                 gameData: {
-                    players: [
-                        {
-                            playerId: "2038983",
-                            playerName: "Nattee",
-                            playerAvatarURL:
-                                "https://drive.google.com/uc?export=view&id=1e8M36JuoSgn-eIUTeJdh2-ScqjxV8HJ6",
-                            status: "playing",
-                        },
-                        {
-                            playerId: "2342434",
-                            playerName: "TeaChanathip",
-                            playerAvatarURL:
-                                "https://drive.google.com/uc?export=view&id=1JktkwqHwryFRH7RqmalhAy0ORIwhkgi0",
-                            status: "playing",
-                        },
-                        {
-                            playerId: "4534534",
-                            playerName: "AzusaChan~~~",
-                            playerAvatarURL:
-                                "https://drive.google.com/uc?export=view&id=1BtpiBnZpqFtW4o80i6fCGztnnIIWbshY",
-                            status: "playing",
-                        },
-                        {
-                            playerId: "5673456",
-                            playerName: "Random Guy 6969",
-                            playerAvatarURL:
-                                "https://drive.google.com/uc?export=view&id=1V-C0PODkyrK_U84pGHys0NRWBBen2Ayz",
-                            status: "playing",
-                        },
-                        {
-                            playerId: "6776577",
-                            playerName: "Mooms",
-                            playerAvatarURL:
-                                "https://drive.google.com/uc?export=view&id=1ta4eJyBw-21yxntpb9GmSWxadoInpgLE",
-                            status: "playing",
-                        },
-                        {
-                            playerId: "5432456",
-                            playerName: "Random Cat 9696",
-                            playerAvatarURL:
-                                "https://drive.google.com/uc?export=view&id=1UuOiIvuI6q6J02aXWjVpmvYrpmatNtHY",
-                            status: "playing",
-                        },
-                        {
-                            playerId: "6524345",
-                            playerName: "LisaSu",
-                            playerAvatarURL:
-                                "https://drive.google.com/uc?export=view&id=1YBfmIcegUTs2oKyvqyKOxiCAW4mlRok1",
-                            status: "playing",
-                        },
-                        {
-                            playerId: "3562343",
-                            playerName: "CheesyDoritos",
-                            playerAvatarURL:
-                                "https://drive.google.com/uc?export=view&id=19PBu3logUfNweezw723ThssGgPVwfyWC",
-                            status: "playing",
-                        },
-                    ],
-                    playerCards: [
-                        {
-                            value: 2,
-                            isSpecial: false,
-                        },
-                        {
-                            value: -9,
-                            isSpecial: false,
-                        },
-                        {
-                            value: 2,
-                            isSpecial: true,
-                        },
-                    ],
-                    status: "waiting",
-                    currentPlayerIndex: null,
-                    currentDirection: 1,
+                    players: [],
+                    playerCards: [],
+                    status: "",
+                    currentPlayerIndex: 0,
+                    currentDirection: 0,
                     stackValue: 0,
                     maxStackValue: 99,
                     lastPlayedCard: {
@@ -428,6 +368,13 @@ export default {
         },
     },
     created: function () {
+        this.connection.onmessage = (event) => {
+            // console.log(event);
+            // console.log(JSON.parse(event.data));
+            this.receivedData = JSON.parse(event.data);
+            console.log(this.receivedData);
+        };
+
         // for debugging
         this.updateRemainPlayerIdx(this.players);
         this.updateRemainPlayer(this.players);

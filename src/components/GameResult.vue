@@ -154,7 +154,7 @@ button {
     border: 0px;
     border-radius: 8px;
     width: 16vh;
-    height: 10vh;
+    height: 8vh;
     cursor: pointer;
 }
 
