@@ -12,22 +12,31 @@
             />
         </div>
     </div>
-    <div class="card-container" ref="container">
-        <div v-for="(card, index) in cards" :key="index" ref="draggableCards">
-            <img
-                class="card"
-                draggable="false"
-                :src="card.src"
-                @mousedown="mouseStartDragging($event, card)"
-                @mousemove="mouseMoveCard"
-                @mouseup="mouseStopDragging"
-                @touchstart="touchStartDragging($event, card)"
-                @touchmove="touchMoveCard"
-                @touchend="touchStopDragging"
-                style="position: relative; left: 0; top: 0"
-            />
+    <transition>
+        <div class="inform-text" v-if="isPlayerOut">
+            <p>You are out!</p>
         </div>
-    </div>
+        <div class="card-container" ref="container" v-else>
+            <div
+                v-for="(card, index) in cards"
+                :key="index"
+                ref="draggableCards"
+            >
+                <img
+                    class="card"
+                    draggable="false"
+                    :src="card.src"
+                    @mousedown="mouseStartDragging($event, card)"
+                    @mousemove="mouseMoveCard"
+                    @mouseup="mouseStopDragging"
+                    @touchstart="touchStartDragging($event, card)"
+                    @touchmove="touchMoveCard"
+                    @touchend="touchStopDragging"
+                    style="position: relative; left: 0; top: 0"
+                />
+            </div>
+        </div>
+    </transition>
 </template>
 
 <script>
@@ -41,13 +50,13 @@ export default {
             type: Number,
             required: true,
         },
-        maxStackValue: {
-            type: Number,
-            default: 99,
-        },
         lastPlayedCard: {
             type: Object,
             default: null,
+        },
+        isPlayerOut: {
+            type: Boolean,
+            default: false,
         },
     },
     data() {
@@ -447,5 +456,18 @@ export default {
     height: 30vh;
     border-radius: 15px;
     vertical-align: middle;
+}
+
+.inform-text {
+    position: absolute;
+    bottom: 5%;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.inform-text p {
+    color: white;
+    font-size: 5vw;
+    margin: 0;
 }
 </style>

@@ -11,8 +11,8 @@
         userId: {{ userId }} | myPlayerIdx: {{ myPlayerIndex }}
     </p>
     <div class="debug-button">
+        <button @click="setGameStatus('playing')">set status "playing"</button>
         <button @click="setGameStatus('ended')">set status "ended"</button>
-        <button @click="toggleError">Toggle Error</button>
     </div>
 
     <div v-if="errorMessage.length != 0" class="game-error">
@@ -32,9 +32,10 @@
         class="game-playing-container"
     >
         <transition>
+            <p class="warning" v-if="showWarning">{{ warningMessage }}</p>
             <div
                 class="timer-self"
-                v-if="
+                v-else-if="
                     receivedData.gameData.currentPlayerIndex === myPlayerIndex
                 "
             >
@@ -80,12 +81,10 @@
                     :stackValue="stackValue"
                     :maxStackValue="maxStackValue"
                     :lastPlayedCard="lastPlayedCard"
+                    :isPlayerOut="isPlayerOut"
                     @playCard="playCard"
                 />
             </div>
-        </transition>
-        <transition>
-            <p class="warning" v-if="showWarning">{{ warningMessage }}</p>
         </transition>
     </div>
     <div v-else>
@@ -133,7 +132,7 @@ export default {
     data() {
         return {
             playTime: 30,
-            timer: 30,
+            timer: null,
             timerInterval: null, // timerInternal ref
 
             isWindowShow: false,
@@ -147,8 +146,6 @@ export default {
 
             playerRankings: [],
             remainPlayer: null,
-
-            remainPlayerIdx: [], // for debugging
         };
     },
     computed: {
@@ -199,29 +196,14 @@ export default {
         isGameEnd() {
             return this.gameStatus == "ended";
         },
+        isPlayerOut() {
+            return this.players[this.myPlayerIndex].status !== "playing";
+        },
     },
     methods: {
-        toggleError() {
-            // for debugging
-            if (this.errorMessage.length != 0) {
-                this.receivedData.error = "";
-            } else {
-                this.receivedData.error = "test error message";
-            }
-        },
         setGameStatus(newStatus) {
             // for debugging
             this.receivedData.gameData.status = newStatus;
-        },
-        updateRemainPlayerIdx(value) {
-            // for debugging
-            let p = [];
-            for (let i = 0; i < this.totalPlayer; i++) {
-                if (value[i].status === "playing") {
-                    p.push(i);
-                }
-            }
-            this.remainPlayerIdx = p;
         },
 
         disableContextMenu(event) {
@@ -236,6 +218,8 @@ export default {
             this.timerInterval = setInterval(() => {
                 if (this.timer > 0) {
                     this.timer--;
+                } else if (this.isMyturn) {
+                    this.autoPlay();
                 }
             }, 1000);
         },
@@ -286,8 +270,21 @@ export default {
                 this.allowPlay = false;
             }
         },
+        sendMessage(message) {
+            if(!this.isGameEnd){
+                const jsonMes = JSON.stringify(message);
+                console.log(jsonMes);
+                this.connection.send(jsonMes);
+            }
+        },
+        isValidPlay(index) {
+            return (
+                this.playerCards[index].isSpecial ||
+                this.playerCards[index].value + this.stackValue <=
+                    this.maxStackValue
+            );
+        },
         playCard(index) {
-            // console.log(value);
             if (!this.isMyturn) {
                 this.warningMessage = "Not your turn!";
                 clearTimeout(this.warningTimeOut);
@@ -295,11 +292,21 @@ export default {
                 this.warningTimeOut = setTimeout(() => {
                     this.showWarning = false;
                 }, 1000);
-            } else if (this.allowPlay) {
-                // Work on mockup data, might change when use with backend
-                // this.receivedData.gameData.lastPlayedCard =
-                //     this.playerCards[value];
-                // this.playerCards.splice(value, 1);
+            } else if (!this.allowPlay) {
+                this.warningMessage = "You already played!";
+                clearTimeout(this.warningTimeOut);
+                this.showWarning = true;
+                this.warningTimeOut = setTimeout(() => {
+                    this.showWarning = false;
+                }, 1000);
+            } else if (!this.isValidPlay(index)) {
+                this.warningMessage = "Invalid play!";
+                clearTimeout(this.warningTimeOut);
+                this.showWarning = true;
+                this.warningTimeOut = setTimeout(() => {
+                    this.showWarning = false;
+                }, 1000);
+            } else {
                 this.allowPlay = false;
                 const playedCard = {
                     action: "play",
@@ -309,32 +316,36 @@ export default {
                     },
                 };
                 this.sendMessage(playedCard);
-            } else {
-                this.warningMessage = "You played already!";
-                clearTimeout(this.warningTimeOut);
-                this.showWarning = true;
-                this.warningTimeOut = setTimeout(() => {
-                    this.showWarning = false;
-                }, 1000);
             }
         },
-        sendMessage(message) {
-            const jsonMes = JSON.stringify(message);
-            console.log(jsonMes);
-            this.connection.send(jsonMes);
+        autoPlay() {
+            let selected = 0;
+            for (let i = 0; i < this.playerCards.length; i++) {
+                if (this.isValidPlay(i)) {
+                    selected = i;
+                    break;
+                }
+            }
+            const playedCard = {
+                action: "play",
+                card: {
+                    value: this.playerCards[selected].value,
+                    isSpecial: this.playerCards[selected].isSpecial,
+                },
+            };
+            this.sendMessage(playedCard);
         },
     },
     watch: {
-        currentPlayerIndex(value) {
-            this.prepareNextPlayer(value);
+        receivedData: {
+            handler(value) {
+                this.prepareNextPlayer(value.gameData.currentPlayerIndex);
+            },
+            deep: true,
         },
         players: {
             handler(newValue, oldValue) {
                 console.log("players changed");
-
-                // for debugging
-                this.updateRemainPlayerIdx(newValue);
-
                 this.updateRemainPlayer(newValue);
                 this.updatePlayerRanking(newValue);
                 this.updateMyPlayerIndex(newValue);
@@ -343,12 +354,8 @@ export default {
         },
     },
     created: function () {
-        // for debugging
-        this.updateRemainPlayerIdx(this.players);
-
         this.updateRemainPlayer(this.players);
         this.updateMyPlayerIndex(this.players);
-
         this.prepareNextPlayer(this.currentPlayerIndex);
     },
 };
@@ -409,7 +416,7 @@ export default {
 
     position: absolute;
     right: 0%;
-    z-index: 100;
+    z-index: 99;
 }
 
 .player-card {
