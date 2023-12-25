@@ -32,9 +32,6 @@ export default {
     },
     async created() {
         this.connect();
-        setTimeout(() => {
-            this.sendJoinAction();
-        }, 1000);
     },
     methods: {
         async connect() {
@@ -48,11 +45,12 @@ export default {
                 console.log(JSON.parse(event.data));
             };
 
-            this.connection.onopen = function (event) {
+            this.connection.onopen = (event) => {
                 console.log(event);
                 console.log(
                     "Successfully connected to the WebSocket server..."
                 );
+                this.sendJoinAction();
             };
 
             this.connection.onclose = function (event) {
