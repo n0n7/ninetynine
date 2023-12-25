@@ -118,7 +118,7 @@ export default {
 }
 
 .highlighted {
-    width: 20vh;
+    width: 22vh;
     transition: width 0.5s ease;
 }
 

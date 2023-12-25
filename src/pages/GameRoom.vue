@@ -4,9 +4,6 @@ import Room from "../components/Room.vue";
 </script>
 
 <template>
-    <button @click="toggleProgress" style="position: absolute; bottom: 0">
-        Toggle Progress
-    </button>
     <div>
         <Lobby v-if="!inProgress" :roomId="roomId" :connection="null" />
         <Room
@@ -14,17 +11,22 @@ import Room from "../components/Room.vue";
             :roomId="roomId"
             :connection="connection"
             :userId="userId"
+            :receivedData="receivedData"
         />
     </div>
+    <!-- <p style="color: white; position: absolute; bottom: 0%">
+        {{ inProgress }} | {{ receivedData }}
+    </p> -->
 </template>
 
 <script>
 export default {
     data() {
         return {
-            inProgress: false,
+            // inProgress: false,
             connection: null,
             userId: null,
+            receivedData: null,
         };
     },
     props: {
@@ -40,9 +42,10 @@ export default {
                 "ws://localhost:8080/ws/000000000000"
             );
 
-            this.connection.onmessage = function (event) {
+            this.connection.onmessage = (event) => {
                 console.log(event);
-                console.log(JSON.parse(event.data));
+                // console.log(JSON.parse(event.data));
+                this.receivedData = JSON.parse(event.data);
             };
 
             this.connection.onopen = (event) => {
@@ -65,12 +68,6 @@ export default {
         },
         sendJoinAction() {
             // test data
-            // const joinData = {
-            //     action: "join",
-            //     userId: "000000000",
-            //     username: "yourUsername",
-            //     profilePics: "profilePicUrl"
-            // };
             const rand = this.randomUserId();
             this.userId = rand;
             const joinData = {
@@ -88,11 +85,20 @@ export default {
             console.log(this.connection);
             this.connection.send(jsonData);
         },
-        toggleProgress() {
-            this.inProgress = !this.inProgress;
-        },
         randomUserId() {
             return Math.floor(Math.random() * 1000000000).toString();
+        },
+    },
+    computed: {
+        inProgress() {
+            if (
+                this.receivedData === null ||
+                this.receivedData.gameData.status === "waiting"
+            ) {
+                return false;
+            } else if (this.receivedData.gameData.status === "playing") {
+                return true;
+            }
         },
     },
 };
