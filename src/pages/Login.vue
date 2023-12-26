@@ -52,7 +52,14 @@
 </template>
 
 <script>
+import { useSessionStore } from "../store/session.js";
 export default {
+    setup() {
+        const sessionStore = useSessionStore();
+        return {
+            sessionStore,
+        };
+    },
     data() {
         return {
             email: "",
@@ -104,8 +111,9 @@ export default {
                         ),
                     });
                     const data = await response.json();
-                    console.log(data);
+                    console.log(data.userId);
                     if (data.error === undefined) {
+                        await this.sessionStore.login(data);
                         this.$router.push("/");
                     } else {
                         this.isResponsePassed = false;

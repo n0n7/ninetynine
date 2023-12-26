@@ -23,8 +23,11 @@
             <div id="nav-profile">
                 <ul class="nav-ul">
                     <li class="nav-list">
-                        <router-link to="/login">
+                        <router-link v-if="!isLoggedIn" to="/login">
                             <a> Login </a>
+                        </router-link>
+                        <router-link v-else to="/" @click="logout">
+                            <a> Logout </a>
                         </router-link>
                     </li>
                     <router-link to="/AccountSetting">
@@ -42,7 +45,24 @@
 </template>
 
 <script>
+import { useSessionStore } from "../store/session.js";
 export default {
+    setup() {
+        const sessionStore = useSessionStore();
+        return {
+            sessionStore,
+        };
+    },
+    props: {
+        isLoggedIn: {
+            type: Boolean,
+            default: false,
+        },
+        data: {
+            type: Object,
+            default: null,
+        },
+    },
     data() {
         return {
             pages: [
@@ -51,6 +71,11 @@ export default {
                 { name: "Contact", path: "/contact" },
             ],
         };
+    },
+    methods: {
+        logout() {
+            this.sessionStore.logout();
+        },
     },
 };
 </script>
