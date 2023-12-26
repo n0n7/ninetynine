@@ -3,95 +3,102 @@
         style="
             color: white;
             position: absolute;
-            top: 50%;
+            bottom: 0;
             right: 0;
-            transform: translateY(-50%);
+            z-index: 200;
         "
     >
         userId: {{ userId }} | myPlayerIdx: {{ myPlayerIndex }}
     </p>
-    <div class="debug-button">
-        <button @click="setGameStatus('playing')">set status "playing"</button>
-        <button @click="setGameStatus('ended')">set status "ended"</button>
-    </div>
 
-    <div v-if="errorMessage.length != 0" class="game-error">
-        <h2 style="text-align: center; font-size: 8vw; margin-bottom: 0">
-            Error :\
-        </h2>
-        <p style="text-align: center; font-size: 4vw; margin-top: 0">
-            {{ errorMessage }}
-        </p>
-    </div>
-    <div v-else-if="gameStatus == 'ended'">
-        <GameResult :playerRankings="playerRankings" />
-    </div>
-    <div
-        v-else-if="gameStatus == 'playing'"
-        @contextmenu.prevent="disableContextMenu"
-        class="game-playing-container"
-    >
-        <transition>
-            <p class="warning" v-if="showWarning">{{ warningMessage }}</p>
-            <div
-                class="timer-self"
-                v-else-if="
-                    receivedData.gameData.currentPlayerIndex === myPlayerIndex
-                "
-            >
-                <p>Your turn!</p>
-                <CountDownTimer :timer="timer" />
+    <transition>
+        <div v-if="errorMessage.length != 0" class="game-error">
+            <h2 style="text-align: center; font-size: 8vw; margin-bottom: 0">
+                Error :\
+            </h2>
+            <p style="text-align: center; font-size: 4vw; margin-top: 0">
+                {{ errorMessage }}
+            </p>
+        </div>
+        <div v-else-if="gameStatus == 'ended'">
+            <GameResult :playerRankings="playerRankings" />
+        </div>
+        <div
+            v-else-if="gameStatus == 'playing'"
+            @contextmenu.prevent="disableContextMenu"
+            class="game-playing-container"
+        >
+            <transition>
+                <p v-if="showCDStart" class="countdown-start">
+                    {{ countdownStart }}
+                </p>
+            </transition>
+            <div v-if="!showCDStart">
+                <transition>
+                    <p v-if="showWarning" class="warning">
+                        {{ warningMessage }}
+                    </p>
+                    <div
+                        v-else-if="
+                            receivedData.gameData.currentPlayerIndex ===
+                            myPlayerIndex
+                        "
+                        class="timer-self"
+                    >
+                        <p>Your turn!</p>
+                        <CountDownTimer :timer="timer" />
+                    </div>
+                </transition>
             </div>
-        </transition>
-        <div class="dropdown-menu">
-            <DropDownMenu @openWindow="toggleWindow()" />
-        </div>
-        <div>
-            <ConfirmWindow
-                :isVisible="isWindowShow"
-                @closeWindow="toggleWindow()"
-            />
-        </div>
-        <div class="player-list-bar left">
-            <RoomPlayerListBar
-                side="left"
-                :playerList="pListLeft"
-                :currentPlayerIndex="currentPlayerIndex"
-                :timer="timer"
-            />
-        </div>
-        <div class="player-list-bar right" :v-if="totalPlayer > 4">
-            <RoomPlayerListBar
-                side="right"
-                :playerList="pListRight"
-                :currentPlayerIndex="currentPlayerIndex - 4"
-                :timer="timer"
-            />
-        </div>
-        <transition>
-            <div
-                class="player-card"
-                v-if="gameStatus == 'playing'"
-                @wheel.prevent
-                @touchmove.prevent
-                @scroll.prevent
-            >
-                <AllCard
-                    :playerCards="playerCards"
-                    :stackValue="stackValue"
-                    :maxStackValue="maxStackValue"
-                    :lastPlayedCard="lastPlayedCard"
-                    :isPlayerOut="isPlayerOut"
-                    @playCard="playCard"
+            <div class="dropdown-menu">
+                <DropDownMenu @openWindow="toggleWindow()" />
+            </div>
+            <div>
+                <ConfirmWindow
+                    :isVisible="isWindowShow"
+                    @closeWindow="toggleWindow()"
                 />
             </div>
-        </transition>
-    </div>
-    <div v-else>
-        <p style="color: white; text-align: center; font-size: 6vw">
-            Invalid Game Status
-        </p>
-    </div>
+            <div class="player-list-bar left">
+                <RoomPlayerListBar
+                    side="left"
+                    :playerList="pListLeft"
+                    :currentPlayerIndex="currentPlayerIndex"
+                    :timer="timer"
+                />
+            </div>
+            <div :v-if="totalPlayer > 4" class="player-list-bar right">
+                <RoomPlayerListBar
+                    side="right"
+                    :playerList="pListRight"
+                    :currentPlayerIndex="currentPlayerIndex - 4"
+                    :timer="timer"
+                />
+            </div>
+            <transition>
+                <div
+                    class="player-card"
+                    v-if="gameStatus == 'playing' && !showCDStart"
+                    @wheel.prevent
+                    @touchmove.prevent
+                    @scroll.prevent
+                >
+                    <AllCard
+                        :playerCards="playerCards"
+                        :stackValue="stackValue"
+                        :lastPlayedCard="lastPlayedCard"
+                        :isPlayerOut="isPlayerOut"
+                        @playCard="playCard"
+                    />
+                </div>
+            </transition>
+        </div>
+        <div v-else>
+            <p style="color: white; text-align: center; font-size: 6vw">
+                Invalid Game Status
+            </p>
+        </div>
+    </transition>
 </template>
 
 <script>
@@ -131,7 +138,10 @@ export default {
     },
     data() {
         return {
-            playTime: 30,
+            countdownStart: 5,
+            showCDStart: true,
+
+            playTime: 2,
             timer: null,
             timerInterval: null, // timerInternal ref
 
@@ -145,7 +155,6 @@ export default {
             allowPlay: false,
 
             playerRankings: [],
-            remainPlayer: null,
         };
     },
     computed: {
@@ -201,11 +210,6 @@ export default {
         },
     },
     methods: {
-        setGameStatus(newStatus) {
-            // for debugging
-            this.receivedData.gameData.status = newStatus;
-        },
-
         disableContextMenu(event) {
             // Prevent the default right-click context menu
             event.preventDefault();
@@ -218,15 +222,14 @@ export default {
             this.timerInterval = setInterval(() => {
                 if (this.timer > 0) {
                     this.timer--;
-                } else if (this.isMyturn) {
+                } else if (this.isMyturn && this.allowPlay) {
                     this.autoPlay();
                 }
             }, 1000);
         },
-
         updatePlayerRanking(value) {
-            for (const player of value) {
-                if (player.status === "out") {
+            for (let player of value) {
+                if (player.status === "Out") {
                     if (
                         this.playerRankings.find(
                             ({ playerId }) => playerId === player.playerId
@@ -238,19 +241,17 @@ export default {
                 }
             }
 
-            if (this.remainPlayer == 1) {
-                const winner = value.find(({ status }) => status === "playing");
-                this.playerRankings.push(winner);
-            }
-        },
-        updateRemainPlayer(value) {
-            let remainPlayer = 0;
-            for (const player of value) {
-                if (player.status === "playing") {
-                    remainPlayer++;
+            if (this.isGameEnd) {
+                let winner = value.find(({ status }) => status === "playing");
+                if (
+                    winner !== undefined &&
+                    this.playerRankings.find(
+                        ({ playerId }) => playerId === winner.playerId
+                    ) === undefined
+                ) {
+                    this.playerRankings.push(winner);
                 }
             }
-            this.remainPlayer = remainPlayer;
         },
         updateMyPlayerIndex(value) {
             for (let i = 0; i < value.length; i++) {
@@ -271,7 +272,7 @@ export default {
             }
         },
         sendMessage(message) {
-            if(!this.isGameEnd){
+            if (!this.isGameEnd) {
                 const jsonMes = JSON.stringify(message);
                 console.log(jsonMes);
                 this.connection.send(jsonMes);
@@ -333,7 +334,23 @@ export default {
                     isSpecial: this.playerCards[selected].isSpecial,
                 },
             };
+            this.allowPlay = false;
             this.sendMessage(playedCard);
+        },
+        gameStart() {
+            this.updateMyPlayerIndex(this.players);
+            const inst = setInterval(() => {
+                if (this.countdownStart > 0) {
+                    this.countdownStart--;
+                    if (this.countdownStart == 0) {
+                        this.countdownStart = "Start!";
+                    }
+                } else {
+                    this.showCDStart = false;
+                    this.prepareNextPlayer(this.currentPlayerIndex);
+                    clearInterval(inst);
+                }
+            }, 1000);
         },
     },
     watch: {
@@ -346,36 +363,27 @@ export default {
         players: {
             handler(newValue, oldValue) {
                 console.log("players changed");
-                this.updateRemainPlayer(newValue);
-                this.updatePlayerRanking(newValue);
                 this.updateMyPlayerIndex(newValue);
+                this.updatePlayerRanking(newValue);
             },
             deep: true,
         },
     },
     created: function () {
-        this.updateRemainPlayer(this.players);
-        this.updateMyPlayerIndex(this.players);
-        this.prepareNextPlayer(this.currentPlayerIndex);
+        this.gameStart();
     },
 };
 </script>
 
 <style scoped>
-.debug-button {
-    position: absolute;
-    top: 0;
+.v-enter-active,
+.v-leave-active {
+    transition: opacity 0.5s ease;
+}
 
-    display: flex;
-    flex-direction: column;
-    z-index: 200;
-
-    -webkit-user-select: none;
-    /* Safari */
-    -ms-user-select: none;
-    /* IE 10 and IE 11 */
-    user-select: none;
-    /* Standard syntax */
+.v-enter-from,
+.v-leave-to {
+    opacity: 0;
 }
 
 .timer-self {
@@ -421,16 +429,6 @@ export default {
 
 .player-card {
     /* z-index: 70; */
-}
-
-.v-enter-active,
-.v-leave-active {
-    transition: opacity 0.5s ease;
-}
-
-.v-enter-from,
-.v-leave-to {
-    opacity: 0;
 }
 
 .game-error {
@@ -482,5 +480,16 @@ export default {
     font-size: 6vh;
     margin: 0;
     color: #ff0033;
+}
+
+.countdown-start {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+
+    font-size: 10vw;
+    margin: 0;
+    color: white;
 }
 </style>

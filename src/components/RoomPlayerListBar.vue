@@ -5,7 +5,9 @@
             v-for="(item, idx) in playerList"
             :key="idx"
         >
-            <h2 v-show="isPlayerOut[idx]" v-if="side === 'right'">Out!</h2>
+            <transition>
+                <h2 v-show="isPlayerOut[idx]" v-if="side === 'right'">Out!</h2>
+            </transition>
             <div :class="getPlayerFrameClass(idx)">
                 <transition>
                     <p
@@ -26,7 +28,9 @@
                     </p>
                 </transition>
             </div>
-            <h2 v-show="isPlayerOut[idx]" v-if="side === 'left'">Out!</h2>
+            <transition>
+                <h2 v-show="isPlayerOut[idx]" v-if="side === 'left'">Out!</h2>
+            </transition>
         </div>
     </div>
 </template>
@@ -99,7 +103,7 @@ export default {
 
     background: #a35bff;
     width: 14vh;
-    transition: width 0.5s ease;
+    transition: width 0.5s, background-color 0.5s ease;
 }
 
 .player-frame.left {

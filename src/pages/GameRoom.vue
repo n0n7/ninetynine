@@ -5,18 +5,17 @@ import Room from "../components/Room.vue";
 
 <template>
     <div>
-        <Lobby v-if="!inProgress" :roomId="roomId" :connection="null" />
-        <Room
-            v-else
-            :roomId="roomId"
-            :connection="connection"
-            :userId="userId"
-            :receivedData="receivedData"
-        />
+        <transition>
+            <Lobby v-if="!inProgress" :roomId="roomId" :connection="null" />
+            <Room
+                v-else
+                :roomId="roomId"
+                :connection="connection"
+                :userId="userId"
+                :receivedData="receivedData"
+            />
+        </transition>
     </div>
-    <!-- <p style="color: white; position: absolute; bottom: 0%">
-        {{ inProgress }} | {{ receivedData }}
-    </p> -->
 </template>
 
 <script>
@@ -106,3 +105,15 @@ export default {
     },
 };
 </script>
+
+<style scoped>
+.v-enter-active,
+.v-leave-active {
+    transition: opacity 0.5s ease;
+}
+
+.v-enter-from,
+.v-leave-to {
+    opacity: 0;
+}
+</style>

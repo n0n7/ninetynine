@@ -24,15 +24,20 @@
             <button>Leave</button>
         </router-link>
     </div>
+    <ConfettiEffect />
 </template>
 
 <script>
+import ConfettiEffect from "./ConfettiEffect.vue";
 export default {
     props: {
         playerRankings: {
             type: Array,
             required: true,
         },
+    },
+    components: {
+        ConfettiEffect,
     },
     computed: {
         firstPlace() {
@@ -89,6 +94,8 @@ export default {
     display: flex;
     flex-direction: row;
     column-gap: 10vw;
+
+    z-index: -2;
 }
 
 .place {
@@ -145,6 +152,8 @@ export default {
     column-gap: 2vh;
 
     margin-right: 2vh;
+
+    z-index: 0;
 }
 
 button {

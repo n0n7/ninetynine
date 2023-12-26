@@ -41,6 +41,7 @@
 
 <script>
 export default {
+    emits: ["playCard"],
     props: {
         playerCards: {
             type: Array,
@@ -352,7 +353,7 @@ export default {
                     });
                 }
             });
-            console.log(arr);
+            // console.log(arr);
             return arr;
         },
         topCard() {
