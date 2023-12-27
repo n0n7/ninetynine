@@ -90,11 +90,9 @@ export default {
     bottom: 0;
     left: 50%;
     transform: translateX(-50%);
-
     display: flex;
     flex-direction: row;
     column-gap: 10vw;
-
     z-index: -2;
 }
 
@@ -146,13 +144,10 @@ export default {
 .button-container {
     position: absolute;
     right: 0%;
-
     display: flex;
     flex-direction: row;
     column-gap: 2vh;
-
     margin-right: 2vh;
-
     z-index: 0;
 }
 

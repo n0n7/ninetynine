@@ -141,7 +141,7 @@ export default {
             countdownStart: 5,
             showCDStart: true,
 
-            playTime: 2,
+            playTime: 30,
             timer: null,
             timerInterval: null, // timerInternal ref
 

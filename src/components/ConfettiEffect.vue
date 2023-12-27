@@ -120,3 +120,16 @@ export default {
     },
 };
 </script>
+
+<style scoped>
+#confetti {
+    overflow-y: hidden;
+    overflow-x: hidden;
+    width: 100%;
+    margin: 0;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    z-index: -2;
+}
+</style>
