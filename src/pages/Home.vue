@@ -22,8 +22,14 @@
                     text="Join Room"
                     to="/joinroom"
                 />
-                <NavButton class="flex-item-button" text="Create Room" to="/" />
+                <NavButton class="flex-item-button" text="Create Room" @click="createRoom" />
             </div>
+            <p
+                v-show="isError"
+                id="invalid-status"
+            >
+                {{ status }}
+            </p>
         </div>
         <div class="home-sidebar"></div>
         <!-- empty sidebar -->
@@ -32,12 +38,15 @@
 
 <script>
 import NavButton from "/src/components/NavButton.vue";
+import { useSessionStore } from "../store/session.js";
+
 export default {
     components: {
         NavButton,
     },
     data() {
         return {
+            status: "",
             activePage: 0,
             pages: [
                 {
@@ -56,7 +65,45 @@ export default {
                     content: "Write the status here",
                 },
             ],
+            sessionStore: useSessionStore(),
         };
+    },
+    computed: {
+        isError() {
+            return this.status !== "";
+        },
+    },
+    methods: {
+        async createRoom() {
+            if (!this.sessionStore.isLoggedIn) {
+                this.status = "Please login first";
+            } else {
+                try {
+                    const response = await fetch(
+                        "http://localhost:8080/createroom",
+                        {
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/json",
+                            },
+                            body: JSON.stringify({
+                                userId: this.sessionStore.data.userId,
+                            }),
+                        }
+                    );
+                    const data = await response.json();
+                    console.log(data);
+                    if (data.error === undefined) {
+                        this.$router.push("/room/" + data.roomId);
+                    } else {
+                        this.status = data.error;
+                    }
+                } catch (error) {
+                    this.status =
+                        "Cannot connect to server. Please try again later.";
+                }
+            }
+        }
     },
 };
 </script>
@@ -141,5 +188,9 @@ h1 {
 
 .flex-item-button {
     margin-bottom: 0.5rem;
+}
+
+#invalid-status {
+    color: #ff0033;
 }
 </style>

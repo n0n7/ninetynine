@@ -3,7 +3,7 @@
     <div class="search-bar">
         <form @submit.prevent="searchRoomID()">
             <input
-                :class="{'input-invalid': isError}"
+                :class="{'input-invalid': isRoomError}"
                 type="text"
                 placeholder="Room ID: xxxxxxxxxxxx"
                 maxlength="12"
@@ -25,24 +25,34 @@
 
 <script>
 import NavButton from "/src/components/NavButton.vue";
+import { useSessionStore } from "../store/session.js";
+
 export default {
     components: {
         NavButton,
     },
     data() {
         return {
-            isError: false,
+            isRoomError: false,
             status: "",
             roomID: "",
+            sessionStore: useSessionStore(),
         };
+    },
+    computed: {
+        isError() {
+            return this.status !== "";
+        },
     },
     methods: {
         async joinRoom() {
             console.log("joinRoom");
-            this.isError = false;
+            this.isRoomError = false;
             if (this.roomID.length < 12) {
-                this.isError = true;
+                this.isRoomError = true;
                 this.status = "Invalid format";
+            } else if (!this.sessionStore.isLoggedIn) {
+                this.status = "Please login first";
             } else {
                 try {
                     const response = await fetch(
@@ -53,7 +63,7 @@ export default {
                                 "Content-Type": "application/json",
                             },
                             body: JSON.stringify({
-                                userId: "7gtuWXORKjYzTIhetV4ZknC7orC3",
+                                userId: this.sessionStore.data.userId,
                                 roomId: this.roomID,
                             }),
                         }
@@ -63,11 +73,9 @@ export default {
                     if (data.error === undefined) {
                         this.$router.push("/room/" + this.roomID);
                     } else {
-                        this.isError = true;
                         this.status = data.error;
                     }
                 } catch (error) {
-                    this.isError = true;
                     this.status =
                         "Cannot connect to server. Please try again later.";
                 }
