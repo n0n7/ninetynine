@@ -51,6 +51,7 @@ export default {
                 console.log(event);
                 // console.log(JSON.parse(event.data));
                 this.receivedData = JSON.parse(event.data);
+                console.log(this.receivedData);
             };
 
             this.connection.onopen = (event) => {
@@ -76,13 +77,13 @@ export default {
                 action: "join",
                 userId: null,
                 username: null,
-                profilePics: "NULL",
+                profilePic: "NULL",
             };
 
             if (this.isLoggedIn) {
                 joinData.userId = this.userData.userId;
                 joinData.username = this.userData.username;
-                joinData.profilePics = this.userData.profilePics;
+                joinData.profilePic = this.userData.profilePic;
             } else {
                 // guset user
                 const rand = this.randomUserId();

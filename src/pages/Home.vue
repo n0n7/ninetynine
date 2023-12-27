@@ -31,7 +31,7 @@
                 {{ status }}
             </p>
         </div>
-        <div class="home-sidebar"></div>
+        <!-- <div class="home-sidebar"></div> -->
         <!-- empty sidebar -->
     </div>
 </template>
@@ -126,7 +126,10 @@ h1 {
 .home-container {
     display: flex;
     flex-direction: row;
-    justify-content: space-between;
+    justify-content: center;
+    position: relative;
+
+    width: 100vw;
 }
 
 .home-main {
@@ -157,6 +160,10 @@ h1 {
     margin-top: 50px;
     min-width: 120px;
     max-width: 20%;
+
+    position: absolute;
+    top: 0;
+    left: 0;
 }
 
 .p-info {
