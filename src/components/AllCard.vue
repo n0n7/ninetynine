@@ -82,8 +82,6 @@ export default {
                 "/cards/Sp3_set99.png",
             ],
 
-            cards: null,
-
             isDragging: false,
             currOffsetX: 0,
             currOffsetY: 0,

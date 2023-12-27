@@ -5,6 +5,10 @@ export const useSessionStore = defineStore("session", {
         isLoggedIn: false,
         data: null,
     }),
+    getters: {
+        getIsLoggedIn: (state) => state.isLoggedIn,
+        getData: (state) => state.data,
+    },
     actions: {
         login(data) {
             this.isLoggedIn = true;

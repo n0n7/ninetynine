@@ -143,9 +143,9 @@ export default {
 
             playTime: 30,
             timer: null,
-            timerInterval: null, // timerInternal ref
+            timerInterval: null, // playtime countdown ref
 
-            isWindowShow: false,
+            isWindowShow: false, // confirm window
 
             showWarning: false,
             warningMessage: "",
@@ -154,7 +154,7 @@ export default {
             myPlayerIndex: null,
             allowPlay: false,
 
-            playerRankings: [],
+            playerRankings: [], // for game result
         };
     },
     computed: {
@@ -241,8 +241,10 @@ export default {
                 }
             }
 
+            // status of winner is "playing"
             if (this.isGameEnd) {
                 let winner = value.find(({ status }) => status === "playing");
+                // backend will send the message twice (Why? I don't know), so we need to prevent the duplicate
                 if (
                     winner !== undefined &&
                     this.playerRankings.find(
@@ -308,6 +310,7 @@ export default {
                     this.showWarning = false;
                 }, 1000);
             } else {
+                // player can play
                 this.allowPlay = false;
                 const playedCard = {
                     action: "play",
