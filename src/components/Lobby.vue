@@ -102,6 +102,11 @@
             <p>Copied to clipboard!</p>
         </div>
     </transition>
+    <transition name="fade">
+        <div class="warning-message" v-if="showWarningMessage">
+            <p>{{ this.receivedData.error }}!</p>
+        </div>
+    </transition>
 </template>
 
 <script>
@@ -127,8 +132,12 @@ export default {
             ],
 
             lobbyStore: useLobbyStore(),
+
             showClipboardMessage: false,
             messageTimeOut: null,
+
+            showWarningMessage: false,
+            warningMessageTimeOut: null,
         };
     },
     components: {
@@ -201,6 +210,13 @@ export default {
                 this.showClipboardMessage = false;
             }, 2000);
         },
+        setWarningMessage() {
+            this.showWarningMessage = true;
+            clearTimeout(this.warningMessageTimeOut);
+            this.warningMessageTimeOut = setTimeout(() => {
+                this.showWarningMessage = false;
+            }, 2000);
+        },
     },
     computed: {
         isOwner() {
@@ -208,10 +224,18 @@ export default {
         },
     },
     watch: {
-        receivedData() {
-            this.updateOwner();
-            this.updatePlayer();
-            this.updateSpectator();
+        receivedData(value) {
+            if(value.error === ""){
+                this.updateOwner();
+                this.updatePlayer();
+                this.updateSpectator();
+                if(this.receivedData.error.length !== 0) {
+                    this.showWarningMessage();
+                }
+            }
+            else {
+                this.setWarningMessage();
+            }
         },
     },
     created() {
@@ -334,13 +358,30 @@ h1 {
     left: 50%;
     transform: translateX(-50%);
 
-    background: #4e4f50;
+    background: #3f3f3f;
     border-radius: 8px;
     margin-top: 1rem;
 }
 
 .clipboard-message p {
     color: white;
+    font-size: 18px;
+    margin: 0.5rem 1rem;
+}
+
+.warning-message {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+
+    background: #3f3f3f;
+    border-radius: 8px;
+    margin-top: 1rem;
+}
+
+.warning-message p {
+    color: #ff0033;
     font-size: 18px;
     margin: 0.5rem 1rem;
 }

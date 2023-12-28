@@ -109,11 +109,13 @@ export default {
             } else if (this.receivedData.gameData.status === "waiting") {
                 return false;
             } else if (
-                this.receivedData.gameData.status === "playing" ||
-                this.receivedData.gameData.status === "ended"
+                (this.receivedData.gameData.status === "playing" ||
+                    this.receivedData.gameData.status === "ended") &&
+                this.receivedData.error === ""
             ) {
                 return true;
             }
+            return false;
         },
         isLoggedIn() {
             return this.sessionStore.getIsLoggedIn;
