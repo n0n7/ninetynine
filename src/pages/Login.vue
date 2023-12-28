@@ -190,7 +190,7 @@ button {
     border: none;
     color: white;
     border-radius: 10px;
-    margin-bottom: 10px;
+    margin-bottom: 20px;
     font-size: 16px;
 }
 
@@ -233,6 +233,12 @@ input {
     width: 200px;
 }
 
+#password-field {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
 #password-show {
     color: white;
     font-size: 16px;
@@ -240,15 +246,9 @@ input {
     right: 10px;
 }
 
-#password-field {
-    position: relative;
-    display: flex;
-    align-items: center;
-}
-
 #password-field input {
-    width: 160px;
-    padding-right: 47px;
+    width: 167px;
+    padding-right: 40px;
 }
 
 .login-form {
@@ -256,7 +256,7 @@ input {
     text-align: center;
     background-color: #242526;
     padding: 30px;
-    min-width: 300px;
+    min-width: 350px;
     width: 350px;
     margin-bottom: 40px;
     border-radius: 7px;

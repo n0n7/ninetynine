@@ -40,15 +40,20 @@
                 >
                     Password
                 </label>
-                <input
-                    type="password"
-                    id="password"
-                    name="password"
-                    v-model="password"
-                    placeholder="password"
-                    :class="{ 'input-error': !isPasswordValid }"
-                    @input="clearErrorPassword()"
-                />
+                <div id="password-field">
+                    <input
+                        :type="showPassword ? 'text' : 'password'"
+                        id="password"
+                        name="password"
+                        v-model="password"
+                        placeholder="password"
+                        :class="{ 'input-error': !isPasswordValid }"
+                        @input="clearErrorPassword()"
+                    />
+                    <div id="password-show" @click="showPassword = !showPassword">
+                        <font-awesome-icon :icon="showPassword ? 'fas fa-eye-slash' : 'fas fa-eye'" />
+                    </div>
+                </div>
             </div>
             <!--confirm password-->
             <div class="form-input-container">
@@ -58,15 +63,20 @@
                 >
                     Confirm Password
                 </label>
-                <input
-                    type="password"
-                    id="confirm-password"
-                    name="confirm-password"
-                    v-model="confirmPassword"
-                    placeholder="confirm password"
-                    :class="{ 'input-error': !isConfirmPasswordValid }"
-                    @input="clearErrorConfirmPassword()"
-                />
+                <div id="password-field">
+                    <input
+                        :type="showConfirmPassword ? 'text' : 'password'"
+                        id="confirm-password"
+                        name="confirm-password"
+                        v-model="confirmPassword"
+                        placeholder="confirm password"
+                        :class="{ 'input-error': !isConfirmPasswordValid }"
+                        @input="clearErrorConfirmPassword()"
+                    />
+                    <div id="password-show" @click="showConfirmPassword = !showConfirmPassword">
+                        <font-awesome-icon :icon="showConfirmPassword ? 'fas fa-eye-slash' : 'fas fa-eye'" />
+                    </div>
+                </div>
             </div>
         </form>
         <button type="submit" @click.prevent="register">Register</button>
@@ -77,7 +87,14 @@
 </template>
 
 <script>
+import { useSessionStore } from "../store/session.js";
 export default {
+    setup() {
+        const sessionStore = useSessionStore();
+        return {
+            sessionStore,
+        };
+    },
     data() {
         return {
             email: "",
@@ -90,6 +107,8 @@ export default {
             isConfirmPasswordValid: true,
             isResponsePassed: true,
             errorMessage: "",
+            showPassword: false,
+            showConfirmPassword: false,
         };
     },
     computed: {
@@ -153,11 +172,8 @@ export default {
                 console.log(data);
 
                 if (data.error === undefined) {
-                    this.clearForm();
-
-                    // template literal
-                    this.$router.push("/login");
-                    //
+                    await this.sessionStore.login(data);
+                    this.$router.push("/");
                 }
 
                 // display error message
@@ -253,6 +269,7 @@ export default {
 <style scoped>
 h1 {
     color: white;
+    margin-bottom: 40px;
 }
 
 label {
@@ -263,17 +280,24 @@ input {
     color: white;
     background-color: #4e4f50;
     border-radius: 7px;
+    border: none;
+    font-size: 16px;
+    padding: 7px;
+    width: 200px;
 }
 
 button {
     width: 10%;
     height: 5%;
+    min-height: 50px;
+    min-width: 100px;
     padding: 5px;
     background-color: #a35bff;
+    border: none;
     color: white;
     border-radius: 10px;
-    border: 2px solid black;
-    margin-bottom: 10px;
+    margin-bottom: 20px;
+    font-size: 16px;
 }
 
 button:hover {
@@ -296,15 +320,40 @@ button:active {
     justify-content: space-between;
     align-items: center;
     width: 100%;
-    margin-bottom: 10px;
+    margin-bottom: 20px;
 }
+
+.form-input-container label {
+    font-size: 20px;
+}
+
+#password-field {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+#password-show {
+    color: white;
+    font-size: 16px;
+    position: absolute;
+    right: 10px;
+}
+
+#password-field input {
+    width: 167px;
+    padding-right: 40px;
+}
+
 .register-form {
     flex-direction: column;
     text-align: center;
     background-color: #242526;
-    padding: 10px 10px 0px 10px;
+    padding: 30px 30px 10px 30px;
     min-width: 350px;
-    margin-bottom: 20px;
+    width: 400px;
+    margin-bottom: 40px;
+    border-radius: 7px;
 }
 
 .form-router {
@@ -316,7 +365,7 @@ button:active {
 }
 
 .input-error {
-    border: 2px solid red;
+    outline: 2px solid red;
 }
 
 .text-error {
