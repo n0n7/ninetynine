@@ -4,25 +4,72 @@
         <div class="lobby-id-container">
             <p class="p-gray">Your Room ID:</p>
             <p class="p-white">{{ roomId }}</p>
-            <img src="/copy_icon.png" style="width: 40px" alt="copy" />
+            <img
+                class="copy-icon"
+                src="/copy_icon2.png"
+                style="width: 40px"
+                alt="copy"
+                @click="copyRoomId"
+            />
         </div>
         <div class="lobby-member-list">
+<<<<<<< Updated upstream
             <div
                 class="lobby-member-list-container"
                 v-for="player in playerList"
                 :key="player.playerName"
             >
+||||||| Stash base
+            <div
+                class="lobby-member-list-container"
+                v-for="player in playerList"
+                :key="player.name"
+            >
+=======
+            <div class="lobby-member-list-container">
+>>>>>>> Stashed changes
                 <img
-                    src="/default_profile_icon.png"
-                    style="width: 40px"
+                    :src="owner.playerAvatarURL"
+                    class="profile-icon"
                     alt="user"
+                    @error="setAvatarToDefault"
                 />
                 <div class="lobby-member-details">
+<<<<<<< Updated upstream
                     <p class="p-white">{{ player.playerName }}</p>
+||||||| Stash base
+                    <p class="p-white">{{ player.name }}</p>
+=======
+                    <p :class="getNameClass(owner.playerId)">
+                        {{ owner.playerName }}
+                    </p>
+                </div>
+                <div class="lobby-member-role">
+                    <p class="p-gray">Owner</p>
+                </div>
+                <img src="/crown_icon.png" style="width: 30px" alt="owner" />
+            </div>
+            <div
+                class="lobby-member-list-container"
+                v-for="(player, index) in playerList"
+                :key="player.playerId"
+            >
+                <img
+                    :src="player.playerAvatarURL"
+                    class="profile-icon"
+                    alt="user"
+                    @error="setAvatarToDefault"
+                />
+                <div class="lobby-member-details">
+                    <p :class="getNameClass(playerList[index].playerId)">
+                        {{ player.playerName }}
+                    </p>
+>>>>>>> Stashed changes
                 </div>
                 <div class="lobby-member-role">
                     <p class="p-gray">Player</p>
                 </div>
+<<<<<<< Updated upstream
                 <img
                     v-if="player.name === owner"
                     src="/crown_icon.png"
@@ -35,27 +82,55 @@
                     style="width: 30px"
                     alt="kick"
                 />
+||||||| Stash base
+                <img v-if="player.name === owner" src="/crown_icon.png" style="width: 30px" alt="owner" />
+                <img v-else src="/kick_icon.png" style="width: 30px" alt="kick" />
+=======
+                <img
+                    src="/kick_icon.png"
+                    style="width: 30px; opacity: 0"
+                    alt="kick"
+                    :draggable="false"
+                />
+>>>>>>> Stashed changes
             </div>
             <!-- <div
                 class="lobby-member-list-container"
-                v-for="spectator in spectatorList"
-                :key="spectator.name"
+                v-for="(spectator, index) in spectatorList"
+                :key="spectator.spectatorId"
             >
                 <img
-                    src="/default_profile_icon.png"
-                    style="width: 40px"
+                    :src="spectator.spectatorAvatarURL"
+                    class="profile-icon"
                     alt="user"
+                    @error="setAvatarToDefault"
                 />
                 <div class="lobby-member-details">
-                    <p class="p-white">{{ spectator.name }}</p>
+                    <p :class="getNameClass(spectatorList[index].spectatorId)">
+                        {{ spectator.spectatorName }}
+                    </p>
                 </div>
                 <div class="lobby-member-role">
                     <p class="p-gray">Spectator</p>
                 </div>
+<<<<<<< Updated upstream
                 <img src="/kick_icon.png" style="width: 30px" alt="kick" />
             </div> -->
+||||||| Stash base
+                <img src="/kick_icon.png" style="width: 30px" alt="kick" />
+            </div>
+=======
+                <img
+                    src="/kick_icon.png"
+                    style="width: 30px; opacity: 0"
+                    alt="kick"
+                    :draggable="false"
+                />
+            </div>
+>>>>>>> Stashed changes
         </div>
         <div class="flex-container-button">
+<<<<<<< Updated upstream
             <NavButton
                 class="flex-item-button"
                 text="Start"
@@ -66,27 +141,107 @@
                 text="Leave Room"
                 @click="leaveRoom"
             />
+||||||| Stash base
+            <NavButton class="flex-item-button" text="Start" @click="startGame" />
+            <NavButton class="flex-item-button" text="Leave Room" @click="leaveRoom" />
+=======
+            <NavButton
+                class="flex-item-button"
+                text="Start"
+                @click="startGame"
+                :enable="isOwner"
+            />
+            <NavButton
+                class="flex-item-button"
+                text="Leave Room"
+                @click="leaveRoom"
+            />
+>>>>>>> Stashed changes
         </div>
     </div>
+    <transition name="fade">
+        <div class="clipboard-message" v-if="showClipboardMessage">
+            <p>Copied to clipboard!</p>
+        </div>
+    </transition>
 </template>
 
 <script>
+<<<<<<< Updated upstream
 import NavButton from "/src/components/NavButton.vue"
+||||||| Stash base
+import NavButton from "/src/components/NavButton.vue";
+=======
+import NavButton from "/src/components/NavButton.vue";
+import { useLobbyStore } from "../store/lobbyStore.js";
+
+>>>>>>> Stashed changes
 export default {
     data() {
         return {
+<<<<<<< Updated upstream
             owner: "Nattee",
             spectatorList: [],
         }
+||||||| Stash base
+            owner: "Nattee",
+            playerList: [
+                { name: "Nattee" },
+                { name: "TeaChanathip" },
+                { name: "AzusaChan~~~" },
+                { name: "Random Guy 6969" },
+            ],
+            spectatorList: [
+                { name: "Nattee" },
+                { name: "TeaChanathip" },
+                { name: "AzusaChan~~~" },
+                { name: "Random Guy 6969" },
+            ],
+        };
+=======
+            owner: null,
+            playerList: [],
+            spectatorList: [
+                {
+                    spectatorId: "spec1",
+                    spectatorName: "testSpectator1",
+                    spectatorAvatarURL: "/default_profile_icon.png",
+                },
+                {
+                    spectatorId: "spec2",
+                    spectatorName: "testSpectator2",
+                    spectatorAvatarURL: "/default_profile_icon.png",
+                },
+            ],
+
+            lobbyStore: useLobbyStore(),
+            showClipboardMessage: false,
+            messageTimeOut: null,
+        };
+>>>>>>> Stashed changes
+    },
+    components: {
+        NavButton,
     },
     props: {
         roomId: String,
         connection: Object,
+<<<<<<< Updated upstream
         receivedData: Object,
     },
     created: function () {
         //this.connection = new WebSocket("ws://localhost:8080/ws/" + this.lobbyId);
         //this.sendJoinAction();
+||||||| Stash base
+    },
+    created: function () {
+        //this.connection = new WebSocket("ws://localhost:8080/ws/" + this.lobbyId);
+
+        //this.sendJoinAction();
+=======
+        userId: String,
+        receivedData: Object,
+>>>>>>> Stashed changes
     },
     computed: {
         playerList() {
@@ -95,6 +250,7 @@ export default {
     },
     methods: {
         startGame() {
+<<<<<<< Updated upstream
             // need test if owner then change inProgress in Gameroom to true
             console.log("startGame")
             this.connection.send(
@@ -104,14 +260,82 @@ export default {
             )
 
             // no error handling yet
+||||||| Stash base
+            // need test if owner then change inProgress in Gameroom to true
+            console.log("startGame");
+=======
+            if (this.isOwner) {
+                const action = {
+                    action: "start",
+                };
+                this.connection.send(JSON.stringify(action));
+                console.log("startGame");
+            }
+>>>>>>> Stashed changes
         },
         leaveRoom() {
             // push logic
             this.$router.push("/")
         },
+        setAvatarToDefault(event) {
+            event.target.src = "/default_profile_icon.png";
+        },
+        updateOwner() {
+            const players = this.receivedData.gameData.players;
+            this.owner = players.find(
+                ({ playerId }) =>
+                    playerId === this.lobbyStore.getLobbyDetails.ownerId
+            );
+            console.log(this.owner);
+        },
+        updatePlayer() {
+            const players = this.receivedData.gameData.players;
+            this.playerList = players.filter(
+                ({ playerId }) =>
+                    playerId !== this.lobbyStore.getLobbyDetails.ownerId
+            );
+            console.log(this.playerList);
+        },
+        updateSpectator() {
+            if (this.receivedData.gameData.spectators !== undefined) {
+                this.spectatorList = this.receivedData.gameData.spectators;
+                console.log(this.spectatorList);
+            } else {
+                console.log("spectatorList is undefined");
+            }
+        },
+        getNameClass(playerId) {
+            if (this.userId === playerId) {
+                return "p-highlighted";
+            } else {
+                return "p-white";
+            }
+        },
+        copyRoomId() {
+            navigator.clipboard.writeText(this.roomId);
+            this.showClipboardMessage = true;
+            clearTimeout(this.messageTimeOut);
+            this.messageTimeOut = setTimeout(() => {
+                this.showClipboardMessage = false;
+            }, 2000);
+        },
     },
-    components: {
-        NavButton,
+    computed: {
+        isOwner() {
+            return this.userId === this.lobbyStore.getLobbyDetails.ownerId;
+        },
+    },
+    watch: {
+        receivedData() {
+            this.updateOwner();
+            this.updatePlayer();
+            this.updateSpectator();
+        },
+    },
+    created() {
+        this.updateOwner();
+        this.updatePlayer();
+        this.updateSpectator();
     },
 }
 </script>
@@ -119,10 +343,18 @@ export default {
 <style>
 h1 {
     color: white;
+    font-size: 3.5rem;
+    margin-top: 0;
+    margin-bottom: 30px;
+    text-align: center;
 }
 
 .p-white {
     color: white;
+}
+
+.p-highlighted {
+    color: #a36aed;
 }
 
 .p-gray {
@@ -143,16 +375,22 @@ h1 {
     min-width: 400px;
     margin-bottom: 20px;
     background-color: #242526;
-    padding: 10px;
+    padding: 5px 10px;
     border-radius: 7px;
 }
 
 .lobby-member-list {
     display: flex;
     flex-direction: column;
+<<<<<<< Updated upstream
+||||||| Stash base
+    justify-content: space-between;
+=======
+    /* justify-content: space-between; */
+>>>>>>> Stashed changes
     align-items: center;
     min-width: 400px;
-    height: 300px;
+    height: 33vh;
     overflow-y: auto;
     margin-bottom: 30px;
     background-color: #242526;
@@ -166,7 +404,7 @@ h1 {
     align-items: center;
     min-width: 400px;
     background-color: #242526;
-    padding: 10px;
+    padding: 5px 10px;
     border-radius: 7px;
     border-color: #a35bff;
 }
@@ -193,6 +431,49 @@ h1 {
     justify-content: center;
     flex-wrap: wrap;
     column-gap: 8vw;
-    margin-bottom: 50px;
+    /* margin-bottom: 50px; */
+}
+
+.profile-icon {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+}
+
+.copy-icon {
+    cursor: copy;
+    filter: invert(36%) sepia(60%) saturate(1359%) hue-rotate(235deg)
+        brightness(110%) contrast(108%);
+}
+
+.copy-icon:hover {
+    filter: invert(20%) sepia(84%) saturate(5503%) hue-rotate(263deg)
+        brightness(100%) contrast(106%);
+}
+
+.clipboard-message {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+
+    background: #4e4f50;
+    border-radius: 8px;
+    margin-top: 1rem;
+}
+
+.clipboard-message p {
+    color: white;
+    font-size: 18px;
+    margin: 0.5rem 1rem;
+}
+
+.fade-enter-active,
+.fade-leave-active {
+    transition: opacity 0.5s;
+}
+.fade-enter,
+.fade-leave-to {
+    opacity: 0;
 }
 </style>

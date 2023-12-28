@@ -3,7 +3,7 @@
     <div class="search-bar">
         <form @submit.prevent="searchRoomID()">
             <input
-                :class="{'input-invalid': isRoomError}"
+                :class="{ 'input-invalid': isRoomError }"
                 type="text"
                 placeholder="Room ID: xxxxxxxxxxxx"
                 maxlength="12"
@@ -11,10 +11,7 @@
             />
         </form>
     </div>
-    <p
-        v-show="isError"
-        id="invalid-status"
-    >
+    <p v-show="isError" id="invalid-status">
         {{ status }}
     </p>
     <div class="flex-container-button">
@@ -26,6 +23,7 @@
 <script>
 import NavButton from "/src/components/NavButton.vue";
 import { useSessionStore } from "../store/session.js";
+import { useLobbyStore } from "../store/lobbyStore.js";
 
 export default {
     components: {
@@ -37,6 +35,7 @@ export default {
             status: "",
             roomID: "",
             sessionStore: useSessionStore(),
+            lobbyStore: useLobbyStore(),
         };
     },
     computed: {
@@ -69,6 +68,7 @@ export default {
                         }
                     );
                     const data = await response.json();
+                    this.lobbyStore.storeLobbyDetails(data);
                     console.log(data);
                     if (data.error === undefined) {
                         this.$router.push("/room/" + this.roomID);
@@ -88,8 +88,8 @@ export default {
 <style scoped>
 h1 {
     color: white;
-    font-size: 4rem;
-    margin-top: 7vh;
+    font-size: 3.5rem;
+    margin-top: 0;
     text-align: center;
 }
 

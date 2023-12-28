@@ -6,7 +6,9 @@
             :key="idx"
         >
             <transition>
-                <h2 v-show="isPlayerOut[idx]" v-if="side === 'right'">Out!</h2>
+                <h2 v-show="isPlayerOut[idx]" v-if="side === 'right'">
+                    {{ item.status === "left" ? "Left" : "Out!" }}
+                </h2>
             </transition>
             <div :class="getPlayerFrameClass(idx)">
                 <transition>
@@ -17,19 +19,27 @@
                         {{ timer }}
                     </p>
                 </transition>
-                <img class="profile-pic" :src="item.playerAvatarURL" />
+                <img
+                    class="profile-pic"
+                    :src="item.playerAvatarURL"
+                    @error="setAvatarToDefault"
+                />
                 <!-- {{getPlayerFrameClass(idx)}} -->
                 <transition>
-                    <p
-                        class="timer"
+                    <div
+                        class="timer-container"
                         v-if="side === 'left' && idx === currentPlayerIndex"
                     >
-                        {{ timer }}
-                    </p>
+                        <p>
+                            {{ timer }}
+                        </p>
+                    </div>
                 </transition>
             </div>
             <transition>
-                <h2 v-show="isPlayerOut[idx]" v-if="side === 'left'">Out!</h2>
+                <h2 v-show="isPlayerOut[idx]" v-if="side === 'left'">
+                    {{ item.status === "left" ? "Left" : "Out!" }}
+                </h2>
             </transition>
         </div>
     </div>
@@ -64,6 +74,9 @@ export default {
                 classes = classes + "highlighted";
             }
             return classes;
+        },
+        setAvatarToDefault() {
+            event.target.src = "/default_profile_icon.png";
         },
     },
     computed: {
@@ -142,11 +155,20 @@ h2 {
     vertical-align: middle;
 }
 
-.timer {
+.timer-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%; /* or any specific height */
+    width: 30%;
+}
+
+.timer-container p {
     font-size: 5vh;
     padding: 0;
-    margin: auto 0;
+    margin: 0;
     color: white;
+    text-align: center;
 }
 
 .v-enter-active,

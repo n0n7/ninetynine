@@ -31,14 +31,13 @@
                 {{ status }}
             </p>
         </div>
-        <!-- <div class="home-sidebar"></div> -->
-        <!-- empty sidebar -->
     </div>
 </template>
 
 <script>
 import NavButton from "/src/components/NavButton.vue";
 import { useSessionStore } from "../store/session.js";
+import { useLobbyStore } from "../store/lobbyStore.js";
 
 export default {
     components: {
@@ -66,6 +65,7 @@ export default {
                 },
             ],
             sessionStore: useSessionStore(),
+            lobbyStore: useLobbyStore(),
         };
     },
     computed: {
@@ -92,6 +92,7 @@ export default {
                         }
                     );
                     const data = await response.json();
+                    this.lobbyStore.storeLobbyDetails(data);
                     console.log(data);
                     if (data.error === undefined) {
                         this.$router.push("/room/" + data.roomId);

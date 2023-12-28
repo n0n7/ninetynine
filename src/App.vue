@@ -8,7 +8,7 @@ const sessionStore = useSessionStore();
 
 <template>
     <div id="app">
-        <Navbar :isLoggedIn="sessionStore.isLoggedIn" :data="sessionStore.data"/> 
+        <Navbar :isLoggedIn="sessionStore.isLoggedIn" :data="sessionStore.data"/>
         <router-view></router-view>
     </div>
 </template>

@@ -276,7 +276,7 @@ export default {
         sendMessage(message) {
             if (!this.isGameEnd) {
                 const jsonMes = JSON.stringify(message);
-                console.log(jsonMes);
+                // console.log(jsonMes);
                 this.connection.send(jsonMes);
             }
         },
@@ -365,7 +365,7 @@ export default {
         },
         players: {
             handler(newValue, oldValue) {
-                console.log("players changed");
+                // console.log("players changed");
                 this.updateMyPlayerIndex(newValue);
                 this.updatePlayerRanking(newValue);
             },

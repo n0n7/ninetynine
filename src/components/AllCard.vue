@@ -109,7 +109,7 @@ export default {
         },
         mouseStartDragging(event, card) {
             if (!this.isDragging) {
-                console.log("start dragging ");
+                // console.log("start dragging ");
 
                 this.$refs.draggableCards[card.id].style.transition = "";
                 this.$refs.draggableCards[card.id].style.transform =
@@ -130,7 +130,7 @@ export default {
         },
         mouseStopDragging(event) {
             if (this.isDragging) {
-                console.log("stop dragging ");
+                // console.log("stop dragging ");
                 this.isDragging = false;
 
                 if (this.isDroppable(event.clientX, event.clientY)) {
@@ -159,7 +159,7 @@ export default {
         },
         mouseMoveCard(event) {
             if (this.isDragging) {
-                console.log("moving");
+                // console.log("moving");
 
                 const container = this.$refs.container.getBoundingClientRect();
 
@@ -203,7 +203,7 @@ export default {
         },
         touchStartDragging(event, card) {
             if (!this.isDragging) {
-                console.log("touch start dragging ");
+                // console.log("touch start dragging ");
 
                 const touch = event.touches[0];
                 // console.log(touch);
@@ -227,7 +227,7 @@ export default {
         },
         touchStopDragging(event) {
             if (this.isDragging) {
-                console.log("stop dragging ");
+                // console.log("stop dragging ");
                 this.isDragging = false;
 
                 // console.log(event);
@@ -259,7 +259,7 @@ export default {
         },
         touchMoveCard(event) {
             if (this.isDragging) {
-                console.log("touch moving");
+                // console.log("touch moving");
 
                 const container = this.$refs.container.getBoundingClientRect();
                 // console.log(container);
@@ -367,10 +367,7 @@ export default {
                 return this.Neg[this.lastPlayedCard.value + 10];
             }
         },
-    },
-    mounted() {
-        console.log(this.$refs.draggableCards);
-    },
+    }
 };
 </script>
 
