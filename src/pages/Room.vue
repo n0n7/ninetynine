@@ -7,7 +7,7 @@
         :userId="userData.userId"
         :receivedData="receivedData"
     />
-    <Room
+    <GameRoom
         v-else-if="inProgress === true"
         :roomId="roomId"
         :connection="connection"
@@ -30,13 +30,13 @@
 
 <script>
 import Lobby from "../components/Lobby.vue";
-import Room from "../components/Room.vue";
+import GameRoom from "../components/GameRoom.vue";
 import { useSessionStore } from "../store/session.js";
 
 export default {
     components: {
         Lobby,
-        Room,
+        GameRoom,
     },
     data() {
         return {

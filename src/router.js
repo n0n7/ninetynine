@@ -6,7 +6,7 @@ import RegisterPage from "./pages/register.vue";
 import HomePage from "./pages/Home.vue";
 import GameStatsPage from "./pages/GameStats.vue";
 import AccountSettingPage from "./pages/AccountSetting.vue";
-import RoomPage from "./pages/GameRoom.vue";
+import RoomPage from "./pages/Room.vue";
 import JoinRoom from "./pages/JoinRoom.vue";
 
 const routes = [

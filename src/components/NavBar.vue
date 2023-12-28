@@ -30,14 +30,14 @@
                             <a> Logout </a>
                         </router-link>
                     </li>
-                    <router-link to="/AccountSetting">
+                    <!--<router-link to="/AccountSetting">-->
                         <img
                             src="/default_profile_icon.png"
                             alt="profile"
                             width="50px"
                             height="50px"
                         />
-                    </router-link>
+                    <!-- </router-link> -->
                 </ul>
             </div>
         </div>
