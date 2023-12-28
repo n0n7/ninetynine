@@ -15,6 +15,17 @@
         :receivedData="receivedData"
     />
     <!-- </transition> -->
+    <p
+        style="
+            color: white;
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+        "
+    >
+        {{ inProgress }}
+    </p>
 </template>
 
 <script>
@@ -50,7 +61,7 @@ export default {
 
             this.connection.onmessage = (event) => {
                 // console.log(event);
-                // console.log(JSON.parse(event.data));
+                console.log(JSON.parse(event.data));
                 this.receivedData = JSON.parse(event.data);
             };
 
@@ -101,6 +112,9 @@ export default {
         randomUserId() {
             return Math.floor(Math.random() * 1000000000).toString();
         },
+        closeConnection() {
+            this.connection.close();
+        },
     },
     computed: {
         inProgress() {
@@ -124,13 +138,14 @@ export default {
             return this.sessionStore.getData;
         },
     },
+    mounted() {
+        window.addEventListener("beforeunload", this.closeConnection);
+    },
+    beforeDestroy() {
+        window.removeEventListener("beforeunload", this.closeConnection);
+    },
     beforeRouteLeave(to, from, next) {
-        // called when the route that renders this component is about to
-        // be navigated away from.
-        // has access to `this` component instance.
-
-        //this.connection is your ws
-        this.connection.close();
+        this.closeConnection();
         next();
     },
 };

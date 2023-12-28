@@ -13,4 +13,7 @@ export const useLobbyStore = defineStore("lobby", {
             console.log("Lobby details stored");
         },
     },
+    persist: {
+        storage: sessionStorage,
+    },
 });
