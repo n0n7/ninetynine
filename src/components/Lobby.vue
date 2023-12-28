@@ -142,8 +142,8 @@ export default {
     },
     computed: {
         playerList() {
-            return this.receivedData.gameData.players
-        },    
+            return this.receivedData.gameData.players;
+        },
     },
     methods: {
         startGame() {
@@ -157,7 +157,7 @@ export default {
         },
         leaveRoom() {
             // push logic
-            this.$router.push("/")
+            this.$router.push("/");
         },
         setAvatarToDefault(event) {
             event.target.src = "/default_profile_icon.png";
@@ -219,7 +219,7 @@ export default {
         this.updatePlayer();
         this.updateSpectator();
     },
-}
+};
 </script>
 
 <style>

@@ -1,26 +1,26 @@
 <template>
     <!-- <transition name="fade"> -->
-        <Lobby
-            v-if="inProgress === false"
-            :roomId="roomId"
-            :connection="connection"
-            :userId="userData.userId"
-            :receivedData="receivedData"
-        />
-        <Room
-            v-else-if="inProgress === true"
-            :roomId="roomId"
-            :connection="connection"
-            :userId="userData.userId"
-            :receivedData="receivedData"
-        />
+    <Lobby
+        v-if="inProgress === false"
+        :roomId="roomId"
+        :connection="connection"
+        :userId="userData.userId"
+        :receivedData="receivedData"
+    />
+    <Room
+        v-else-if="inProgress === true"
+        :roomId="roomId"
+        :connection="connection"
+        :userId="userData.userId"
+        :receivedData="receivedData"
+    />
     <!-- </transition> -->
 </template>
 
 <script>
-import Lobby from "../components/Lobby.vue"
-import Room from "../components/Room.vue"
-import { useSessionStore } from "../store/session.js"
+import Lobby from "../components/Lobby.vue";
+import Room from "../components/Room.vue";
+import { useSessionStore } from "../store/session.js";
 
 export default {
     components: {
@@ -39,14 +39,14 @@ export default {
         roomId: String,
     },
     async created() {
-        this.connect()
+        this.connect();
     },
     methods: {
         async connect() {
-            console.log("Starting connection to WebSocket Server")
+            console.log("Starting connection to WebSocket Server");
             this.connection = new WebSocket(
                 "ws://localhost:8080/ws/" + this.roomId
-            )
+            );
 
             this.connection.onmessage = (event) => {
                 // console.log(event);
@@ -78,28 +78,28 @@ export default {
                 userId: null,
                 username: null,
                 profilePic: "NULL",
-            }
+            };
 
             if (this.isLoggedIn) {
-                joinData.userId = this.userData.userId
-                joinData.username = this.userData.username
-                joinData.profilePic = this.userData.profilePic
+                joinData.userId = this.userData.userId;
+                joinData.username = this.userData.username;
+                joinData.profilePic = this.userData.profilePic;
             } else {
                 // guset user
-                const rand = this.randomUserId()
-                joinData.userId = rand
-                joinData.username = "test" + rand
+                const rand = this.randomUserId();
+                joinData.userId = rand;
+                joinData.username = "test" + rand;
             }
 
             // Convert the JSON object to a string
-            const jsonData = JSON.stringify(joinData)
+            const jsonData = JSON.stringify(joinData);
 
             // Send the JSON data through the WebSocket connection
             // console.log(jsonData);
             this.connection.send(jsonData);
         },
         randomUserId() {
-            return Math.floor(Math.random() * 1000000000).toString()
+            return Math.floor(Math.random() * 1000000000).toString();
         },
     },
     computed: {
@@ -112,14 +112,14 @@ export default {
                 this.receivedData.gameData.status === "playing" ||
                 this.receivedData.gameData.status === "ended"
             ) {
-                return true
+                return true;
             }
         },
         isLoggedIn() {
-            return this.sessionStore.getIsLoggedIn
+            return this.sessionStore.getIsLoggedIn;
         },
         userData() {
-            return this.sessionStore.getData
+            return this.sessionStore.getData;
         },
     },
     beforeRouteLeave(to, from, next) {
