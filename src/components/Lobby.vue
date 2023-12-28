@@ -13,21 +13,7 @@
             />
         </div>
         <div class="lobby-member-list">
-<<<<<<< Updated upstream
-            <div
-                class="lobby-member-list-container"
-                v-for="player in playerList"
-                :key="player.playerName"
-            >
-||||||| Stash base
-            <div
-                class="lobby-member-list-container"
-                v-for="player in playerList"
-                :key="player.name"
-            >
-=======
             <div class="lobby-member-list-container">
->>>>>>> Stashed changes
                 <img
                     :src="owner.playerAvatarURL"
                     class="profile-icon"
@@ -35,11 +21,6 @@
                     @error="setAvatarToDefault"
                 />
                 <div class="lobby-member-details">
-<<<<<<< Updated upstream
-                    <p class="p-white">{{ player.playerName }}</p>
-||||||| Stash base
-                    <p class="p-white">{{ player.name }}</p>
-=======
                     <p :class="getNameClass(owner.playerId)">
                         {{ owner.playerName }}
                     </p>
@@ -64,37 +45,18 @@
                     <p :class="getNameClass(playerList[index].playerId)">
                         {{ player.playerName }}
                     </p>
->>>>>>> Stashed changes
                 </div>
                 <div class="lobby-member-role">
                     <p class="p-gray">Player</p>
                 </div>
-<<<<<<< Updated upstream
-                <img
-                    v-if="player.name === owner"
-                    src="/crown_icon.png"
-                    style="width: 30px"
-                    alt="owner"
-                />
-                <img
-                    v-else
-                    src="/kick_icon.png"
-                    style="width: 30px"
-                    alt="kick"
-                />
-||||||| Stash base
-                <img v-if="player.name === owner" src="/crown_icon.png" style="width: 30px" alt="owner" />
-                <img v-else src="/kick_icon.png" style="width: 30px" alt="kick" />
-=======
                 <img
                     src="/kick_icon.png"
                     style="width: 30px; opacity: 0"
                     alt="kick"
                     :draggable="false"
                 />
->>>>>>> Stashed changes
             </div>
-            <!-- <div
+            <div
                 class="lobby-member-list-container"
                 v-for="(spectator, index) in spectatorList"
                 :key="spectator.spectatorId"
@@ -113,13 +75,6 @@
                 <div class="lobby-member-role">
                     <p class="p-gray">Spectator</p>
                 </div>
-<<<<<<< Updated upstream
-                <img src="/kick_icon.png" style="width: 30px" alt="kick" />
-            </div> -->
-||||||| Stash base
-                <img src="/kick_icon.png" style="width: 30px" alt="kick" />
-            </div>
-=======
                 <img
                     src="/kick_icon.png"
                     style="width: 30px; opacity: 0"
@@ -127,24 +82,8 @@
                     :draggable="false"
                 />
             </div>
->>>>>>> Stashed changes
         </div>
         <div class="flex-container-button">
-<<<<<<< Updated upstream
-            <NavButton
-                class="flex-item-button"
-                text="Start"
-                @click="startGame"
-            />
-            <NavButton
-                class="flex-item-button"
-                text="Leave Room"
-                @click="leaveRoom"
-            />
-||||||| Stash base
-            <NavButton class="flex-item-button" text="Start" @click="startGame" />
-            <NavButton class="flex-item-button" text="Leave Room" @click="leaveRoom" />
-=======
             <NavButton
                 class="flex-item-button"
                 text="Start"
@@ -156,7 +95,6 @@
                 text="Leave Room"
                 @click="leaveRoom"
             />
->>>>>>> Stashed changes
         </div>
     </div>
     <transition name="fade">
@@ -167,38 +105,12 @@
 </template>
 
 <script>
-<<<<<<< Updated upstream
-import NavButton from "/src/components/NavButton.vue"
-||||||| Stash base
-import NavButton from "/src/components/NavButton.vue";
-=======
 import NavButton from "/src/components/NavButton.vue";
 import { useLobbyStore } from "../store/lobbyStore.js";
 
->>>>>>> Stashed changes
 export default {
     data() {
         return {
-<<<<<<< Updated upstream
-            owner: "Nattee",
-            spectatorList: [],
-        }
-||||||| Stash base
-            owner: "Nattee",
-            playerList: [
-                { name: "Nattee" },
-                { name: "TeaChanathip" },
-                { name: "AzusaChan~~~" },
-                { name: "Random Guy 6969" },
-            ],
-            spectatorList: [
-                { name: "Nattee" },
-                { name: "TeaChanathip" },
-                { name: "AzusaChan~~~" },
-                { name: "Random Guy 6969" },
-            ],
-        };
-=======
             owner: null,
             playerList: [],
             spectatorList: [
@@ -218,7 +130,6 @@ export default {
             showClipboardMessage: false,
             messageTimeOut: null,
         };
->>>>>>> Stashed changes
     },
     components: {
         NavButton,
@@ -226,22 +137,8 @@ export default {
     props: {
         roomId: String,
         connection: Object,
-<<<<<<< Updated upstream
-        receivedData: Object,
-    },
-    created: function () {
-        //this.connection = new WebSocket("ws://localhost:8080/ws/" + this.lobbyId);
-        //this.sendJoinAction();
-||||||| Stash base
-    },
-    created: function () {
-        //this.connection = new WebSocket("ws://localhost:8080/ws/" + this.lobbyId);
-
-        //this.sendJoinAction();
-=======
         userId: String,
         receivedData: Object,
->>>>>>> Stashed changes
     },
     computed: {
         playerList() {
@@ -250,20 +147,6 @@ export default {
     },
     methods: {
         startGame() {
-<<<<<<< Updated upstream
-            // need test if owner then change inProgress in Gameroom to true
-            console.log("startGame")
-            this.connection.send(
-                JSON.stringify({
-                    action: "start",
-                })
-            )
-
-            // no error handling yet
-||||||| Stash base
-            // need test if owner then change inProgress in Gameroom to true
-            console.log("startGame");
-=======
             if (this.isOwner) {
                 const action = {
                     action: "start",
@@ -271,7 +154,6 @@ export default {
                 this.connection.send(JSON.stringify(action));
                 console.log("startGame");
             }
->>>>>>> Stashed changes
         },
         leaveRoom() {
             // push logic
@@ -382,12 +264,7 @@ h1 {
 .lobby-member-list {
     display: flex;
     flex-direction: column;
-<<<<<<< Updated upstream
-||||||| Stash base
-    justify-content: space-between;
-=======
     /* justify-content: space-between; */
->>>>>>> Stashed changes
     align-items: center;
     min-width: 400px;
     height: 33vh;
