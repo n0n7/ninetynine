@@ -21,10 +21,7 @@
                 />
             </div>
             <div class="form-input-container">
-                <label
-                    for="email"
-                    :class="{ 'text-error': !isEmailValid }"
-                >
+                <label for="email" :class="{ 'text-error': !isEmailValid }">
                     Email
                 </label>
                 <input
@@ -43,7 +40,9 @@
                     <label class="label-router"> Change Password </label>
                 </router-link>
                 <router-link to="/">
-                    <label class="label-router delete-label"> Delete Account </label>
+                    <label class="label-router delete-label">
+                        Delete Account
+                    </label>
                 </router-link>
             </div>
         </div>
@@ -62,7 +61,7 @@ export default {
             email: "",
             errorMessage: "",
             isUsernameValid: true,
-            isEmailValid: true
+            isEmailValid: true,
         };
     },
     methods: {
@@ -82,9 +81,9 @@ export default {
             this.displayName = "displayName11111111";
             this.email = "email111111111";
         },
-        confirm(){
-            if(!this.verifyUsername(this.username)){
-               return;
+        confirm() {
+            if (!this.verifyUsername(this.username)) {
+                return;
             }
 
             console.log("confirm");
@@ -102,7 +101,7 @@ export default {
                 return false;
             }
             return true;
-        }
+        },
     },
     created() {
         this.getUserInfo();
@@ -111,7 +110,7 @@ export default {
         isError() {
             return !this.isUsernameValid || !this.isEmailValid;
         },
-    }
+    },
 };
 </script>
 

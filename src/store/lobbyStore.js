@@ -11,6 +11,6 @@ export const useLobbyStore = defineStore("lobby", {
         storeLobbyDetails(data) {
             this.lobbyDetails = data;
             console.log("Lobby details stored");
-        }
+        },
     },
 });

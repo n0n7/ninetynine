@@ -4,10 +4,7 @@
         <h1>Login</h1>
         <form class="login-form">
             <div class="form-input-container">
-                <label
-                    for="email"
-                    :class="{ 'text-error': !isEmailValid }"
-                >
+                <label for="email" :class="{ 'text-error': !isEmailValid }">
                     Email
                 </label>
                 <input
@@ -37,14 +34,23 @@
                         :class="{ 'input-error': !isPasswordValid }"
                         @input="clearErrorPassword()"
                     />
-                    <div id="password-show" @click="showPassword = !showPassword">
-                        <font-awesome-icon :icon="showPassword ? 'fas fa-eye-slash' : 'fas fa-eye'" />
+                    <div
+                        id="password-show"
+                        @click="showPassword = !showPassword"
+                    >
+                        <font-awesome-icon
+                            :icon="
+                                showPassword ? 'fas fa-eye-slash' : 'fas fa-eye'
+                            "
+                        />
                     </div>
                 </div>
             </div>
             <!--register-->
             <div class="form-router">
-                <label class="label-router" @click="directToRegister"> Don't have an account? </label>
+                <label class="label-router" @click="directToRegister">
+                    Don't have an account?
+                </label>
             </div>
         </form>
         <button type="submit" @click.prevent="login">Login</button>
@@ -76,7 +82,11 @@ export default {
     },
     computed: {
         isError() {
-            return !this.isEmailValid || !this.isPasswordValid || !this.isResponsePassed;
+            return (
+                !this.isEmailValid ||
+                !this.isPasswordValid ||
+                !this.isResponsePassed
+            );
         },
     },
     methods: {
@@ -102,18 +112,19 @@ export default {
             if (this.isEmailValid && this.isPasswordValid) {
                 // post data to server
                 try {
-                    const response = await fetch("http://localhost:8080/login", {
-                        method: "POST",
-                        headers: {
-                            "Content-Type": "application/json",
-                        },
-                        body: JSON.stringify(
-                            {
+                    const response = await fetch(
+                        "http://localhost:8080/login",
+                        {
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/json",
+                            },
+                            body: JSON.stringify({
                                 email: this.email,
                                 password: this.password,
-                            },
-                        ),
-                    });
+                            }),
+                        }
+                    );
                     const data = await response.json();
                     console.log(data.userId);
                     if (data.error === undefined) {
@@ -125,7 +136,8 @@ export default {
                     }
                 } catch (error) {
                     this.isResponsePassed = false;
-                    this.errorMessage = "Cannot connect to server. Please try again later."
+                    this.errorMessage =
+                        "Cannot connect to server. Please try again later.";
                 }
             }
         },
@@ -165,7 +177,7 @@ export default {
         },
         directToRegister() {
             this.$router.push("/register");
-        }, 
+        },
     },
 };
 </script>

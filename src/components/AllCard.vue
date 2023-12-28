@@ -367,7 +367,7 @@ export default {
                 return this.Neg[this.lastPlayedCard.value + 10];
             }
         },
-    }
+    },
 };
 </script>
 

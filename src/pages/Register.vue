@@ -50,8 +50,15 @@
                         :class="{ 'input-error': !isPasswordValid }"
                         @input="clearErrorPassword()"
                     />
-                    <div id="password-show" @click="showPassword = !showPassword">
-                        <font-awesome-icon :icon="showPassword ? 'fas fa-eye-slash' : 'fas fa-eye'" />
+                    <div
+                        id="password-show"
+                        @click="showPassword = !showPassword"
+                    >
+                        <font-awesome-icon
+                            :icon="
+                                showPassword ? 'fas fa-eye-slash' : 'fas fa-eye'
+                            "
+                        />
                     </div>
                 </div>
             </div>
@@ -73,8 +80,17 @@
                         :class="{ 'input-error': !isConfirmPasswordValid }"
                         @input="clearErrorConfirmPassword()"
                     />
-                    <div id="password-show" @click="showConfirmPassword = !showConfirmPassword">
-                        <font-awesome-icon :icon="showConfirmPassword ? 'fas fa-eye-slash' : 'fas fa-eye'" />
+                    <div
+                        id="password-show"
+                        @click="showConfirmPassword = !showConfirmPassword"
+                    >
+                        <font-awesome-icon
+                            :icon="
+                                showConfirmPassword
+                                    ? 'fas fa-eye-slash'
+                                    : 'fas fa-eye'
+                            "
+                        />
                     </div>
                 </div>
             </div>
@@ -183,7 +199,8 @@ export default {
                 }
             } catch (error) {
                 this.isResponsePassed = false;
-                this.errorMessage = "Cannot connect to server. Please try again later.";
+                this.errorMessage =
+                    "Cannot connect to server. Please try again later.";
             }
         },
         verifyEmail(email) {
@@ -261,7 +278,7 @@ export default {
             this.isUsernameValid = true;
             this.isPasswordValid = true;
             this.isConfirmPasswordValid = true;
-        },  
+        },
     },
 };
 </script>

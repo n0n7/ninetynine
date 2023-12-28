@@ -1,10 +1,18 @@
 <template>
     <div class="home-container">
         <div class="home-sidebar">
-            <div class="p-info" :class="{ active: (activePage == 1) }" @click.prevent="activePage = 1">
+            <div
+                class="p-info"
+                :class="{ active: activePage == 1 }"
+                @click.prevent="activePage = 1"
+            >
                 <p>How to Play?</p>
             </div>
-            <div class="p-info" :class="{ active: (activePage == 2) }" @click.prevent="activePage = 2">
+            <div
+                class="p-info"
+                :class="{ active: activePage == 2 }"
+                @click.prevent="activePage = 2"
+            >
                 <p>Status</p>
             </div>
         </div>
@@ -22,12 +30,13 @@
                     text="Join Room"
                     to="/joinroom"
                 />
-                <NavButton class="flex-item-button" text="Create Room" @click="createRoom" />
+                <NavButton
+                    class="flex-item-button"
+                    text="Create Room"
+                    @click="createRoom"
+                />
             </div>
-            <p
-                v-show="isError"
-                id="invalid-status"
-            >
+            <p v-show="isError" id="invalid-status">
                 {{ status }}
             </p>
         </div>
@@ -56,7 +65,8 @@ export default {
                 {
                     name: "howToPlay",
                     title: "How to Play?",
-                    content: "Write the rules here Write the rules here Write the rules here Write the rules here",
+                    content:
+                        "Write the rules here Write the rules here Write the rules here Write the rules here",
                 },
                 {
                     name: "status",
@@ -104,7 +114,7 @@ export default {
                         "Cannot connect to server. Please try again later.";
                 }
             }
-        }
+        },
     },
 };
 </script>
@@ -139,7 +149,7 @@ h1 {
     justify-content: center;
     align-items: center;
     margin-top: 30px;
-    width: 60%
+    width: 60%;
 }
 
 .home-main-info {
@@ -178,7 +188,7 @@ h1 {
 
 .p-info:hover {
     cursor: pointer;
-    filter: brightness(90%)
+    filter: brightness(90%);
 }
 
 .p-info p {

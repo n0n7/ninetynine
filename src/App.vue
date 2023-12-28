@@ -3,18 +3,19 @@ import Navbar from "./components/NavBar.vue";
 import { useSessionStore } from "./store/session.js";
 
 const sessionStore = useSessionStore();
-
 </script>
 
 <template>
     <div id="app">
-        <Navbar :isLoggedIn="sessionStore.isLoggedIn" :data="sessionStore.data"/>
+        <Navbar
+            :isLoggedIn="sessionStore.isLoggedIn"
+            :data="sessionStore.data"
+        />
         <router-view></router-view>
     </div>
 </template>
 
 <script>
-
 export default {
     data() {
         return {
