@@ -85,6 +85,13 @@ export default {
         startGame() {
             // need test if owner then change inProgress in Gameroom to true
             console.log("startGame");
+            this.connection.send(
+                JSON.stringify({
+                    action: "start",
+                })
+            );
+
+            // no error handling yet
         },
         leaveRoom() {
             // push logic

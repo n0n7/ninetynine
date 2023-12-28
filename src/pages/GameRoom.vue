@@ -1,6 +1,6 @@
 <template>
     <transition name="fade">
-        <Lobby v-if="!inProgress" :roomId="roomId" :connection="null" />
+        <Lobby v-if="!inProgress" :roomId="roomId" :connection="this.connection" />
         <Room
             v-else
             :roomId="roomId"
