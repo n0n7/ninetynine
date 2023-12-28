@@ -27,21 +27,24 @@
                 >
                     Password
                 </label>
-                <input
-                    type="password"
-                    id="password"
-                    name="password"
-                    v-model="password"
-                    placeholder="password"
-                    :class="{ 'input-error': !isPasswordValid }"
-                    @input="clearErrorPassword()"
-                />
+                <div id="password-field">
+                    <input
+                        :type="showPassword ? 'text' : 'password'"
+                        id="password"
+                        name="password"
+                        v-model="password"
+                        placeholder="password"
+                        :class="{ 'input-error': !isPasswordValid }"
+                        @input="clearErrorPassword()"
+                    />
+                    <div id="password-show" @click="showPassword = !showPassword">
+                        <font-awesome-icon :icon="showPassword ? 'fas fa-eye-slash' : 'fas fa-eye'" />
+                    </div>
+                </div>
             </div>
             <!--register-->
             <div class="form-router">
-                <router-link to="/register">
-                    <label class="label-router"> Don't have an account? </label>
-                </router-link>
+                <label class="label-router" @click="directToRegister"> Don't have an account? </label>
             </div>
         </form>
         <button type="submit" @click.prevent="login">Login</button>
@@ -68,6 +71,7 @@ export default {
             isPasswordValid: true,
             isResponsePassed: true,
             errorMessage: "",
+            showPassword: false,
         };
     },
     computed: {
@@ -159,6 +163,9 @@ export default {
         clearErrorPassword() {
             this.isPasswordValid = true;
         },
+        directToRegister() {
+            this.$router.push("/register");
+        }, 
     },
 };
 </script>
@@ -166,6 +173,7 @@ export default {
 <style scoped>
 h1 {
     color: white;
+    margin-bottom: 40px;
 }
 
 label {
@@ -175,12 +183,15 @@ label {
 button {
     width: 10%;
     height: 5%;
+    min-height: 50px;
+    min-width: 100px;
     padding: 5px;
     background-color: #a35bff;
+    border: none;
     color: white;
     border-radius: 10px;
-    border: 2px solid black;
     margin-bottom: 10px;
+    font-size: 16px;
 }
 
 button:hover {
@@ -190,12 +201,6 @@ button:hover {
 
 button:active {
     filter: brightness(80%);
-}
-
-input {
-    color: white;
-    background-color: #4e4f50;
-    border-radius: 7px;
 }
 
 .form-container {
@@ -210,15 +215,51 @@ input {
     justify-content: space-between;
     align-items: center;
     width: 100%;
-    margin-bottom: 10px;
+    margin-bottom: 20px;
+    position: relative;
 }
+
+.form-input-container label {
+    font-size: 20px;
+}
+
+input {
+    color: white;
+    background-color: #4e4f50;
+    border-radius: 7px;
+    border: none;
+    font-size: 16px;
+    padding: 7px;
+    width: 200px;
+}
+
+#password-show {
+    color: white;
+    font-size: 16px;
+    position: absolute;
+    right: 10px;
+}
+
+#password-field {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+#password-field input {
+    width: 160px;
+    padding-right: 47px;
+}
+
 .login-form {
     flex-direction: column;
     text-align: center;
     background-color: #242526;
-    padding: 10px;
+    padding: 30px;
     min-width: 300px;
-    margin-bottom: 20px;
+    width: 350px;
+    margin-bottom: 40px;
+    border-radius: 7px;
 }
 
 .form-router {
@@ -238,7 +279,7 @@ input {
 }
 
 .input-error {
-    border: 2px solid red;
+    outline: 2px solid red;
 }
 
 .text-error {
