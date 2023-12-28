@@ -10,7 +10,7 @@
             <div
                 class="lobby-member-list-container"
                 v-for="player in playerList"
-                :key="player.name"
+                :key="player.playerName"
             >
                 <img
                     src="/default_profile_icon.png"
@@ -18,15 +18,25 @@
                     alt="user"
                 />
                 <div class="lobby-member-details">
-                    <p class="p-white">{{ player.name }}</p>
+                    <p class="p-white">{{ player.playerName }}</p>
                 </div>
                 <div class="lobby-member-role">
                     <p class="p-gray">Player</p>
                 </div>
-                <img v-if="player.name === owner" src="/crown_icon.png" style="width: 30px" alt="owner" />
-                <img v-else src="/kick_icon.png" style="width: 30px" alt="kick" />
+                <img
+                    v-if="player.name === owner"
+                    src="/crown_icon.png"
+                    style="width: 30px"
+                    alt="owner"
+                />
+                <img
+                    v-else
+                    src="/kick_icon.png"
+                    style="width: 30px"
+                    alt="kick"
+                />
             </div>
-            <div
+            <!-- <div
                 class="lobby-member-list-container"
                 v-for="spectator in spectatorList"
                 :key="spectator.name"
@@ -43,65 +53,67 @@
                     <p class="p-gray">Spectator</p>
                 </div>
                 <img src="/kick_icon.png" style="width: 30px" alt="kick" />
-            </div>
+            </div> -->
         </div>
         <div class="flex-container-button">
-            <NavButton class="flex-item-button" text="Start" @click="startGame" />
-            <NavButton class="flex-item-button" text="Leave Room" @click="leaveRoom" />
+            <NavButton
+                class="flex-item-button"
+                text="Start"
+                @click="startGame"
+            />
+            <NavButton
+                class="flex-item-button"
+                text="Leave Room"
+                @click="leaveRoom"
+            />
         </div>
     </div>
 </template>
 
 <script>
-import NavButton from "/src/components/NavButton.vue";
+import NavButton from "/src/components/NavButton.vue"
 export default {
     data() {
         return {
             owner: "Nattee",
-            playerList: [
-                { name: "Nattee" },
-                { name: "TeaChanathip" },
-                { name: "AzusaChan~~~" },
-                { name: "Random Guy 6969" },
-            ],
-            spectatorList: [
-                { name: "Nattee" },
-                { name: "TeaChanathip" },
-                { name: "AzusaChan~~~" },
-                { name: "Random Guy 6969" },
-            ],
-        };
+            spectatorList: [],
+        }
     },
     props: {
         roomId: String,
         connection: Object,
+        receivedData: Object,
     },
     created: function () {
         //this.connection = new WebSocket("ws://localhost:8080/ws/" + this.lobbyId);
-
         //this.sendJoinAction();
+    },
+    computed: {
+        playerList() {
+            return this.receivedData.gameData.players
+        },    
     },
     methods: {
         startGame() {
             // need test if owner then change inProgress in Gameroom to true
-            console.log("startGame");
+            console.log("startGame")
             this.connection.send(
                 JSON.stringify({
                     action: "start",
                 })
-            );
+            )
 
             // no error handling yet
         },
         leaveRoom() {
             // push logic
-            this.$router.push("/");
+            this.$router.push("/")
         },
     },
     components: {
         NavButton,
     },
-};
+}
 </script>
 
 <style>
@@ -138,7 +150,6 @@ h1 {
 .lobby-member-list {
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
     align-items: center;
     min-width: 400px;
     height: 300px;

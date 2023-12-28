@@ -1,6 +1,11 @@
 <template>
     <transition name="fade">
-        <Lobby v-if="!inProgress" :roomId="roomId" :connection="this.connection" />
+        <Lobby
+            v-if="!inProgress"
+            :roomId="roomId"
+            :connection="this.connection"
+            :receivedData="receivedData"
+        />
         <Room
             v-else
             :roomId="roomId"
@@ -12,16 +17,16 @@
 </template>
 
 <script>
-import Lobby from "../components/Lobby.vue";
-import Room from "../components/Room.vue";
-import { useSessionStore } from "../store/session.js";
+import Lobby from "../components/Lobby.vue"
+import Room from "../components/Room.vue"
+import { useSessionStore } from "../store/session.js"
 
 export default {
     setup() {
-        const sessionStore = useSessionStore();
+        const sessionStore = useSessionStore()
         return {
             sessionStore,
-        };
+        }
     },
     components: {
         Lobby,
@@ -32,45 +37,43 @@ export default {
             // inProgress: false,
             connection: null,
             receivedData: null,
-        };
+        }
     },
     props: {
         roomId: String,
     },
     async created() {
-        this.connect();
+        this.connect()
     },
     methods: {
         async connect() {
-            console.log("Starting connection to WebSocket Server");
+            console.log("Starting connection to WebSocket Server")
             this.connection = new WebSocket(
                 "ws://localhost:8080/ws/" + this.roomId
-            );
+            )
 
             this.connection.onmessage = (event) => {
-                console.log(event);
+                console.log(event)
                 // console.log(JSON.parse(event.data));
-                this.receivedData = JSON.parse(event.data);
-                console.log(this.receivedData);
-            };
+                this.receivedData = JSON.parse(event.data)
+                console.log(this.receivedData)
+            }
 
             this.connection.onopen = (event) => {
-                console.log(event);
-                console.log(
-                    "Successfully connected to the WebSocket server..."
-                );
-                this.sendJoinAction();
-            };
+                console.log(event)
+                console.log("Successfully connected to the WebSocket server...")
+                this.sendJoinAction()
+            }
 
             this.connection.onclose = function (event) {
-                console.log(event);
-                console.log("Connection closed");
-            };
+                console.log(event)
+                console.log("Connection closed")
+            }
 
             this.connection.onerror = function (event) {
-                console.log(event);
-                console.log("Connection error");
-            };
+                console.log(event)
+                console.log("Connection error")
+            }
         },
         sendJoinAction() {
             let joinData = {
@@ -78,29 +81,29 @@ export default {
                 userId: null,
                 username: null,
                 profilePic: "NULL",
-            };
+            }
 
             if (this.isLoggedIn) {
-                joinData.userId = this.userData.userId;
-                joinData.username = this.userData.username;
-                joinData.profilePic = this.userData.profilePic;
+                joinData.userId = this.userData.userId
+                joinData.username = this.userData.username
+                joinData.profilePic = this.userData.profilePic
             } else {
                 // guset user
-                const rand = this.randomUserId();
-                joinData.userId = rand;
-                joinData.username = "test" + rand;
+                const rand = this.randomUserId()
+                joinData.userId = rand
+                joinData.username = "test" + rand
             }
 
             // Convert the JSON object to a string
-            const jsonData = JSON.stringify(joinData);
+            const jsonData = JSON.stringify(joinData)
 
             // Send the JSON data through the WebSocket connection
-            console.log(jsonData);
-            console.log(this.connection);
-            this.connection.send(jsonData);
+            console.log(jsonData)
+            console.log(this.connection)
+            this.connection.send(jsonData)
         },
         randomUserId() {
-            return Math.floor(Math.random() * 1000000000).toString();
+            return Math.floor(Math.random() * 1000000000).toString()
         },
     },
     computed: {
@@ -109,22 +112,22 @@ export default {
                 this.receivedData === null ||
                 this.receivedData.gameData.status === "waiting"
             ) {
-                return false;
+                return false
             } else if (
                 this.receivedData.gameData.status === "playing" ||
                 this.receivedData.gameData.status === "ended"
             ) {
-                return true;
+                return true
             }
         },
         isLoggedIn() {
-            return this.sessionStore.getIsLoggedIn;
+            return this.sessionStore.getIsLoggedIn
         },
         userData() {
-            return this.sessionStore.getData;
+            return this.sessionStore.getData
         },
     },
-};
+}
 </script>
 
 <style scoped>
