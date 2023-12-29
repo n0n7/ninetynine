@@ -68,9 +68,9 @@ export default {
                         }
                     );
                     const data = await response.json();
-                    this.lobbyStore.storeLobbyDetails(data);
                     console.log(data);
                     if (data.error === undefined) {
+                        this.lobbyStore.storeLobbyDetails(data);
                         this.$router.push("/room/" + this.roomID);
                     } else {
                         this.status = data.error;

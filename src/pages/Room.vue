@@ -15,17 +15,6 @@
         :receivedData="receivedData"
     />
     <!-- </transition> -->
-    <p
-        style="
-            color: white;
-            position: absolute;
-            top: 0;
-            left: 50%;
-            transform: translateX(-50%);
-        "
-    >
-        {{ inProgress }}
-    </p>
 </template>
 
 <script>
@@ -148,6 +137,7 @@ export default {
         this.closeConnection();
         next();
     },
+    
 };
 </script>
 

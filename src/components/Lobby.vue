@@ -13,7 +13,10 @@
             />
         </div>
         <div class="lobby-member-list">
-            <div class="lobby-member-list-container">
+            <div
+                class="lobby-member-list-container"
+                v-if="owner !== null || owner !== undefined"
+            >
                 <img
                     :src="owner.playerAvatarURL"
                     class="profile-icon"
@@ -33,7 +36,7 @@
             <div
                 class="lobby-member-list-container"
                 v-for="(player, index) in playerList"
-                :key="player.playerId"
+                :key="index"
             >
                 <img
                     :src="player.playerAvatarURL"
@@ -59,7 +62,7 @@
             <div
                 class="lobby-member-list-container"
                 v-for="(spectator, index) in spectatorList"
-                :key="spectator.spectatorId"
+                :key="index"
             >
                 <img
                     :src="spectator.spectatorAvatarURL"
@@ -104,9 +107,12 @@
     </transition>
     <transition name="fade">
         <div class="warning-message" v-if="showWarningMessage">
-            <p>{{ this.receivedData.error }}!</p>
+            <p>{{ warningMessage }}!</p>
         </div>
     </transition>
+    <!-- <p style="color: white; position: absolute; font-size: 1rem; bottom: 0; right:1rem;">
+        userId: {{ userId }}
+    </p> -->
 </template>
 
 <script>
@@ -118,24 +124,14 @@ export default {
         return {
             owner: null,
             playerList: [],
-            spectatorList: [
-                {
-                    spectatorId: "spec1",
-                    spectatorName: "testSpectator1",
-                    spectatorAvatarURL: "/default_profile_icon.png",
-                },
-                {
-                    spectatorId: "spec2",
-                    spectatorName: "testSpectator2",
-                    spectatorAvatarURL: "/default_profile_icon.png",
-                },
-            ],
+            spectatorList: [],
 
             lobbyStore: useLobbyStore(),
 
             showClipboardMessage: false,
             messageTimeOut: null,
 
+            warningMessage: "",
             showWarningMessage: false,
             warningMessageTimeOut: null,
         };
@@ -148,11 +144,6 @@ export default {
         connection: Object,
         userId: String,
         receivedData: Object,
-    },
-    computed: {
-        playerList() {
-            return this.receivedData.gameData.players;
-        },
     },
     methods: {
         startGame() {
@@ -171,30 +162,6 @@ export default {
         setAvatarToDefault(event) {
             event.target.src = "/default_profile_icon.png";
         },
-        updateOwner() {
-            const players = this.receivedData.gameData.players;
-            this.owner = players.find(
-                ({ playerId }) =>
-                    playerId === this.lobbyStore.getLobbyDetails.ownerId
-            );
-            console.log(this.owner);
-        },
-        updatePlayer() {
-            const players = this.receivedData.gameData.players;
-            this.playerList = players.filter(
-                ({ playerId }) =>
-                    playerId !== this.lobbyStore.getLobbyDetails.ownerId
-            );
-            console.log(this.playerList);
-        },
-        updateSpectator() {
-            if (this.receivedData.gameData.spectators !== undefined) {
-                this.spectatorList = this.receivedData.gameData.spectators;
-                console.log(this.spectatorList);
-            } else {
-                console.log("spectatorList is undefined");
-            }
-        },
         getNameClass(playerId) {
             if (this.userId === playerId) {
                 return "p-highlighted";
@@ -210,38 +177,106 @@ export default {
                 this.showClipboardMessage = false;
             }, 2000);
         },
-        setWarningMessage() {
+        setWarningMessage(waningMessage) {
+            this.warningMessage = waningMessage;
             this.showWarningMessage = true;
             clearTimeout(this.warningMessageTimeOut);
             this.warningMessageTimeOut = setTimeout(() => {
                 this.showWarningMessage = false;
             }, 2000);
         },
+        async setUpLobby() {
+            // console.log("setUpLobby");
+            this.playerList = this.receivedData.gameData.players;
+
+            if(this.lobbyStore.getLobbyDetails === null) {
+                await this.getNewRoomData();
+            }
+
+            const ownerIdx = this.receivedData.gameData.players.findIndex(
+                ({ playerId }) =>
+                    playerId === this.lobbyStore.getLobbyDetails.ownerId
+            );
+
+            this.owner = this.playerList.splice(ownerIdx, 1)[0];
+
+            // console.log("owner:", this.owner);
+            // console.log("playerList:", this.playerList);
+        },
+        async getNewRoomData() {
+            try {
+                const response = await fetch("http://localhost:8080/getroom", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        userId: this.userId,
+                        roomId: this.roomId,
+                    }),
+                });
+                const data = await response.json();
+                // console.log(data);
+                if (data.error === undefined) {
+                    this.lobbyStore.storeLobbyDetails(data);
+                } else {
+                    this.setWarningMessage(data.error);
+                }
+            } catch (error) {
+                this.setWarningMessage(
+                    "Cannot connect to server. Please try again later."
+                );
+            }
+        },
+        async updateLobby(players) {
+            // console.log("updateLobby");
+            const players_copy = [...players];
+
+            let ownerIdx = players.findIndex(
+                ({ playerId }) => playerId === this.ownerId
+            );
+
+            // Delay before fetching new room data
+            function delay(ms) {
+                return new Promise(resolve => setTimeout(resolve, ms));
+            }
+
+            // Check if owner left
+            while(ownerIdx === -1) {
+                await delay(1000);
+                await this.getNewRoomData();
+                ownerIdx = players.findIndex(
+                    ({ playerId }) =>
+                        playerId === this.lobbyStore.getLobbyDetails.ownerId
+                );
+            }
+
+            this.owner = players_copy.splice(ownerIdx, 1)[0];
+            this.playerList = players_copy;
+
+            // console.log("owner:", this.owner);
+            // console.log("playerList:", this.playerList);
+        },
     },
     computed: {
+        ownerId() {
+            return this.lobbyStore.getLobbyDetails.ownerId;
+        },
         isOwner() {
-            return this.userId === this.lobbyStore.getLobbyDetails.ownerId;
+            return this.userId === this.ownerId;
         },
     },
     watch: {
         receivedData(value) {
-            if(value.error === ""){
-                this.updateOwner();
-                this.updatePlayer();
-                this.updateSpectator();
-                if(this.receivedData.error.length !== 0) {
-                    this.showWarningMessage();
-                }
-            }
-            else {
-                this.setWarningMessage();
+            if (value.error === "") {
+                this.updateLobby(value.gameData.players);
+            } else {
+                this.setWarningMessage(value.error);
             }
         },
     },
     created() {
-        this.updateOwner();
-        this.updatePlayer();
-        this.updateSpectator();
+        this.setUpLobby();
     },
 };
 </script>
