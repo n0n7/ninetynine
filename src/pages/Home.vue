@@ -4,14 +4,14 @@
             <div
                 class="p-info"
                 :class="{ active: activePage == 1 }"
-                @click.prevent="activePage = 1"
+                @click.prevent="activePage===1 ? activePage=0 : activePage = 1"
             >
                 <p>How to Play?</p>
             </div>
             <div
                 class="p-info"
                 :class="{ active: activePage == 2 }"
-                @click.prevent="activePage = 2"
+                @click.prevent="activePage===2 ? activePage=0 : activePage = 2"
             >
                 <p>Status</p>
             </div>

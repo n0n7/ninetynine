@@ -8,8 +8,8 @@ const sessionStore = useSessionStore();
 <template>
     <div id="app">
         <Navbar
-            :isLoggedIn="sessionStore.isLoggedIn"
-            :data="sessionStore.data"
+            :isLoggedIn="sessionStore.getIsLoggedIn"
+            :data="sessionStore.getData"
         />
         <router-view></router-view>
     </div>
@@ -31,6 +31,9 @@ export default {
 
 * {
     font-family: "Monda", sans-serif;
+    -webkit-user-select: none; /* Safari */
+    -ms-user-select: none; /* IE 10 and IE 11 */
+    user-select: none; /* Standard syntax */
 }
 
 html {

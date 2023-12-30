@@ -22,6 +22,7 @@
                 <img
                     class="profile-pic"
                     :src="item.playerAvatarURL"
+                    alt="player"
                     @error="setAvatarToDefault"
                 />
                 <!-- {{getPlayerFrameClass(idx)}} -->
