@@ -1,8 +1,8 @@
 import { createRouter, createWebHistory } from "vue-router";
 
 // Import page components
-import LoginPage from "./pages/login.vue";
-import RegisterPage from "./pages/register.vue";
+import LoginPage from "./pages/Login.vue";
+import RegisterPage from "./pages/Register.vue";
 import HomePage from "./pages/Home.vue";
 import GameStatsPage from "./pages/GameStats.vue";
 import AccountSettingPage from "./pages/AccountSetting.vue";
