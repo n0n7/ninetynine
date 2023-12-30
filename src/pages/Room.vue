@@ -84,11 +84,6 @@ export default {
                 joinData.userId = this.userData.userId;
                 joinData.username = this.userData.username;
                 joinData.profilePic = this.userData.profilePic;
-            } else {
-                // guset user
-                const rand = this.randomUserId();
-                joinData.userId = rand;
-                joinData.username = "test" + rand;
             }
 
             // Convert the JSON object to a string
@@ -97,9 +92,6 @@ export default {
             // Send the JSON data through the WebSocket connection
             // console.log(jsonData);
             this.connection.send(jsonData);
-        },
-        randomUserId() {
-            return Math.floor(Math.random() * 1000000000).toString();
         },
         closeConnection() {
             this.connection.close();

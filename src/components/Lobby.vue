@@ -15,7 +15,7 @@
         <div class="lobby-member-list">
             <div
                 class="lobby-member-list-container"
-                v-if="owner !== null || owner !== undefined"
+                v-if="owner !== null && owner !== undefined"
             >
                 <img
                     :src="owner.playerAvatarURL"
@@ -110,9 +110,17 @@
             <p>{{ warningMessage }}!</p>
         </div>
     </transition>
-    <!-- <p style="color: white; position: absolute; font-size: 1rem; bottom: 0; right:1rem;">
+    <p
+        style="
+            color: white;
+            position: absolute;
+            font-size: 1rem;
+            bottom: 0;
+            right: 1rem;
+        "
+    >
         userId: {{ userId }}
-    </p> -->
+    </p>
 </template>
 
 <script>
@@ -185,24 +193,6 @@ export default {
                 this.showWarningMessage = false;
             }, 2000);
         },
-        async setUpLobby() {
-            // console.log("setUpLobby");
-            this.playerList = this.receivedData.gameData.players;
-
-            if(this.lobbyStore.getLobbyDetails === null) {
-                await this.getNewRoomData();
-            }
-
-            const ownerIdx = this.receivedData.gameData.players.findIndex(
-                ({ playerId }) =>
-                    playerId === this.lobbyStore.getLobbyDetails.ownerId
-            );
-
-            this.owner = this.playerList.splice(ownerIdx, 1)[0];
-
-            // console.log("owner:", this.owner);
-            // console.log("playerList:", this.playerList);
-        },
         async getNewRoomData() {
             try {
                 const response = await fetch("http://localhost:8080/getroom", {
@@ -228,55 +218,80 @@ export default {
                 );
             }
         },
+        async setUpLobby() {
+            console.log("setUpLobby");
+            this.playerList = this.receivedData.gameData.players;
+
+            if (this.lobbyStore.getLobbyDetails === null) {
+                await this.getNewRoomData();
+            }
+
+            const ownerIdx = this.receivedData.gameData.players.findIndex(
+                ({ playerId }) =>
+                    playerId === this.lobbyStore.getLobbyDetails.ownerId
+            );
+
+            this.owner = this.playerList.splice(ownerIdx, 1)[0];
+
+            console.log("owner:", this.owner);
+            console.log("playerList:", this.playerList);
+        },
         async updateLobby(players) {
-            // console.log("updateLobby");
-            const players_copy = [...players];
+            console.log("updateLobby");
 
             let ownerIdx = players.findIndex(
-                ({ playerId }) => playerId === this.ownerId
+                ({ playerId }) =>
+                    playerId === this.lobbyStore.getLobbyDetails.ownerId
             );
 
             // Delay before fetching new room data
             function delay(ms) {
-                return new Promise(resolve => setTimeout(resolve, ms));
+                return new Promise((resolve) => setTimeout(resolve, ms));
             }
 
             // Check if owner left
-            while(ownerIdx === -1) {
+            // The problem might occurs when the owner refresh the page too quickly (skill issue).
+            for (let i = 0; i < 3; i++) {
                 await delay(1000);
                 await this.getNewRoomData();
                 ownerIdx = players.findIndex(
                     ({ playerId }) =>
                         playerId === this.lobbyStore.getLobbyDetails.ownerId
                 );
+
+                if (ownerIdx !== -1) {
+                    break;
+                }
             }
 
+            let players_copy = [...this.receivedData.gameData.players];
             this.owner = players_copy.splice(ownerIdx, 1)[0];
             this.playerList = players_copy;
 
-            // console.log("owner:", this.owner);
-            // console.log("playerList:", this.playerList);
+            console.log("owner:", this.owner);
+            console.log("playerList:", this.playerList);
         },
     },
     computed: {
-        ownerId() {
-            return this.lobbyStore.getLobbyDetails.ownerId;
-        },
         isOwner() {
-            return this.userId === this.ownerId;
+            if (this.lobbyStore.getLobbyDetails === null) {
+                return false;
+            }
+            return this.userId === this.lobbyStore.getLobbyDetails.ownerId;
         },
     },
     watch: {
         receivedData(value) {
             if (value.error === "") {
+                console.log("newPlayers:", value.gameData.players);
                 this.updateLobby(value.gameData.players);
             } else {
                 this.setWarningMessage(value.error);
             }
         },
     },
-    created() {
-        this.setUpLobby();
+    async created() {
+        await this.setUpLobby();
     },
 };
 </script>

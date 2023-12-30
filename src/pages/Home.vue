@@ -28,7 +28,7 @@
                 <NavButton
                     class="flex-item-button"
                     text="Join Room"
-                    to="/joinroom"
+                    @click="joinRoom"
                 />
                 <NavButton
                     class="flex-item-button"
@@ -113,6 +113,14 @@ export default {
                     this.status =
                         "Cannot connect to server. Please try again later.";
                 }
+            }
+        },
+        joinRoom() {
+            if (!this.sessionStore.isLoggedIn) {
+                this.status = "Please login first";
+            }
+            else {
+                this.$router.push("/joinroom");
             }
         },
     },
