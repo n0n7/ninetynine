@@ -62,6 +62,9 @@
 
 <script>
 import { useSessionStore } from "../store/session.js";
+
+const BACKEND_URL = import.meta.env.VITE_API_URL;
+
 export default {
     setup() {
         const sessionStore = useSessionStore();
@@ -113,7 +116,7 @@ export default {
                 // post data to server
                 try {
                     const response = await fetch(
-                        "http://localhost:8080/login",
+                        BACKEND_URL+"/login",
                         {
                             method: "POST",
                             headers: {

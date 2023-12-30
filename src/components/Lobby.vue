@@ -127,6 +127,8 @@
 import NavButton from "/src/components/NavButton.vue";
 import { useLobbyStore } from "../store/lobbyStore.js";
 
+const BACKEND_URL = import.meta.env.VITE_API_URL;
+
 export default {
     data() {
         return {
@@ -195,7 +197,7 @@ export default {
         },
         async getNewRoomData() {
             try {
-                const response = await fetch("http://localhost:8080/getroom", {
+                const response = await fetch(BACKEND_URL+"/getroom", {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
