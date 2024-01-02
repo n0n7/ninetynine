@@ -25,7 +25,7 @@ import NavButton from "/src/components/NavButton.vue";
 import { useSessionStore } from "../store/session.js";
 import { useLobbyStore } from "../store/lobbyStore.js";
 
-const BACKEND_URL = process.env.BACKEND_URL;
+const BACKEND_URL = process.env.VITE_API_URL;
 
 export default {
     components: {

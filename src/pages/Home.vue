@@ -56,7 +56,7 @@ import { useLobbyStore } from "../store/lobbyStore.js";
 import HowToPlay from "/src/components/HowToPlay.vue";
 import CardEffectsList from "/src/components/CardEffectsList.vue";
 
-const BACKEND_URL = process.env.BACKEND_URL;
+const BACKEND_URL = process.env.VITE_API_URL;
 
 export default {
     components: {

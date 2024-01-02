@@ -63,7 +63,7 @@
 <script>
 import { useSessionStore } from "../store/session.js";
 
-const BACKEND_URL = process.env.BACKEND_URL;
+const BACKEND_URL = process.env.VITE_API_URL;
 
 export default {
     setup() {
