@@ -5,8 +5,8 @@
             <h1>{{ message }}</h1>
             <p :class="isShaking ? 'shake' : ''">Please confirm your choice</p>
             <div class="button-zone">
-                <NavButton text="Confirm" :to="to" />
-                <NavButton text="Cancel" @click="closeWindow()" />
+                <NavButton text="Confirm" :to="to" @click="confirm" />
+                <NavButton text="Cancel" @click="closeWindow" />
             </div>
         </div>
     </div>
@@ -15,6 +15,7 @@
 <script>
 import NavButton from "/src/components/NavButton.vue";
 export default {
+    emits: ["confirm", "closeWindow"],
     components: {
         NavButton,
     },
@@ -38,6 +39,9 @@ export default {
         };
     },
     methods: {
+        confirm() {
+            this.$emit("confirm");
+        },
         closeWindow() {
             this.$emit("closeWindow");
         },

@@ -110,17 +110,6 @@
             <p>{{ warningMessage }}!</p>
         </div>
     </transition>
-    <p
-        style="
-            color: white;
-            position: absolute;
-            font-size: 1rem;
-            bottom: 0;
-            right: 1rem;
-        "
-    >
-        userId: {{ userId }}
-    </p>
 </template>
 
 <script>
@@ -197,7 +186,7 @@ export default {
         },
         async getNewRoomData() {
             try {
-                const response = await fetch(BACKEND_URL+"/getroom", {
+                const response = await fetch(BACKEND_URL + "/getroom", {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",

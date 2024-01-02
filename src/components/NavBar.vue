@@ -41,19 +41,25 @@
                     </div>
                     <div class="dropdown-content" v-if="isLoggedIn">
                         <!-- <router-link to="/accountsetting"> -->
-                            <a>Profile</a>
+                        <a>Profile</a>
                         <!-- </router-link> -->
-                        <router-link to="/" @click="logout">
-                            <a id="logout-btn">Logout</a>
-                        </router-link>
+                        <a id="logout-btn" @click="toggleWindow">Logout</a>
                     </div>
                 </div>
             </div>
         </div>
     </nav>
+    <ConfirmWindow
+        message="Logout?"
+        to="/"
+        :isVisible="isWindowShown"
+        @confirm="logout"
+        @closeWindow="toggleWindow"
+    />
 </template>
 
 <script>
+import ConfirmWindow from "./ConfirmWindow.vue";
 import { useSessionStore } from "../store/session.js";
 export default {
     setup() {
@@ -72,6 +78,9 @@ export default {
             default: null,
         },
     },
+    components: {
+        ConfirmWindow,
+    },
     data() {
         return {
             pages: [
@@ -79,14 +88,20 @@ export default {
                 { name: "Login", path: "/login" },
                 { name: "Contact", path: "/contact" },
             ],
+
+            isWindowShown: false,
         };
     },
     methods: {
         logout() {
             this.sessionStore.logout();
+            this.isWindowShown = false;
         },
         setAvatarToDefault(event) {
             event.target.src = "/default_profile_icon.png";
+        },
+        toggleWindow() {
+            this.isWindowShown = !this.isWindowShown;
         },
     },
 };
