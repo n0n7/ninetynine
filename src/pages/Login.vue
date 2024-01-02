@@ -182,6 +182,9 @@ export default {
             this.$router.push("/register");
         },
     },
+    created() {
+        console.log(BACKEND_URL);
+    },
 };
 </script>
 
