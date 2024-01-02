@@ -168,6 +168,7 @@ img {
 .dropdown a {
     color: #fff;
     text-decoration: none;
+    cursor: pointer;
 }
 
 .dropdown a:hover {
@@ -195,7 +196,7 @@ img {
 
 .dropdown-content {
     background: #242526;
-    display: none;
+    display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
@@ -205,10 +206,16 @@ img {
     z-index: 1;
     border-bottom-left-radius: 8px;
     border-bottom-right-radius: 8px;
+    height: 0;
+    opacity: 0;
+    visibility: hidden;
+    transition: height 0.2s ease-in-out, opacity 0.2s ease-in-out, visibility 0.2s ease-in-out;
 }
 
 .dropdown:hover .dropdown-content {
-    display: flex;
+    height: 100px;
+    opacity: 1;
+    visibility: visible;
 }
 
 #logout-btn:hover {
