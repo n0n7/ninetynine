@@ -13,15 +13,21 @@
                 :class="{ active: activePage == 2 }"
                 @click.prevent="activePage===2 ? activePage=0 : activePage = 2"
             >
-                <p>Status</p>
+                <p>Card Effects</p>
             </div>
         </div>
         <div class="home-main">
             <img v-if="activePage == 0" src="/99.png" style="width: 300px" />
-            <div v-else class="home-main-info">
+            <div v-else-if="activePage == 1" class="home-main-info">
                 <h1>{{ pages[activePage].title }}</h1>
                 <div class="home-main-details">
-                    <p>{{ pages[activePage].content }}</p>
+                    <HowToPlay />
+                </div>
+            </div>
+            <div v-else-if="activePage == 2" class="home-main-info">
+                <h1>{{ pages[activePage].title }}</h1>
+                <div class="home-main-details">
+                    <CardEffectsList />
                 </div>
             </div>
             <div class="flex-container-button">
@@ -47,12 +53,16 @@
 import NavButton from "/src/components/NavButton.vue";
 import { useSessionStore } from "../store/session.js";
 import { useLobbyStore } from "../store/lobbyStore.js";
+import HowToPlay from "/src/components/HowToPlay.vue";
+import CardEffectsList from "/src/components/CardEffectsList.vue";
 
 const BACKEND_URL = import.meta.env.VITE_API_URL;
 
 export default {
     components: {
         NavButton,
+        HowToPlay,
+        CardEffectsList,
     },
     data() {
         return {
@@ -71,8 +81,8 @@ export default {
                         "Write the rules here Write the rules here Write the rules here Write the rules here",
                 },
                 {
-                    name: "status",
-                    title: "Status",
+                    name: "Card Effects",
+                    title: "Card Effects",
                     content: "Write the status here",
                 },
             ],
@@ -215,10 +225,17 @@ h1 {
 }
 
 .flex-item-button {
-    margin-bottom: 0.5rem;
+    margin-bottom: 2rem;
 }
 
 #invalid-status {
     color: #ff0033;
+}
+
+@media screen and (max-width: 900px) {
+    .p-info p {
+    color: white;
+    font-size: 16px;
+}
 }
 </style>
