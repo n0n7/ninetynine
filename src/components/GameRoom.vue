@@ -55,7 +55,7 @@
             </div>
             <div>
                 <ConfirmWindow
-                    :isVisible="isWindowShow"
+                    :isVisible="isWindowShown"
                     @closeWindow="toggleWindow()"
                 />
             </div>
@@ -145,7 +145,7 @@ export default {
             timer: null,
             timerInterval: null, // playtime countdown ref
 
-            isWindowShow: false, // confirm window
+            isWindowShown: false, // confirm window
 
             showWarning: false,
             warningMessage: "",
@@ -215,7 +215,7 @@ export default {
             event.preventDefault();
         },
         toggleWindow() {
-            this.isWindowShow = !this.isWindowShow;
+            this.isWindowShown = !this.isWindowShown;
         },
         countdown() {
             this.timer = this.playTime;
