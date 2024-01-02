@@ -135,6 +135,9 @@ export default {
             }
         },
     },
+    created() {
+        console.log(BACKEND_URL);
+    },
 };
 </script>
 
