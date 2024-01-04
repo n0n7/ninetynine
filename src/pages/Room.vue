@@ -22,6 +22,9 @@ import Lobby from "../components/Lobby.vue";
 import GameRoom from "../components/GameRoom.vue";
 import { useSessionStore } from "../store/session.js";
 
+// const BACKEND_URL = import.meta.env.VITE_API_URL;
+const BACKEND_URL = process.env.VITE_API_URL;
+
 export default {
     components: {
         Lobby,
