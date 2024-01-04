@@ -175,7 +175,7 @@ export default {
 
             // post data to server
             try {
-                const response = await fetch(BACKEND_URL+"/register", {
+                const response = await fetch("http://"+BACKEND_URL+"/register", {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",

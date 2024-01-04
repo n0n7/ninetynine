@@ -186,7 +186,7 @@ export default {
         },
         async getNewRoomData() {
             try {
-                const response = await fetch(BACKEND_URL + "/getroom", {
+                const response = await fetch("http://"+BACKEND_URL+"/getroom", {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",

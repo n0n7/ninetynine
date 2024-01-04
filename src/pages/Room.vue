@@ -47,7 +47,7 @@ export default {
         async connect() {
             console.log("Starting connection to WebSocket Server");
             this.connection = new WebSocket(
-                "ws://localhost:8080/ws/" + this.roomId
+                "ws://"+BACKEND_URL+"/ws/" + this.roomId
             );
 
             this.connection.onmessage = (event) => {

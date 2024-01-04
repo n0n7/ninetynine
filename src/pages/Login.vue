@@ -116,7 +116,7 @@ export default {
                 // post data to server
                 try {
                     const response = await fetch(
-                        BACKEND_URL+"/login",
+                        "http://"+BACKEND_URL+"/login",
                         {
                             method: "POST",
                             headers: {

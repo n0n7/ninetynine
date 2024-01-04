@@ -57,7 +57,7 @@ export default {
             } else {
                 try {
                     const response = await fetch(
-                        BACKEND_URL + "/joinroom",
+                        "http://"+BACKEND_URL+"/joinroom",
                         {
                             method: "POST",
                             headers: {
