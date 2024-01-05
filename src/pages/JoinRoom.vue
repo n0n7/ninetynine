@@ -47,7 +47,7 @@ export default {
     },
     methods: {
         async joinRoom() {
-            console.log("joinRoom");
+            // console.log("joinRoom");
             this.isRoomError = false;
             if (this.roomID.length < 12) {
                 this.isRoomError = true;
@@ -57,7 +57,7 @@ export default {
             } else {
                 try {
                     const response = await fetch(
-                        "http://"+BACKEND_URL+"/joinroom",
+                        "http://" + BACKEND_URL + "/joinroom",
                         {
                             method: "POST",
                             headers: {
@@ -70,7 +70,7 @@ export default {
                         }
                     );
                     const data = await response.json();
-                    console.log(data);
+                    // console.log(data);
                     if (data.error === undefined) {
                         this.lobbyStore.storeLobbyDetails(data);
                         this.$router.push("/room/" + this.roomID);

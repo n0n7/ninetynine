@@ -43,8 +43,8 @@ export default {
                     name: "Set to 99",
                     filename: "/cards/Sp3_set99.png",
                     effect: "Set the stack to 99",
-                }
-            ]
+                },
+            ],
         };
     },
 };
@@ -91,7 +91,7 @@ p {
 
 @media screen and (min-width: 600px) {
     .card-effects-list {
-    flex-direction: row;
+        flex-direction: row;
     }
 
     .card-effects-list-info {
@@ -117,6 +117,5 @@ p {
         font-size: 16px;
         color: white;
     }
-
 }
 </style>

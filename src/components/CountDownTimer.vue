@@ -1,6 +1,6 @@
 <template>
     <div>
-        <img src="/hourglass.svg" alt="timer"/>
+        <img src="/hourglass.svg" alt="timer" />
         <p>{{ timer }}</p>
     </div>
 </template>

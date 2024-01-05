@@ -95,7 +95,7 @@ export default {
     methods: {
         async login() {
             // print username and password to console
-            console.log(this.email, this.password);
+            // console.log(this.email, this.password);
 
             // clear error message
             this.errorMessage = "";
@@ -116,7 +116,7 @@ export default {
                 // post data to server
                 try {
                     const response = await fetch(
-                        "http://"+BACKEND_URL+"/login",
+                        "http://" + BACKEND_URL + "/login",
                         {
                             method: "POST",
                             headers: {
@@ -129,7 +129,7 @@ export default {
                         }
                     );
                     const data = await response.json();
-                    console.log(data.userId);
+                    // console.log(data.userId);
                     if (data.error === undefined) {
                         await this.sessionStore.login(data);
                         this.$router.push("/");
@@ -181,9 +181,6 @@ export default {
         directToRegister() {
             this.$router.push("/register");
         },
-    },
-    created() {
-        console.log(BACKEND_URL);
     },
 };
 </script>

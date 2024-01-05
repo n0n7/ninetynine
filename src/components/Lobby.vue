@@ -151,7 +151,7 @@ export default {
                     action: "start",
                 };
                 this.connection.send(JSON.stringify(action));
-                console.log("startGame");
+                // console.log("startGame");
             }
         },
         leaveRoom() {
@@ -186,16 +186,19 @@ export default {
         },
         async getNewRoomData() {
             try {
-                const response = await fetch("http://"+BACKEND_URL+"/getroom", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify({
-                        userId: this.userId,
-                        roomId: this.roomId,
-                    }),
-                });
+                const response = await fetch(
+                    "http://" + BACKEND_URL + "/getroom",
+                    {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify({
+                            userId: this.userId,
+                            roomId: this.roomId,
+                        }),
+                    }
+                );
                 const data = await response.json();
                 // console.log(data);
                 if (data.error === undefined) {
@@ -210,7 +213,7 @@ export default {
             }
         },
         async setUpLobby() {
-            console.log("setUpLobby");
+            // console.log("setUpLobby");
             this.playerList = this.receivedData.gameData.players;
 
             if (this.lobbyStore.getLobbyDetails === null) {
@@ -224,11 +227,11 @@ export default {
 
             this.owner = this.playerList.splice(ownerIdx, 1)[0];
 
-            console.log("owner:", this.owner);
-            console.log("playerList:", this.playerList);
+            // console.log("owner:", this.owner);
+            // console.log("playerList:", this.playerList);
         },
         async updateLobby(players) {
-            console.log("updateLobby");
+            // console.log("updateLobby");
 
             let ownerIdx = players.findIndex(
                 ({ playerId }) =>
@@ -259,8 +262,8 @@ export default {
             this.owner = players_copy.splice(ownerIdx, 1)[0];
             this.playerList = players_copy;
 
-            console.log("owner:", this.owner);
-            console.log("playerList:", this.playerList);
+            // console.log("owner:", this.owner);
+            // console.log("playerList:", this.playerList);
         },
     },
     computed: {
@@ -274,7 +277,7 @@ export default {
     watch: {
         receivedData(value) {
             if (value.error === "") {
-                console.log("newPlayers:", value.gameData.players);
+                // console.log("newPlayers:", value.gameData.players);
                 this.updateLobby(value.gameData.players);
             } else {
                 this.setWarningMessage(value.error);

@@ -4,14 +4,18 @@
             <div
                 class="p-info"
                 :class="{ active: activePage == 1 }"
-                @click.prevent="activePage===1 ? activePage=0 : activePage = 1"
+                @click.prevent="
+                    activePage === 1 ? (activePage = 0) : (activePage = 1)
+                "
             >
                 <p>How to Play?</p>
             </div>
             <div
                 class="p-info"
                 :class="{ active: activePage == 2 }"
-                @click.prevent="activePage===2 ? activePage=0 : activePage = 2"
+                @click.prevent="
+                    activePage === 2 ? (activePage = 0) : (activePage = 2)
+                "
             >
                 <p>Card Effects</p>
             </div>
@@ -102,7 +106,7 @@ export default {
             } else {
                 try {
                     const response = await fetch(
-                        "http://"+BACKEND_URL+"/createroom",
+                        "http://" + BACKEND_URL + "/createroom",
                         {
                             method: "POST",
                             headers: {
@@ -114,7 +118,7 @@ export default {
                         }
                     );
                     const data = await response.json();
-                    console.log(data);
+                    // console.log(data);
                     if (data.error === undefined) {
                         this.lobbyStore.storeLobbyDetails(data);
                         this.$router.push("/room/" + data.roomId);
@@ -130,14 +134,10 @@ export default {
         joinRoom() {
             if (!this.sessionStore.isLoggedIn) {
                 this.status = "Please login first";
-            }
-            else {
+            } else {
                 this.$router.push("/joinroom");
             }
         },
-    },
-    created() {
-        console.log(BACKEND_URL);
     },
 };
 </script>
@@ -237,8 +237,8 @@ h1 {
 
 @media screen and (max-width: 900px) {
     .p-info p {
-    color: white;
-    font-size: 16px;
-}
+        color: white;
+        font-size: 16px;
+    }
 }
 </style>

@@ -209,7 +209,8 @@ img {
     height: 0;
     opacity: 0;
     visibility: hidden;
-    transition: height 0.2s ease-in-out, opacity 0.2s ease-in-out, visibility 0.2s ease-in-out;
+    transition: height 0.2s ease-in-out, opacity 0.2s ease-in-out,
+        visibility 0.2s ease-in-out;
 }
 
 .dropdown:hover .dropdown-content {

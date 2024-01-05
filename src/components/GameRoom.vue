@@ -1,16 +1,4 @@
 <template>
-    <p
-        style="
-            color: white;
-            position: absolute;
-            bottom: 0;
-            right: 0;
-            z-index: 200;
-        "
-    >
-        userId: {{ userId }} | myPlayerIdx: {{ myPlayerIndex }}
-    </p>
-
     <transition>
         <div v-if="errorMessage.length != 0" class="game-error">
             <h2 style="text-align: center; font-size: 8vw; margin-bottom: 0">

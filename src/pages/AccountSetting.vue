@@ -86,7 +86,7 @@ export default {
                 return;
             }
 
-            console.log("confirm");
+            // console.log("confirm");
         },
         clearErrorUsername() {
             this.isUsernameValid = true;

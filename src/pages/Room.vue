@@ -45,33 +45,33 @@ export default {
     },
     methods: {
         async connect() {
-            console.log("Starting connection to WebSocket Server");
+            // console.log("Starting connection to WebSocket Server");
             this.connection = new WebSocket(
-                "ws://"+BACKEND_URL+"/ws/" + this.roomId
+                "ws://" + BACKEND_URL + "/ws/" + this.roomId
             );
 
             this.connection.onmessage = (event) => {
                 // console.log(event);
-                console.log(JSON.parse(event.data));
+                // console.log(JSON.parse(event.data));
                 this.receivedData = JSON.parse(event.data);
             };
 
             this.connection.onopen = (event) => {
                 // console.log(event);
-                console.log(
-                    "Successfully connected to the WebSocket server..."
-                );
+                // console.log(
+                //     "Successfully connected to the WebSocket server..."
+                // );
                 this.sendJoinAction();
             };
 
             this.connection.onclose = function (event) {
                 // console.log(event);
-                console.log("Connection closed");
+                // console.log("Connection closed");
             };
 
             this.connection.onerror = function (event) {
                 // console.log(event);
-                console.log("Connection error");
+                // console.log("Connection error");
             };
         },
         sendJoinAction() {
@@ -131,7 +131,6 @@ export default {
         this.closeConnection();
         next();
     },
-    
 };
 </script>
 

@@ -148,12 +148,12 @@ export default {
             this.isResponsePassed = true;
 
             // print username and password to console
-            console.log(
-                this.email,
-                this.username,
-                this.password,
-                this.confirmPassword
-            );
+            // console.log(
+            //     this.email,
+            //     this.username,
+            //     this.password,
+            //     this.confirmPassword
+            // );
 
             // check if form is valid
             if (!this.verifyEmail(this.email)) {
@@ -175,20 +175,23 @@ export default {
 
             // post data to server
             try {
-                const response = await fetch("http://"+BACKEND_URL+"/register", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify({
-                        username: this.username,
-                        email: this.email,
-                        password: this.password,
-                    }),
-                });
-                console.log(response);
+                const response = await fetch(
+                    "http://" + BACKEND_URL + "/register",
+                    {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify({
+                            username: this.username,
+                            email: this.email,
+                            password: this.password,
+                        }),
+                    }
+                );
+                // console.log(response);
                 const data = await response.json();
-                console.log(data);
+                // console.log(data);
 
                 if (data.error === undefined) {
                     await this.sessionStore.login(data);
