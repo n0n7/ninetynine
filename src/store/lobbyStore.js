@@ -10,10 +10,7 @@ export const useLobbyStore = defineStore("lobby", {
     actions: {
         storeLobbyDetails(data) {
             this.lobbyDetails = data;
-            console.log("Lobby details stored", this.lobbyDetails);
+            // console.log("Lobby details stored", this.lobbyDetails);
         },
     },
-    // persist: {
-    //     storage: sessionStorage,
-    // },
 });
