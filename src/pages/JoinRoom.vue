@@ -57,7 +57,7 @@ export default {
             } else {
                 try {
                     const response = await fetch(
-                        "http://" + BACKEND_URL + "/joinroom",
+                        `http://${BACKEND_URL}/joinroom`,
                         {
                             method: "POST",
                             headers: {
@@ -90,7 +90,7 @@ export default {
 <style scoped>
 h1 {
     color: white;
-    font-size: 3.5rem;
+    font-size: 40px;
     margin-top: 0;
     text-align: center;
 }
@@ -167,5 +167,17 @@ input {
 
 .flex-item-button {
     margin-bottom: 0.5rem;
+}
+
+@media screen and (max-width: 600px) {
+    input {
+        width: calc(9vw + 17rem);
+        min-width: 17rem;
+        font-size: 1.5rem;
+    }
+
+    #invalid-status {
+        font-size: 1.5rem;
+    }
 }
 </style>

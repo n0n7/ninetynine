@@ -47,12 +47,11 @@ export default {
         async connect() {
             // console.log("Starting connection to WebSocket Server");
             this.connection = new WebSocket(
-                "ws://" + BACKEND_URL + "/ws/" + this.roomId
+                `ws://${BACKEND_URL}/ws/` + this.roomId
             );
 
             this.connection.onmessage = (event) => {
                 // console.log(event);
-                // console.log(JSON.parse(event.data));
                 this.receivedData = JSON.parse(event.data);
             };
 
@@ -92,7 +91,6 @@ export default {
             const jsonData = JSON.stringify(joinData);
 
             // Send the JSON data through the WebSocket connection
-            // console.log(jsonData);
             this.connection.send(jsonData);
         },
         closeConnection() {

@@ -106,7 +106,7 @@ export default {
             } else {
                 try {
                     const response = await fetch(
-                        "http://" + BACKEND_URL + "/createroom",
+                        `http://${BACKEND_URL}/createroom`,
                         {
                             method: "POST",
                             headers: {
