@@ -225,6 +225,7 @@ h1 {
     justify-content: center;
     flex-wrap: wrap;
     column-gap: 8vw;
+    width: 100vw;
 }
 
 .flex-item-button {

@@ -121,6 +121,7 @@ img {
 
 #container-div {
     display: flex;
+    flex-direction: row;
     align-items: center;
     justify-content: space-between;
 }
@@ -163,6 +164,11 @@ img {
     justify-content: center;
     align-items: center;
     column-gap: 15px;
+}
+
+.profile-detail p {
+    padding: 0;
+    margin: 0;
 }
 
 .dropdown a {

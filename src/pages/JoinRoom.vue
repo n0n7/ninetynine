@@ -170,6 +170,10 @@ input {
 }
 
 @media screen and (max-width: 600px) {
+    h1 {
+        font-size: 30px;
+    }
+
     input {
         width: calc(9vw + 17rem);
         min-width: 17rem;
