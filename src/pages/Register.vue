@@ -63,7 +63,7 @@
                 </div>
             </div>
             <!--confirm password-->
-            <div class="form-input-container">
+            <div id="confirm-password-container" class="form-input-container">
                 <label
                     for="confirm-password"
                     :class="{ 'text-error': !isConfirmPasswordValid }"
@@ -373,7 +373,6 @@ button:active {
     text-align: center;
     background-color: #242526;
     padding: 30px 30px 10px 30px;
-    min-width: 350px;
     width: 400px;
     margin-bottom: 40px;
     border-radius: 7px;
@@ -393,5 +392,35 @@ button:active {
 
 .text-error {
     color: red;
+}
+
+@media screen and (max-width: 600px) {
+    h1 {
+        font-size: 30px;
+    }
+
+    .register-form {
+        width: 250px;
+        padding: 10px;
+        margin-bottom: 20px;
+    }
+
+    .form-input-container label {
+        font-size: 14px;
+    }
+
+    input {
+        width: 120px;
+        font-size: 12px;
+    }
+    
+    #password-field input {
+        width: 87px;
+        padding-right: 40px;
+    }
+
+    #confirm-password-container {
+        margin-bottom: 0px;
+    }
 }
 </style>

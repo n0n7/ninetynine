@@ -270,8 +270,7 @@ input {
     flex-direction: column;
     text-align: center;
     background-color: #242526;
-    padding: 30px;
-    min-width: 350px;
+    padding: 10px;
     width: 350px;
     margin-bottom: 40px;
     border-radius: 7px;
@@ -299,5 +298,30 @@ input {
 
 .text-error {
     color: red;
+}
+
+@media screen and (max-width: 600px) {
+    h1 {
+        font-size: 30px;
+    }
+
+    .login-form {
+        width: 250px;
+        margin-bottom: 20px;
+    }
+
+    .form-input-container label {
+        font-size: 14px;
+    }
+
+    input {
+        width: 150px;
+        font-size: 12px;
+    }
+    
+    #password-field input {
+        width: 117px;
+        padding-right: 40px;
+    }
 }
 </style>

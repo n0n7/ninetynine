@@ -235,7 +235,7 @@ h1 {
     color: #ff0033;
 }
 
-@media screen and (max-width: 900px) {
+@media screen and (max-width: 600px) {
     .p-info p {
         color: white;
         font-size: 16px;
