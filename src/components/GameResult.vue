@@ -1,19 +1,48 @@
 <template>
     <div class="podium-container">
-        <div v-if="secondPlace !== null" class="place">
-            <p>{{ secondPlace.playerName }}</p>
-            <img :src="secondPlace.playerAvatarURL" />
-            <div class="podium silver" ref="silver"></div>
+        <div v-if="secondPlace !== null && !isSmallScreen" class="place">
+            <p v-if="!isSmallScreen">{{ secondPlace.playerName }}</p>
+            <div class="podium silver" ref="silver" v-if="isSmallScreen" />
+            <img
+                :src="secondPlace.playerAvatarURL"
+                alt="player"
+                @error="setAvatarToDefault"
+            />
+            <div class="podium silver" ref="silver" v-if="!isSmallScreen" />
+            <p v-if="isSmallScreen">{{ secondPlace.playerName }}</p>
         </div>
         <div v-if="firstPlace !== null" class="place">
-            <p>{{ firstPlace.playerName }}</p>
-            <img :src="firstPlace.playerAvatarURL" />
-            <div class="podium gold" ref="gold"></div>
+            <p v-if="!isSmallScreen">{{ firstPlace.playerName }}</p>
+            <div class="podium gold" ref="gold" v-if="isSmallScreen" />
+            <img
+                :src="firstPlace.playerAvatarURL"
+                alt="player"
+                @error="setAvatarToDefault"
+            />
+            <div class="podium gold" ref="gold" v-if="!isSmallScreen" />
+            <p v-if="isSmallScreen">{{ firstPlace.playerName }}</p>
+        </div>
+        <div v-if="secondPlace !== null && isSmallScreen" class="place">
+            <p v-if="!isSmallScreen">{{ secondPlace.playerName }}</p>
+            <div class="podium silver" ref="silver" v-if="isSmallScreen" />
+            <img
+                :src="secondPlace.playerAvatarURL"
+                alt="player"
+                @error="setAvatarToDefault"
+            />
+            <div class="podium silver" ref="silver" v-if="!isSmallScreen" />
+            <p v-if="isSmallScreen">{{ secondPlace.playerName }}</p>
         </div>
         <div v-if="thirdPlace !== null" class="place">
-            <p>{{ thirdPlace.playerName }}</p>
-            <img :src="thirdPlace.playerAvatarURL" />
-            <div class="podium bronze" ref="bronze"></div>
+            <p v-if="!isSmallScreen">{{ thirdPlace.playerName }}</p>
+            <div class="podium bronze" ref="bronze" v-if="isSmallScreen" />
+            <img
+                :src="thirdPlace.playerAvatarURL"
+                alt="player"
+                @error="setAvatarToDefault"
+            />
+            <div class="podium bronze" ref="bronze" v-if="!isSmallScreen" />
+            <p v-if="isSmallScreen">{{ thirdPlace.playerName }}</p>
         </div>
     </div>
     <div class="button-container">
@@ -58,27 +87,50 @@ export default {
             }
             return this.playerRankings[this.playerRankings.length - 3];
         },
+        isSmallScreen() {
+            console.log(window.innerWidth);
+            return window.innerWidth < 600;
+        },
     },
     methods: {
-        setPodiumHeight() {
+        setPodium() {
             const gold = this.$refs.gold;
             const silver = this.$refs.silver;
             const bronze = this.$refs.bronze;
 
-            if (gold !== undefined) {
-                gold.style.height = "45vh";
+            if (this.isSmallScreen) {
+                gold && (gold.style.width = "80vw");
+                silver && (silver.style.width = "70vw");
+                bronze && (bronze.style.width = "60vw");
+            } else {
+                gold && (gold.style.height = "45vh");
+                silver && (silver.style.height = "30vh");
+                bronze && (bronze.style.height = "15vh");
             }
-            if (silver !== undefined) {
-                silver.style.height = "30vh";
-            }
-            if (bronze !== undefined) {
-                bronze.style.height = "15vh";
+        },
+        setAvatarToDefault() {
+            event.target.src = "/default_profile_icon.png";
+        },
+
+        resetPodium() {
+            const gold = this.$refs.gold;
+            const silver = this.$refs.silver;
+            const bronze = this.$refs.bronze;
+
+            if (this.isSmallScreen) {
+                gold && (gold.style.width = "0");
+                silver && (silver.style.width = "0");
+                bronze && (bronze.style.width = "0");
+            } else {
+                gold && (gold.style.height = "0");
+                silver && (silver.style.height = "0");
+                bronze && (bronze.style.height = "0");
             }
         },
     },
     mounted() {
         setTimeout(() => {
-            this.setPodiumHeight();
+            this.setPodium();
         }, 100);
     },
 };
@@ -168,5 +220,63 @@ button:hover {
 
 button:disabled {
     background: #aaaaaa;
+}
+
+@media screen and (max-width: 600px) {
+    .podium-container {
+        /* background: green; */
+        position: absolute;
+        height: 85%;
+        left: 0;
+        transform: none;
+        flex-direction: column;
+        justify-content: center;
+
+        row-gap: 12vw;
+    }
+
+    .place {
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        align-self: flex-start;
+        column-gap: 1vw;
+    }
+
+    .place p {
+        font-size: 3vh;
+        position: absolute;
+        left: 1vw;
+        color: #1e1e1e;
+    }
+
+    .place img {
+        width: 18vw;
+        height: 18vw;
+        margin-bottom: 0;
+    }
+
+    .podium {
+        width: 0;
+        height: 10vh;
+        border-top-left-radius: 0;
+        border-top-right-radius: 2vh;
+        border-bottom-right-radius: 2vh;
+        transition: width 1s ease-out;
+    }
+
+    .button-container {
+        position: absolute;
+        width: 100vw;
+
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+
+        margin: 0;
+        column-gap: 2vh;
+        z-index: 0;
+    }
 }
 </style>

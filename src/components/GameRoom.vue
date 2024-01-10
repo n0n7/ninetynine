@@ -211,7 +211,7 @@ export default {
                 if (this.timer > 0) {
                     this.timer--;
                 } else if (this.isMyturn && this.allowPlay) {
-                    this.autoPlay();
+                    // this.autoPlay();
                 }
             }, 1000);
         },

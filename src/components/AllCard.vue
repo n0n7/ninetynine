@@ -14,7 +14,7 @@
     </div>
     <transition>
         <div class="inform-text" v-if="isPlayerOut">
-            <p>You are out!</p>
+            <p style="out-message">You are out!</p>
         </div>
         <div class="card-container" ref="container" v-else>
             <div
@@ -465,5 +465,20 @@ export default {
     color: white;
     font-size: 5vw;
     margin: 0;
+}
+
+@media screen and (max-width: 600px) {
+    .top-card img {
+        height: 25vh;
+    }
+
+    .card-container {
+        margin-bottom: 2vh;
+        column-gap: 1vh;
+    }
+
+    .card {
+        height: 18vh;
+    }
 }
 </style>

@@ -209,7 +209,7 @@ img {
     padding: 30px 30px 20px 30px;
     row-gap: 20px;
     font-size: 1.5rem;
-    z-index: 1;
+    z-index: 200;
     border-bottom-left-radius: 8px;
     border-bottom-right-radius: 8px;
     height: 0;
