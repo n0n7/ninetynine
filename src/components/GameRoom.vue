@@ -21,7 +21,7 @@
                     {{ countdownStart }}
                 </p>
             </transition>
-            <div v-if="!showCDStart">
+            <div v-if="!showCDStart" class="acknowledge-message">
                 <transition>
                     <p v-if="showWarning" class="warning">
                         {{ warningMessage }}
@@ -385,8 +385,7 @@ export default {
     column-gap: 0.5rem;
 
     position: absolute;
-    left: 50%;
-    transform: translate(-50%);
+    width: 100vw;
 }
 
 .timer-self p {
@@ -465,8 +464,8 @@ export default {
 
 .warning {
     position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
+    width: 100vw;
+    text-align: center;
 
     font-size: 6vh;
     margin: 0;
@@ -482,5 +481,15 @@ export default {
     font-size: 10vw;
     margin: 0;
     color: white;
+}
+
+@media screen and (max-width: 600px) {
+    .acknowledge-message p{
+        font-size: 35px;
+    }
+    
+    .warning {
+        font-size: 35px;
+    }
 }
 </style>

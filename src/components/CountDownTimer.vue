@@ -45,4 +45,15 @@ p {
     margin-left: 0.5rem;
     color: white;
 }
+
+@media screen and (max-width: 600px) {
+    img {
+        width: 35px;
+        height: 35px;
+    }
+
+    p {
+        font-size: 35px;
+    }
+}
 </style>
