@@ -129,7 +129,7 @@ export default {
             countdownStart: 5,
             showCDStart: true,
 
-            playTime: 30,
+            playTime: 15,
             timer: null,
             timerInterval: null, // playtime countdown ref
 
@@ -211,7 +211,7 @@ export default {
                 if (this.timer > 0) {
                     this.timer--;
                 } else if (this.isMyturn && this.allowPlay) {
-                    // this.autoPlay();
+                    this.autoPlay();
                 }
             }, 1000);
         },
@@ -396,10 +396,9 @@ export default {
 }
 
 .player-list-bar {
-    position: fixed;
-    /* top: 0; */
-    /* margin:auto; */
-    transform: translateY(calc(20px + 12vh));
+    position: absolute;
+    bottom: 50%;
+    transform: translateY(65%);
 }
 
 .player-list-bar.right {
@@ -484,12 +483,17 @@ export default {
 }
 
 @media screen and (max-width: 600px) {
-    .acknowledge-message p{
+    .acknowledge-message p {
         font-size: 35px;
     }
-    
+
     .warning {
         font-size: 35px;
+    }
+
+    .player-list-bar {
+        bottom: 50%;
+        transform: translateY(40%);
     }
 }
 </style>
