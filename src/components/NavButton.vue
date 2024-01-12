@@ -45,4 +45,17 @@ button:hover {
 button:disabled {
     background: #aaaaaa;
 }
+
+@media screen and (max-width: 600px) {
+    button {
+        font-size: 1rem;
+        color: white;
+        background: #a35bff;
+        border: 0px;
+        border-radius: 8px;
+        width: 8rem;
+        height: 4rem;
+        cursor: pointer;
+    }
+}
 </style>

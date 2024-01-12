@@ -1,22 +1,24 @@
 <template>
-    <h1>Join Room</h1>
-    <div class="search-bar">
-        <form @submit.prevent="searchRoomID()">
-            <input
-                :class="{ 'input-invalid': isRoomError }"
-                type="text"
-                placeholder="Room ID: xxxxxxxxxxxx"
-                maxlength="12"
-                v-model="roomID"
-            />
-        </form>
-    </div>
-    <p v-show="isError" id="invalid-status">
-        {{ status }}
-    </p>
-    <div class="flex-container-button">
-        <NavButton class="flex-item-button" text="Join" @click="joinRoom" />
-        <NavButton class="flex-item-button" text="Spectate" @click="joinRoom" />
+    <div class="joinroom-container">
+        <h1>Join Room</h1>
+        <div class="search-bar">
+            <form @submit.prevent="searchRoomID()">
+                <input
+                    :class="{ 'input-invalid': isRoomError }"
+                    type="text"
+                    placeholder="Room ID: xxxxxxxxxxxx"
+                    maxlength="12"
+                    v-model="roomID"
+                />
+            </form>
+            <p v-show="isError" id="invalid-status">
+                {{ status }}
+            </p>
+        </div>
+        <div class="flex-container-button">
+            <NavButton class="flex-item-button" text="Join" @click="joinRoom" />
+            <NavButton class="flex-item-button" text="Spectate" @click="joinRoom" />
+        </div>
     </div>
 </template>
 
@@ -104,8 +106,9 @@ p {
 }
 
 .search-bar {
-    margin-top: 16vh;
+    margin-top: 4rem;
     text-align: center;
+    margin-bottom: 3rem;
 }
 
 input {
@@ -167,5 +170,45 @@ input {
 
 .flex-item-button {
     margin-bottom: 0.5rem;
+}
+
+.joinroom-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+@media screen and (max-width: 600px) {
+    h1 {
+        font-size: 2rem;
+    }
+    input {
+        width: calc(9vw + 15rem);
+        min-width: 15rem;
+        font-size: 1.2rem;
+    }
+
+    .search-bar {
+        margin-top: 1.5rem;
+        text-align: center;
+        margin-bottom: 1rem;
+    }
+
+    .flex-container-button {
+        margin-top: 3rem;
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+        width: 50%;
+        gap: 1rem
+    }
+
+    #invalid-status {
+        color: #ff0033;
+        font-size: 1rem;
+        margin-bottom: 1rem;
+    }
 }
 </style>

@@ -12,19 +12,17 @@
                         onclick=""
                     />
                 </router-link>
-                <ul class="nav-ul">
-                    <li class="nav-list">
-                        <router-link to="/">
-                            <a> Home </a>
-                        </router-link>
-                    </li>
-                </ul>
+                <p class="nav-list">
+                    <router-link to="/">
+                        <a> Home </a>
+                    </router-link>
+                </p>
             </div>
             <div id="nav-profile">
                 <div class="dropdown">
                     <div class="profile-detail">
                         <router-link v-if="!isLoggedIn" to="/login">
-                            <a> Login </a>
+                            <p> Login </p>
                         </router-link>
                         <p v-else>{{ data.username }}</p>
                         <img
@@ -117,6 +115,7 @@ nav {
 
 img {
     padding: 10px;
+    margin-right: 10px;
 }
 
 #container-div {
@@ -221,5 +220,11 @@ img {
 
 #logout-btn:hover {
     color: #ff0033;
+}
+
+@media screen and (max-width: 600px) {
+    p {
+        font-size: 0.8rem;
+    }
 }
 </style>
