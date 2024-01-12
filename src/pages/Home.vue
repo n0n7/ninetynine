@@ -1,6 +1,6 @@
 <template>
     <div class="home-container">
-        <div class="home-sidebar">
+        <div class="home-sidebar" v-if="!isSmallScreen">
             <div
                 class="p-info"
                 :class="{ active: activePage == 1 }"
@@ -20,8 +20,34 @@
                 <p>Card Effects</p>
             </div>
         </div>
+        <div class="menu-container" v-if="isSmallScreen">
+            <img class="menu-icon" @click="toggleMenu()" src="/menu.svg" />
+            <div
+                :class="
+                    isMenuShow
+                        ? 'menu-list menu-list-show'
+                        : 'menu-list menu-list-hide'
+                "
+            >
+                <button
+                    class="button-menu"
+                    :class="{ active: activePage == 2 }"
+                    @click.prevent="cardEffectsClick()"
+                >
+                    Card Effects
+                </button>
+                <button
+                    class="button-menu"
+                    :class="{ active: activePage == 1 }"
+                    @click.prevent="howToPlayClick()"
+                >
+                    How to Play?
+                </button>
+            </div>
+        </div>
+
         <div class="home-main">
-            <img v-if="activePage == 0" src="/99.png" style="width: 300px" />
+            <img id="logo-image" v-if="activePage == 0" src="/99.png" />
             <div v-else-if="activePage == 1" class="home-main-info">
                 <h1>{{ pages[activePage].title }}</h1>
                 <div class="home-main-details">
@@ -92,12 +118,20 @@ export default {
             ],
             sessionStore: useSessionStore(),
             lobbyStore: useLobbyStore(),
+            isMenuShow: false,
+            isSmallScreen: screen.width <= 600,
         };
     },
     computed: {
         isError() {
             return this.status !== "";
         },
+    },
+    mounted() {
+        window.addEventListener("resize", this.handleWindowSizeChange);
+    },
+    beforeDestroy() {
+        window.removeEventListener("resize", this.handleWindowSizeChange);
     },
     methods: {
         async createRoom() {
@@ -138,11 +172,32 @@ export default {
                 this.$router.push("/joinroom");
             }
         },
+        toggleMenu() {
+            this.isMenuShow = !this.isMenuShow;
+        },
+        handleWindowSizeChange() {
+            this.isSmallScreen = window.innerWidth <= 600;
+        },
+        howToPlayClick() {
+            this.activePage === 1
+                ? (this.activePage = 0)
+                : (this.activePage = 1);
+            this.toggleMenu();
+        },
+        cardEffectsClick() {
+            this.activePage === 2
+                ? (this.activePage = 0)
+                : (this.activePage = 2);
+            this.toggleMenu();
+        },
     },
 };
 </script>
 
 <style scoped>
+#logo-image {
+    width: 300px;
+}
 p {
     color: white;
     margin: 0px;
@@ -171,7 +226,7 @@ h1 {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    margin-top: 30px;
+    margin-top: 40px;
     width: 60%;
 }
 
@@ -216,7 +271,7 @@ h1 {
 
 .p-info p {
     color: white;
-    font-size: 24px;
+    font-size: 22px;
 }
 .flex-container-button {
     margin-top: 30px;
@@ -235,11 +290,117 @@ h1 {
 #invalid-status {
     color: #ff0033;
 }
+.menu-container {
+    display: flex;
+    flex-direction: row;
 
-@media screen and (max-width: 600px) {
+    position: absolute;
+    top: -20px;
+    left: 0;
+    -webkit-user-select: none; /* Safari */
+    -ms-user-select: none; /* IE 10 and IE 11 */
+    user-select: none; /* Standard syntax */
+}
+
+.menu-icon {
+    width: 6vh;
+    height: 6vh;
+    filter: invert(37%) sepia(90%) saturate(2023%) hue-rotate(240deg)
+        brightness(103%) contrast(104%);
+    cursor: pointer;
+
+    position: absolute;
+    top: 5px;
+    right: 100%;
+    transform: translate(115%);
+    padding-right: 2vh;
+    padding-top: 3vh;
+    z-index: 80;
+    /* padding-bottom: 0.5rem; */
+}
+
+.menu-icon:hover {
+    filter: invert(19%) sepia(66%) saturate(6926%) hue-rotate(262deg)
+        brightness(109%) contrast(110%);
+}
+
+.menu-list {
+    background: #2c2f32;
+    padding: 1vh;
+    border-bottom-right-radius: 1vh;
+
+    display: flex;
+    flex-direction: row-reverse;
+    column-gap: 1vh;
+
+    position: absolute;
+    /* margin-top: 8vh; */
+    left: 0;
+    width: 42vh;
+    z-index: 79;
+
+    transition: transform 0.5s ease-out;
+}
+
+.menu-list-show {
+    transform: translate(0%);
+}
+
+.menu-list-hide {
+    transform: translate(-100%);
+}
+
+.button-menu {
+    font-size: 3vh;
+    color: white;
+    background: #462472;
+    border: 0px;
+    border-radius: 8px;
+    width: 16vh;
+    height: 10vh;
+    cursor: pointer;
+}
+
+.button-menu:hover {
+    background: #8222ff;
+}
+
+.button-menu:disabled {
+    background: #aaaaaa;
+}
+
+@media screen and (max-width: 800px) {
     .p-info p {
         color: white;
         font-size: 16px;
+    }
+}
+@media screen and (max-width: 600px) {
+    #logo-image {
+        width: 200px;
+    }
+
+    .p-info p {
+        color: white;
+        font-size: 16px;
+    }
+    .menu-icon {
+        width: 4vh;
+        height: 4vh;
+        padding-right: 1vh;
+        padding-top: 1.5vh;
+    }
+
+    .menu-list {
+        padding: 1vh;
+        border-bottom-right-radius: 1vh;
+        width: 32vh;
+    }
+
+    .button-menu {
+        font-size: 1.8vh;
+        width: 13vh;
+        height: 6vh;
     }
 }
 </style>

@@ -66,9 +66,10 @@ export default {
     flex-direction: column;
     justify-content: center;
     align-items: center;
+
+    width: 350px;
+    margin-top: 0;
     margin-left: 20px;
-    min-width: 150px;
-    width: 200px;
 }
 
 img {
@@ -80,41 +81,46 @@ img {
 .card-name {
     margin: 0;
     padding: 0;
-    font-size: 24px;
+    font-size: 32px;
 }
 
 p {
     padding: 0;
-    font-size: 14px;
+    font-size: 16px;
     color: white;
 }
 
-@media screen and (min-width: 600px) {
+@media screen and (max-width: 600px) {
     .card-effects-list {
         flex-direction: row;
+        margin: 5px;
+        margin-bottom: 10px;
+        border-radius: 5px;
+        padding: 5px;
     }
 
     .card-effects-list-info {
-        width: 350px;
+        width: 50vw;
+        min-width: 150px;
         margin-top: 0;
         margin-left: 20px;
     }
 
     img {
-        width: 100px;
-        max-width: 100px;
-        padding: 10px;
+        width: 70px;
+        max-width: 70px;
+        padding: 5px;
     }
 
     .card-name {
         margin: 0;
         padding: 0;
-        font-size: 40px;
+        font-size: 24px;
     }
 
     p {
         padding: 0;
-        font-size: 16px;
+        font-size: 14px;
         color: white;
     }
 }
