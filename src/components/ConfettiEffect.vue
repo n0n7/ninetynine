@@ -6,7 +6,7 @@
 export default {
     methods: {
         startConfetti() {
-            let W = window.innerWidth;
+            let W = document.getElementById("confetti").clientWidth;
             let H = document.getElementById("confetti").clientHeight;
             const canvas = document.getElementById("confetti");
             const context = canvas.getContext("2d");

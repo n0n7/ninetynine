@@ -457,13 +457,32 @@ export default {
 .inform-text {
     position: absolute;
     bottom: 5%;
-    left: 50%;
-    transform: translateX(-50%);
+    width: 100vw;
 }
 
 .inform-text p {
     color: white;
+    text-align: center;
     font-size: 5vw;
     margin: 0;
+}
+
+@media screen and (max-width: 600px) {
+    .top-card img {
+        height: 25vh;
+    }
+
+    .card-container {
+        margin-bottom: 2vh;
+        column-gap: 1vh;
+    }
+
+    .card {
+        height: 18vh;
+    }
+
+    .inform-text p {
+        font-size: 12vw;
+    }
 }
 </style>

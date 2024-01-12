@@ -12,12 +12,14 @@
             </transition>
             <div :class="getPlayerFrameClass(idx)">
                 <transition>
-                    <p
-                        class="timer"
+                    <div
+                        class="timer-container"
                         v-if="side === 'right' && idx === currentPlayerIndex"
                     >
-                        {{ timer }}
-                    </p>
+                        <p>
+                            {{ timer }}
+                        </p>
+                    </div>
                 </transition>
                 <img
                     class="profile-pic"
@@ -180,5 +182,46 @@ h2 {
 .v-enter-from,
 .v-leave-to {
     opacity: 0;
+}
+
+@media screen and (max-width: 600px) {
+    .container {
+        row-gap: 1vh;
+    }
+
+    .player-frame {
+        width: 12vw;
+        column-gap: 2vw;
+    }
+
+    .highlighted {
+        width: 24vw;
+    }
+
+    .profile-pic {
+        width: 10vw;
+        height: 10vw;
+
+        margin: 0.5vh 0 0.5vh 1vw;
+    }
+
+    .timer-container p {
+        font-size: 6vw;
+    }
+
+    h2 {
+        font-size: 4vw;
+        margin: auto 0.3vw auto 0.3vw;
+    }
+
+    .player-frame.left {
+        border-top-right-radius: 2vw;
+        border-bottom-right-radius: 2vw;
+    }
+
+    .player-frame.right {
+        border-top-left-radius: 2vw;
+        border-bottom-left-radius: 2vw;
+    }
 }
 </style>

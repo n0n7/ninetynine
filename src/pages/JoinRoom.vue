@@ -59,7 +59,7 @@ export default {
             } else {
                 try {
                     const response = await fetch(
-                        "http://" + BACKEND_URL + "/joinroom",
+                        `http://${BACKEND_URL}/joinroom`,
                         {
                             method: "POST",
                             headers: {
@@ -92,7 +92,7 @@ export default {
 <style scoped>
 h1 {
     color: white;
-    font-size: 3.5rem;
+    font-size: 40px;
     margin-top: 0;
     text-align: center;
 }

@@ -21,7 +21,7 @@
                     {{ countdownStart }}
                 </p>
             </transition>
-            <div v-if="!showCDStart">
+            <div v-if="!showCDStart" class="acknowledge-message">
                 <transition>
                     <p v-if="showWarning" class="warning">
                         {{ warningMessage }}
@@ -129,7 +129,7 @@ export default {
             countdownStart: 5,
             showCDStart: true,
 
-            playTime: 30,
+            playTime: 15,
             timer: null,
             timerInterval: null, // playtime countdown ref
 
@@ -385,8 +385,7 @@ export default {
     column-gap: 0.5rem;
 
     position: absolute;
-    left: 50%;
-    transform: translate(-50%);
+    width: 100vw;
 }
 
 .timer-self p {
@@ -397,10 +396,9 @@ export default {
 }
 
 .player-list-bar {
-    position: fixed;
-    /* top: 0; */
-    /* margin:auto; */
-    transform: translateY(calc(20px + 12vh));
+    position: absolute;
+    bottom: 50%;
+    transform: translateY(65%);
 }
 
 .player-list-bar.right {
@@ -465,8 +463,8 @@ export default {
 
 .warning {
     position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
+    width: 100vw;
+    text-align: center;
 
     font-size: 6vh;
     margin: 0;
@@ -482,5 +480,20 @@ export default {
     font-size: 10vw;
     margin: 0;
     color: white;
+}
+
+@media screen and (max-width: 600px) {
+    .acknowledge-message p {
+        font-size: 35px;
+    }
+
+    .warning {
+        font-size: 35px;
+    }
+
+    .player-list-bar {
+        bottom: 50%;
+        transform: translateY(40%);
+    }
 }
 </style>

@@ -67,7 +67,7 @@ export default {
 }
 
 .window {
-    z-index: 100;
+    z-index: 300;
     position: fixed;
     left: 50%;
     top: 50%;
@@ -80,6 +80,7 @@ export default {
 }
 
 h1 {
+    padding-top: 1rem;
     text-align: center;
     font-size: 3rem;
     margin-bottom: 0;
@@ -143,5 +144,26 @@ p {
     align-content: center;
     justify-content: center;
     column-gap: 1rem;
+}
+
+@media screen and (max-width: 600px) {
+    .window {
+        width: 90vw;
+        height: 65vw;
+        max-height: 260px;
+        border-radius: 15px;
+    }
+
+    h1 {
+        font-size: 10vw;
+    }
+
+    p {
+        font-size: 5vw;
+    }
+
+    .button-zone {
+        column-gap: 4vw;
+    }
 }
 </style>

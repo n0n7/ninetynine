@@ -108,4 +108,28 @@ export default {
 .button-menu:disabled {
     background: #aaaaaa;
 }
+
+@media screen and (max-width: 600px) {
+    .menu-icon {
+        width: 5vh;
+        height: 5vh;
+        left: 100%;
+        transform: translate(-100%);
+        padding-right: 1vh;
+        padding-top: 1.5vh;
+    }
+
+    .menu-list {
+        padding: 1vh;
+        border-top-left-radius: 1vh;
+        border-bottom-left-radius: 1vh;
+        width: 39vh;
+    }
+
+    .button-menu {
+        font-size: 2.2vh;
+        width: 16vh;
+        height: 6vh;
+    }
+}
 </style>

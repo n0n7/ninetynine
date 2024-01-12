@@ -186,19 +186,16 @@ export default {
         },
         async getNewRoomData() {
             try {
-                const response = await fetch(
-                    "http://" + BACKEND_URL + "/getroom",
-                    {
-                        method: "POST",
-                        headers: {
-                            "Content-Type": "application/json",
-                        },
-                        body: JSON.stringify({
-                            userId: this.userId,
-                            roomId: this.roomId,
-                        }),
-                    }
-                );
+                const response = await fetch(`http://${BACKEND_URL}/getroom`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        userId: this.userId,
+                        roomId: this.roomId,
+                    }),
+                });
                 const data = await response.json();
                 // console.log(data);
                 if (data.error === undefined) {
@@ -293,7 +290,7 @@ export default {
 <style>
 h1 {
     color: white;
-    font-size: 3.5rem;
+    font-size: 40px;
     margin-top: 0;
     margin-bottom: 30px;
     text-align: center;
@@ -437,5 +434,39 @@ h1 {
 .fade-enter,
 .fade-leave-to {
     opacity: 0;
+}
+
+@media screen and (max-width: 600px) {
+    h1 {
+        font-size: 30px;
+    }
+
+    .lobby-id-container {
+        min-width: 300px;
+    }
+    
+    .lobby-member-list {
+        min-width: 300px;
+    }
+
+    .lobby-member-list-container {
+        min-width: 300px;
+    }
+
+    .lobby-member-details {
+        width: 100px;
+    }
+
+    .lobby-member-role {
+        width: 50px;
+    }
+
+    .clipboard-message p {
+        font-size: 15px;
+    }
+
+    .warning-message p {
+        font-size: 15px;
+    }
 }
 </style>
