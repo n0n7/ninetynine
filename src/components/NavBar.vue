@@ -207,7 +207,7 @@ img {
     align-items: center;
     padding: 30px 30px 20px 30px;
     row-gap: 20px;
-    font-size: 1.5rem;
+    font-size: 1.25rem;
     z-index: 200;
     border-bottom-left-radius: 8px;
     border-bottom-right-radius: 8px;
@@ -231,6 +231,10 @@ img {
 @media screen and (max-width: 600px) {
     p {
         font-size: 0.8rem;
+    }
+
+    .dropdown-content {
+        font-size: 0.75rem;
     }
 }
 </style>

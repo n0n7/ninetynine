@@ -36,14 +36,8 @@
                 />
             </div>
             <div class="form-router">
-                <router-link to="/">
-                    <label class="label-router"> Change Password </label>
-                </router-link>
-                <router-link to="/">
-                    <label class="label-router delete-label">
-                        Delete Account
-                    </label>
-                </router-link>
+                <label class="label-router" @click="changePassword"> Change Password </label>
+                <label class="label-router delete-label" @click="deleteAccount"> Delete Account </label>
             </div>
         </div>
         <button type="submit" @click.prevent="saveInfo">Save</button>
@@ -61,7 +55,8 @@ export default {
         const sessionStorage = useSessionStore();
         const userData = sessionStorage.getData;
         return {
-            sessionStorage, userData
+            sessionStorage,
+            userData,
         };
     },
     data() {
@@ -76,7 +71,11 @@ export default {
     },
     computed: {
         isError() {
-            return !this.isUsernameValid || !this.isEmailValid || !this.isResponsePassed;
+            return (
+                !this.isUsernameValid ||
+                !this.isEmailValid ||
+                !this.isResponsePassed
+            );
         },
     },
     methods: {
@@ -85,8 +84,8 @@ export default {
             this.isUsernameValid = true;
             this.isEmailValid = true;
             this.isResponsePassed = true;
-            
-            if(!this.sessionStorage.isLoggedIn) {
+
+            if (!this.sessionStorage.isLoggedIn) {
                 this.isResponsePassed = false;
                 this.errorMessage = "Please login first";
                 return;
@@ -97,9 +96,8 @@ export default {
             if (!this.verifyEmail(this.email)) {
                 return;
             }
-            
+
             try {
-                console.log(this.userData.userId);
                 const response = await fetch(
                     `http://${BACKEND_URL}/accountSetting`,
                     {
@@ -114,9 +112,7 @@ export default {
                         }),
                     }
                 );
-
                 const data = await response.json();
-                console.log(this.userData);
                 if (data.error === undefined) {
                     await this.sessionStorage.accountSetting(data);
                     this.$router.push("/");
@@ -128,7 +124,8 @@ export default {
                 this.isResponsePassed = false;
                 this.errorMessage =
                     "Cannot connect to server. Please try again later.";
-            } 
+                
+            }
         },
         clearErrorUsername() {
             this.isUsernameValid = true;
@@ -159,17 +156,18 @@ export default {
             }
             return true;
         },
+        changePassword() {
+            window.alert("Change Password is not available for now.");
+        },
+        deleteAccount() {
+            window.alert("Delete Account is not available for now.");
+        },
     },
     created() {
-        if(this.sessionStorage.isLoggedIn) {
+        if (this.sessionStorage.isLoggedIn) {
             this.username = this.userData.username;
             this.email = this.userData.email;
         }
-    },
-    computed: {
-        isError() {
-            return !this.isUsernameValid || !this.isEmailValid;
-        },
     },
 };
 </script>
@@ -182,6 +180,7 @@ h1 {
 label {
     color: white;
     margin: 0;
+    text-decoration: none;
 }
 
 img {
@@ -229,6 +228,7 @@ input {
 }
 .label-router {
     color: white;
+    text-decoration: none;
 }
 
 .label-router:hover {

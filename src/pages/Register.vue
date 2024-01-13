@@ -422,5 +422,9 @@ button:active {
     #confirm-password-container {
         margin-bottom: 0px;
     }
+
+    .text-error {
+        font-size: 12px;
+    }
 }
 </style>

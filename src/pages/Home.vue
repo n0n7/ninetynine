@@ -379,7 +379,9 @@ h1 {
     #logo-image {
         width: 200px;
     }
-
+    .home-main{
+        width: 90%;
+    }
     .p-info p {
         color: white;
         font-size: 16px;

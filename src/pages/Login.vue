@@ -323,5 +323,9 @@ input {
         width: 117px;
         padding-right: 40px;
     }
+
+    .text-error {
+        font-size: 12px;
+    }
 }
 </style>
