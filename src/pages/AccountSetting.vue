@@ -46,7 +46,7 @@
                 </router-link>
             </div>
         </div>
-        <button type="submit" @click.prevent="confirm">Confirm</button>
+        <button type="submit" @click.prevent="saveInfo">Save</button>
         <label id="error-message" class="text-error" v-if="isError">{{
             errorMessage
         }}</label>
@@ -54,7 +54,16 @@
 </template>
 
 <script>
+import { useSessionStore } from "../store/session.js";
+const BACKEND_URL = import.meta.env.VITE_API_URL;
 export default {
+    setup() {
+        const sessionStorage = useSessionStore();
+        const userData = sessionStorage.getData;
+        return {
+            sessionStorage, userData
+        };
+    },
     data() {
         return {
             username: "",
@@ -62,31 +71,64 @@ export default {
             errorMessage: "",
             isUsernameValid: true,
             isEmailValid: true,
+            isResponsePassed: true,
         };
     },
-    methods: {
-        async getUserInfo() {
-            // const response = await fetch("/api/user", {
-            //     method: "GET",
-            //     headers: {
-            //         "Content-Type": "application/json",
-            //     },
-            // })
-            // const data = await response.json()
-            // this.username = data.username
-            // this.displayName = data.displayName
-            // this.email = data.email
-
-            this.username = "usmessss1111111";
-            this.displayName = "displayName11111111";
-            this.email = "email111111111";
+    computed: {
+        isError() {
+            return !this.isUsernameValid || !this.isEmailValid || !this.isResponsePassed;
         },
-        confirm() {
+    },
+    methods: {
+        async saveInfo() {
+            this.errorMessage = "";
+            this.isUsernameValid = true;
+            this.isEmailValid = true;
+            this.isResponsePassed = true;
+            
+            if(!this.sessionStorage.isLoggedIn) {
+                this.isResponsePassed = false;
+                this.errorMessage = "Please login first";
+                return;
+            }
             if (!this.verifyUsername(this.username)) {
                 return;
             }
+            if (!this.verifyEmail(this.email)) {
+                return;
+            }
+            
+            try {
+                console.log(this.userData.userId);
+                const response = await fetch(
+                    `http://${BACKEND_URL}/accountSetting`,
+                    {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify({
+                            userId: this.userData.userId,
+                            username: this.username,
+                            email: this.email,
+                        }),
+                    }
+                );
 
-            // console.log("confirm");
+                const data = await response.json();
+                console.log(this.userData);
+                if (data.error === undefined) {
+                    await this.sessionStorage.accountSetting(data);
+                    this.$router.push("/");
+                } else {
+                    this.isResponsePassed = false;
+                    this.errorMessage = data.error;
+                }
+            } catch (error) {
+                this.isResponsePassed = false;
+                this.errorMessage =
+                    "Cannot connect to server. Please try again later.";
+            } 
         },
         clearErrorUsername() {
             this.isUsernameValid = true;
@@ -102,9 +144,27 @@ export default {
             }
             return true;
         },
+        verifyEmail(email) {
+            if (email.length < 1) {
+                this.isEmailValid = false;
+                this.errorMessage = "Email must not be empty";
+                return false;
+            }
+            const emailRegex =
+                /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+            if (!emailRegex.test(email)) {
+                this.isEmailValid = false;
+                this.errorMessage = "Email is invalid";
+                return false;
+            }
+            return true;
+        },
     },
     created() {
-        this.getUserInfo();
+        if(this.sessionStorage.isLoggedIn) {
+            this.username = this.userData.username;
+            this.email = this.userData.email;
+        }
     },
     computed: {
         isError() {

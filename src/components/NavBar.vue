@@ -38,9 +38,9 @@
                         />
                     </div>
                     <div class="dropdown-content" v-if="isLoggedIn">
-                        <!-- <router-link to="/accountsetting"> -->
-                        <a>Profile</a>
-                        <!-- </router-link> -->
+                        <router-link to="/accountsetting">
+                            <a>Profile</a>
+                        </router-link>
                         <a id="logout-btn" @click="toggleWindow">Logout</a>
                     </div>
                 </div>

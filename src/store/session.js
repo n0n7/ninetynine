@@ -10,15 +10,16 @@ export const useSessionStore = defineStore("session", {
         getData: (state) => state.data,
     },
     actions: {
+        accountSetting(data) {
+            this.data = data;
+        },
         login(data) {
             this.isLoggedIn = true;
             this.data = data;
-            // console.log("Logged in as " + data.userId);
         },
         logout() {
             this.isLoggedIn = false;
             this.data = null;
-            // console.log("Logged out");
         },
     },
     persist: {
