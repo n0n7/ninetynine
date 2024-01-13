@@ -31,7 +31,6 @@
                     v-model="email"
                     placeholder="email"
                     :class="{ 'input-error': !isEmailValid }"
-                    disabled="disabled"
                     @input="clearErrorEmail()"
                 />
             </div>
@@ -194,6 +193,10 @@ input {
     color: white;
     background-color: #4e4f50;
     border-radius: 7px;
+    border: none;
+    font-size: 16px;
+    padding: 7px;
+    width: 200px;
 }
 
 .account-container {
@@ -208,8 +211,9 @@ input {
     text-align: center;
     background-color: #242526;
     padding: 10px;
-    min-width: 300px;
-    margin-bottom: 20px;
+    width: 350px;
+    margin-bottom: 40px;
+    border-radius: 7px;
 }
 
 .form-input-container {
@@ -217,9 +221,12 @@ input {
     justify-content: space-between;
     align-items: center;
     width: 100%;
-    margin-bottom: 10px;
+    margin-bottom: 20px;
+    position: relative;
 }
-
+.form-input-container label {
+    font-size: 20px;
+}
 .form-router {
     display: flex;
     justify-content: space-between;
@@ -239,12 +246,15 @@ input {
 button {
     width: 10%;
     height: 5%;
+    min-height: 50px;
+    min-width: 100px;
     padding: 5px;
     background-color: #a35bff;
+    border: none;
     color: white;
     border-radius: 10px;
-    border: 2px solid black;
-    margin-bottom: 10px;
+    margin-bottom: 20px;
+    font-size: 16px;
 }
 
 button:hover {
@@ -266,5 +276,32 @@ button:active {
 
 .delete-label {
     color: red;
+}
+
+@media screen and (max-width: 600px) {
+    h1 {
+        font-size: 30px;
+    }
+
+    .account-content-box {
+        width: 250px;
+        margin-bottom: 20px;
+    }
+
+    .form-input-container label {
+        font-size: 14px;
+    }
+
+    input {
+        width: 150px;
+        font-size: 12px;
+    }
+
+    .label-router {
+        font-size: 14px;
+    }
+    .text-error {
+        font-size: 12px;
+    }
 }
 </style>
